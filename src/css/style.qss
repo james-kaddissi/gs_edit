@@ -1,0 +1,150 @@
+QMainWindow {
+    background-color: #0C0C1A;
+    color: #bebebe
+}
+
+QSplitter {
+    background-color: #32303d;
+}
+
+QSplitter::handle {
+    background-color: #c678dd;
+}
+
+QScrollBar:vertical {
+    border: none;
+    width: 12px;
+    margin: 15px 0 15px 0;
+    background-color: #2e2e2e;
+    border-radius: 0px;
+}
+
+QScrollBar:handle:vertical {
+    background-color: #424141;
+}
+
+QScrollBar:handle:vertical:hover {
+    background-color: #535050;
+}
+
+QScrollBar:handle:vertical:pressed {
+    background-color: #646363;
+}
+
+QScrollBar::sub-line::vertical {
+    border: none;
+    background: none;
+    height: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-line::vertical {
+    border: none;
+    background: none;
+    height: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    height: 12px;
+    margin: 0 0 0 0;
+    background-color: #2e2e2e;
+    border-radius: 0px;
+}
+
+QScrollBar:handle:horizontal {
+    background-color: #424141;
+}
+
+QScrollBar:handle:horizontal:hover {
+    background-color: #535050;
+}
+
+QScrollBar:handle:horizontal:pressed {
+    background-color: #646363;
+}
+
+QScrollBar::sub-line::horizontal {
+    border: none;
+    background: none;
+    width: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-line::horizontal {
+    border: none;
+    background: none;
+    width: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
+
+QsciScintilla {
+    border: none;
+    background-color: #0C0C1A;
+    color: #d6d6d6;
+}
+
+QMessageBox {
+    color: #d6d6d6;
+    border-radius: 25px;
+}
+
+QLineEdit {
+    background-color: #21252b;
+    border-radius: 3px;
+    border: 1px solid #d6d6d6;
+    padding: 2px;
+    color: #d6d6d6;
+    min-height: 5ex;
+}
+
+QLineEditBox:hover {
+    color: #d6d6d6;
+}
+
+QListView {
+    background-color: black;
+    border-radius: 5px;
+    border: 1px solid green;
+    padding: 5px;
+    color: #d6d6d6
+}
+
+QListView::item:hover {
+    background-color: gray;
+    border: 1px solid #d6d6d6;
+    border-radius: 3px;
+    color: #d6d6d6;
+}
+QListView::item:select {
+    background-color: gray;
+    border-style: none;
+    color: #d6d6d6;
+}
+
+
+QTreeView {
+    background-color: #0C0C1A; /* This affects the color of the background of the file explorer */
+    color: white; /* This affects the color of the names of files and folders in the file explorer */
+}

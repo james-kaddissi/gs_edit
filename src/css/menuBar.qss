@@ -1,0 +1,15 @@
+QMenuBar {
+    background-color: #0C0C1A;
+    border: 1px solid #0C0C1A;
+    padding: 3px;
+    color: #c678dd;
+    font-size: 14px;
+    font-family: 'Consolas';
+}
+
+QMenuBar::item {
+    background-color:#0C0C1A;
+    padding: 3px;
+    color: #c678dd;
+    font-family: 'Consolas';
+}

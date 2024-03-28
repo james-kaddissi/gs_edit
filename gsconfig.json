@@ -1,0 +1,10 @@
+{
+    "debugMode": true,
+    "colors": {
+        "primary-background": "#000000",
+        "primary-text": "#00FF22"
+    },
+    "language-considerations": {
+        "python": [".py"]
+    }
+}

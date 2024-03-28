@@ -1,0 +1,24 @@
+QTabWidget {
+    background-color: #32303d;
+    color: #bebebe;
+}
+
+QTabBar::tab {
+    background-color: #0C0C1A;
+    color: #c678dd;
+    min-width: 10ex;
+    min-height: 5ex;
+    padding: 10px 25px;
+    border-style: none;
+}
+
+QTabBar::tab::selected {
+    color: #0C0C1A;
+    border-style: none;
+    background-color: #c678dd;
+    border-bottom: 2px solid #c678dd;
+}
+
+QTabBar::close-button {
+    image: url("./src/images/close.svg");
+}
