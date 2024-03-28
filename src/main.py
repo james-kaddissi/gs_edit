@@ -63,61 +63,18 @@ class MainWindow(QMainWindow):
         top_menu_bar = MenuBar(self, self.bar, self.file_explorer_frame.file_explorer)
         self.setMenuBar(top_menu_bar)
 
-    def text_editor(self, path=None, pyf=True) -> QsciScintilla:
-        editor = TextEditor(self, path=path, pyf=pyf)
-        return editor
-
-    def valid_file_check(self, path):
-        with open(path, 'rb') as f:
-            return b'\0' in f.read(1024)
-
-    def add_tab(self, path: Path, is_new_file=False):
-        if not is_new_file and self.valid_file_check(path):
-            self.statusBar().set_timed_message("Cannot open this file type", 2000)
-            return
-        if path.is_dir():
-            return
-
-        editor = self.text_editor(path, path.suffix in gsconfig.get_consideration("python"))
-        if is_new_file:
-            self.tab.addTab(editor, "untitled")
-            self.setWindowTitle("untitled - " + self.app_title)
-            self.statusBar().set_timed_message("untitled created", 2000)
-            self.tab.setCurrentIndex(self.tab.count() - 1)
-            self.current_file = None
-            return
-
-        for i in range(self.tab.count()):
-            if self.tab.tabText(i) == path.name or self.tab.tabText(i) == "*" + path.name:
-                self.tab.setCurrentIndex(i)
-                self.current_file = path
-                return
-
-        self.tab.addTab(editor, path.name)
-
-        if not is_new_file:
-            editor.setText(path.read_text(encoding="utf-8"))
-        self.setWindowTitle(path.name)
-        self.current_file = path
-        self.tab.setCurrentIndex(self.tab.count() - 1)
-        self.statusBar().set_timed_message(f"{path.name} opened", 2000)
-
     def configure_body(self):
         # main body
         self.sidebar = Sidebar(self)
         self.horizontal_split = QSplitter(Qt.Horizontal)
         self.tab = TabBar(self, self.bar)
-        self.file_explorer_frame = FileExplorerFrame(self)
         self.grep_frame = GrepFrame(self)
+        self.file_explorer_frame = FileExplorerFrame(self)
         self.horizontal_split.addWidget(self.file_explorer_frame)
         self.horizontal_split.addWidget(self.tab)
         main_body_frame = MainBodyFrame(self)
         self.setCentralWidget(main_body_frame)
 
-    def finish_grep(self, content):
-        self.grep_frame.grep_view.clear()
-        for i in content:
-            self.grep_frame.grep_view.addItem(i)
 
     def display_text(self, header, text):
         display = QMessageBox(self)
@@ -139,15 +96,6 @@ class MainWindow(QMainWindow):
             if display == QMessageBox.Yes:
                 self.save()
         self.tab.removeTab(i)
-
-    def grep_view_clicked(self, content: GrepListItem):
-        self.add_tab(Path(content.path))
-        editor = self.tab.currentWidget()
-        editor.setCursorPosition(content.ln, content.endln)
-        editor.setFocus()
-
-    def file_explorer_context_menu(self, pos):
-        pass
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

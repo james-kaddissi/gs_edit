@@ -152,3 +152,5 @@ class TextEditor(QsciScintilla):
             self.unsaved_changes = True
         if self.first_access:
             self.first_access = False
+    
+    

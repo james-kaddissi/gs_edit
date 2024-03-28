@@ -29,7 +29,7 @@ class FileExplorerFrame(GeneralToolFrame):
         super(FileExplorerFrame, self).__init__()
         self.window = window
         self.file_explorer_layout = FileExplorerLayout()
-        self.file_explorer = FileExplorer(tab=self.window.tab, add_tab=self.window.add_tab, window=self.window)
+        self.file_explorer = FileExplorer(tab=self.window.tab, add_tab=self.window.grep_frame.grep_view.add_tab, window=self.window)
         self.file_explorer_layout.addWidget(self.file_explorer)
         self.setLayout(self.file_explorer_layout)
 
@@ -41,7 +41,8 @@ class GrepFrame(GeneralToolFrame):
         grep_result = Searchbar(self.window)
         self.grep_box = GrepToggle(self.window)
         self.grepgine = Grepgine()
-        self.grepgine.final_result.connect(self.window.finish_grep)
+        self.grep_view = GrepResult(self.window)
+        self.grepgine.final_result.connect(self.grep_view.finish_grep)
         grep_result.textChanged.connect(
             lambda x: self.grepgine.modify(
                 x,
@@ -49,8 +50,6 @@ class GrepFrame(GeneralToolFrame):
                 self.grep_box.isChecked()
             )
         )
-        self.grep_view = GrepResult(self.window)
-
         grep_layout.addWidget(self.grep_box)
         grep_layout.addWidget(grep_result)
         grep_layout.addSpacerItem(QSpacerItem(4, 4, QSizePolicy.Minimum, QSizePolicy.Minimum))

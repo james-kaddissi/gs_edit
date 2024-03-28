@@ -5,6 +5,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from pathlib import Path
+from text_editor import TextEditor
+import gsconfig
 
 class GrepLayout(QVBoxLayout):
     def __init__(self) -> None:
@@ -61,7 +63,51 @@ class GrepResult(QListWidget):
         self.itemClicked.connect(self.grep_view_clicked)
 
     def grep_view_clicked(self, content):
-        self.window.add_tab(Path(content.path))
+        self.add_tab(self.window, Path(content.path))
         editor = self.window.tab.currentWidget()
         editor.setCursorPosition(content.ln, content.endln)
         editor.setFocus()
+
+    def finish_grep(self, content):
+        self.clear()
+        for i in content:
+            self.addItem(i)
+
+    def text_editor(self, path=None, pyf=True) -> QsciScintilla:
+        editor = TextEditor(self.window, path=path, pyf=pyf)
+        return editor
+
+    def valid_file_check(self, path):
+        with open(path, 'rb') as f:
+            return b'\0' in f.read(1024)
+
+    def add_tab(self, window, path: Path, is_new_file=False):
+        if not is_new_file and self.valid_file_check(path):
+            window.statusBar().set_timed_message("Cannot open this file type", 2000)
+            return
+        if path.is_dir():
+            return
+
+        editor = self.text_editor(path, path.suffix in gsconfig.get_consideration("python"))
+        if is_new_file:
+            window.tab.addTab(editor, "untitled")
+            window.setWindowTitle("untitled - " + window.app_title)
+            window.statusBar().set_timed_message("untitled created", 2000)
+            window.tab.setCurrentIndex(window.tab.count() - 1)
+            window.current_file = None
+            return
+
+        for i in range(window.tab.count()):
+            if window.tab.tabText(i) == path.name or window.tab.tabText(i) == "*" + path.name:
+                window.tab.setCurrentIndex(i)
+                window.current_file = path
+                return
+
+        window.tab.addTab(editor, path.name)
+
+        if not is_new_file:
+            editor.setText(path.read_text(encoding="utf-8"))
+        window.setWindowTitle(path.name)
+        window.current_file = path
+        window.tab.setCurrentIndex(window.tab.count() - 1)
+        window.statusBar().set_timed_message(f"{path.name} opened", 2000)
