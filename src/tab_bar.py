@@ -3,10 +3,10 @@ from PyQt5 import *
 from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-from PyQt5.QtWidgets import QWidget
-from pathlib import Path
+from PyQt5.QtWidgets import *
 
 import os
+from popup import PopupMessage
 
 class TabBar(QTabWidget):
     def __init__(self, main_window, status_bar) -> None:
@@ -25,4 +25,12 @@ class TabBar(QTabWidget):
         self.setTabsClosable(True)
         self.setMovable(True)
         self.setDocumentMode(True)
-        self.tabCloseRequested.connect(self.window.close_current_tab)
+        self.tabCloseRequested.connect(self.close_current_tab)
+    
+    def close_current_tab(self, i):
+        editor = self.window.tab.currentWidget()
+        if editor.unsaved_changes:
+            display = PopupMessage("Close", "You have unsaved changes that will be lost if you do not save. Save now?")
+            if display == QMessageBox.Yes:
+                self.window.save()
+        self.window.tab.removeTab(i)

@@ -1,4 +1,4 @@
-from PyQt5.QtGui import QDragEnterEvent, QDropEvent
+from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5 import *
 from PyQt5.Qsci import *
@@ -8,9 +8,8 @@ from PyQt5.QtCore import *
 from pathlib import Path
 import subprocess, sys, shutil, os
 
-from PyQt5.QtWidgets import QWidget
-
 from text_editor import TextEditor
+from popup import PopupMessage
 
 class FileExplorer(QTreeView):
     def __init__(self, tab, add_tab, window):
@@ -60,23 +59,6 @@ class FileExplorer(QTreeView):
 
         self.itemDelegate().closeEditor.connect(self.close_editor)
 
-    def display_text(self, header, text):
-        display = QMessageBox(self)
-        display.setFont(self.ui_font)
-        display.font().setPointSize(16)
-        display.setWindowTitle(header)
-        display.setText(text)
-        display.setWindowIcon(QIcon("./src/images/close.svg"))
-        display.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        display.setDefaultButton(QMessageBox.No)
-        display.setIcon(QMessageBox.Warning)
-
-
-        return display.exec_()
-
-
-
-
     def close_editor(self, editor):
         if self.rename:
             self.renamefn()
@@ -85,7 +67,7 @@ class FileExplorer(QTreeView):
         path = self.file_system_model.filePath(index)
         p = Path(path)
         if p.is_file():
-            self.add_tab(p)
+            self.add_tab(self.window, p)
 
     def show_menu(self, x):
         i = self.indexAt(x)
@@ -135,7 +117,7 @@ class FileExplorer(QTreeView):
     
     def delete_command(self, i):
         name = self.file_system_model.fileName(i)
-        delete_confirm = self.display_text("Delete", f"Confirm deletion of '{name}'?")
+        delete_confirm = PopupMessage("Delete", f"Confirm deletion of '{name}'?")
         if delete_confirm == QMessageBox.Yes:
             if self.selectionModel().selectedRows():
                 for j in self.selectionModel().selectedRows():

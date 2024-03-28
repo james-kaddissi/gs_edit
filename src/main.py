@@ -1,11 +1,9 @@
 '''
 This is the main application of GS-Edit. Keeping this file organized is especially important. Try refactoring code into new files.
 '''
-
 # Python imports
 import sys
 import os
-from pathlib import Path
 # PyQt imports (migration to PyQt6 should be a simple task for a future date)
 from PyQt5.QtWidgets import *
 from PyQt5 import *
@@ -13,11 +11,6 @@ from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 # Class imports
-
-from text_editor import TextEditor
-from grepgine import Grepgine, GrepListItem
-from file_explorer import FileExplorer, FileExplorerLayout
-from code_completer import Completer
 from status_bar import StatusBar
 from menu_bar import MenuBar
 from tab_bar import TabBar
@@ -26,8 +19,6 @@ from sidebar import Sidebar
 from tools import FileExplorerFrame, GrepFrame
 # Other function imports
 import gsconfig
-
-
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -74,28 +65,6 @@ class MainWindow(QMainWindow):
         self.horizontal_split.addWidget(self.tab)
         main_body_frame = MainBodyFrame(self)
         self.setCentralWidget(main_body_frame)
-
-
-    def display_text(self, header, text):
-        display = QMessageBox(self)
-        display.setFont(self.font())
-        display.font().setPointSize(16)
-        display.setWindowTitle(header)
-        display.setText(text)
-        display.setWindowIcon(QIcon("./src/images/close.svg"))
-        display.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        display.setDefaultButton(QMessageBox.No)
-        display.setIcon(QMessageBox.Warning)
-
-        return display.exec_()
-
-    def close_current_tab(self, i):
-        editor = self.tab.currentWidget()
-        if editor.unsaved_changes:
-            display = self.display_text("Close", "You have unsaved changes that will be lost if you do not save. Save now?")
-            if display == QMessageBox.Yes:
-                self.save()
-        self.tab.removeTab(i)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
