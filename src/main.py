@@ -63,8 +63,16 @@ class MainWindow(QMainWindow):
         self.file_explorer_frame = FileExplorerFrame(self)
         self.horizontal_split.addWidget(self.file_explorer_frame)
         self.horizontal_split.addWidget(self.tab)
-        main_body_frame = MainBodyFrame(self)
-        self.setCentralWidget(main_body_frame)
+        self.main_body_frame = MainBodyFrame(self)
+        self.setCentralWidget(self.main_body_frame)
+
+    def toggle_terminal(self):
+        if self.main_body_frame.terminal_widget.isVisible():
+            self.main_body_frame.terminal_widget.hide()
+        else:
+            self.main_body_frame.terminal_widget.show()
+            self.main_body_frame.vertical_split.setSizes([self.height() * 0.75, self.height() * 0.25])
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -4,18 +4,9 @@ from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+from integrated_terminal import IntegratedTerminal
 
-class MainBodyLayout(QHBoxLayout):
-    def __init__(self, window) -> None:
-        super(MainBodyLayout, self).__init__()
-        self.window = window
-        self.initialize_layout()
 
-    def initialize_layout(self):
-        self.setContentsMargins(0, 0, 0, 0)
-        self.setSpacing(0)
-        self.addWidget(self.window.sidebar)
-        self.addWidget(self.window.horizontal_split)
 
 class MainBodyFrame(QFrame):
     def __init__(self, window) -> None:
@@ -33,5 +24,22 @@ class MainBodyFrame(QFrame):
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
     
     def set_layout(self):
-        self.setLayout(MainBodyLayout(self.window))
+        layout = QVBoxLayout(self)  # Use QVBoxLayout to manage the main layout of the frame
+        self.vertical_split = QSplitter(Qt.Vertical)  # This splitter will manage the main content and the terminal
+        
+        self.editor_area = QWidget()  # Container for the main editor layout
+        editor_layout = QHBoxLayout(self.editor_area)
+        editor_layout.setContentsMargins(0, 0, 0, 0)
+        editor_layout.setSpacing(0)
+        editor_layout.addWidget(self.window.sidebar)
+        editor_layout.addWidget(self.window.horizontal_split)
+        
+        self.terminal_widget = IntegratedTerminal(self)  
+        
+        # Add the editor area and the terminal to the vertical splitter
+        self.vertical_split.addWidget(self.editor_area)
+        self.vertical_split.addWidget(self.terminal_widget)
+        layout.addWidget(self.vertical_split)
+        
+        self.terminal_widget.hide()  # Initially hide the terminal
         

@@ -25,6 +25,7 @@ class MenuBar(QMenuBar):
         self.initialize_file_menu()
         self.initialize_edit_menu()
         self.initialize_selection_menu()
+        self.initialize_terminal_menu()
     
     def initialize_file_menu(self):
         self.file_menu = self.addMenu("File")
@@ -44,6 +45,10 @@ class MenuBar(QMenuBar):
     def initialize_selection_menu(self):
         self.selection_menu = self.addMenu("Selection")
         self.selecting_options()
+
+    def initialize_terminal_menu(self):
+        self.terminal_menu = self.addMenu("Terminal")
+        self.terminal_options()
 
     def new_options(self): 
         self.new_file_option()
@@ -132,6 +137,12 @@ class MenuBar(QMenuBar):
         select_all.setShortcut("Ctrl+A")
         select_all.triggered.connect(self.select_all_command)
 
+    def terminal_options(self):
+        self.toggle_terminal_option()
+    def toggle_terminal_option(self):
+        toggle_terminal = self.terminal_menu.addAction("Toggle")
+        toggle_terminal.triggered.connect(self.toggle_terminal)
+
     def new_file_command(self):
         self.window.add_tab(Path("untitled"), is_new_file=True)
     def new_folder_command(self):
@@ -215,4 +226,6 @@ class MenuBar(QMenuBar):
         editor = self.window.tab.currentWidget()
         if editor is not None:
             editor.selectAll()
+    def toggle_terminal(self):
+        self.window.toggle_terminal()
     
