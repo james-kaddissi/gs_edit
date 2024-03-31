@@ -11,9 +11,13 @@ from integrated_terminal import IntegratedTerminal
 class MainBodyFrame(QFrame):
     def __init__(self, window) -> None:
         super(MainBodyFrame, self).__init__()
+        self.refresh_style()
         self.window = window
         self.initialize_frame()
         self.set_layout()
+
+    def refresh_style(self):
+        self.setStyleSheet(open("./src/css/mainBody.qss", "r").read())
 
     def initialize_frame(self):
         self.setFrameShape(QFrame.NoFrame)
@@ -24,7 +28,7 @@ class MainBodyFrame(QFrame):
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
     
     def set_layout(self):
-        layout = QVBoxLayout(self)  # Use QVBoxLayout to manage the main layout of the frame
+        layout = QVBoxLayout(self)
         self.vertical_split = QSplitter(Qt.Vertical)  # This splitter will manage the main content and the terminal
         
         self.editor_area = QWidget()  # Container for the main editor layout

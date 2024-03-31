@@ -7,6 +7,7 @@ import os
 class IntegratedTerminalTextEdit(QTextEdit):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.refresh_style()
         self.setAcceptRichText(False)
         self.process = QProcess()
         self.process.readyReadStandardOutput.connect(self.ouput_triggered)
@@ -14,6 +15,9 @@ class IntegratedTerminalTextEdit(QTextEdit):
         self.process.start("cmd.exe" if os.name == 'nt' else "/bin/bash")
         self.is_command_executing = False
         self.command_start_position = self.textCursor().position()
+
+    def refresh_style(self):
+        self.setStyleSheet(open("./src/css/integratedTerminal.qss", "r").read())
 
     def keyPressEvent(self, event):
         cursor = self.textCursor()

@@ -1,0 +1,6 @@
+QTextEdit {
+    background-color: "black";
+    color: "green";
+    font-family: "Fixedsys";
+    border: none;
+}
