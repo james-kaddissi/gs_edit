@@ -60,7 +60,6 @@ class TextEditor(QsciScintilla):
         self._unsaved_changes = False
         self.first_access = True
 
-
         # syntax highlighting
         self.python_lexer = PythonLexer(self)
         self.python_lexer.setDefaultFont(self.window_font)
