@@ -11,7 +11,6 @@ from PyQt5.QtWidgets import *
 
 import gsconfig
 
-'''LOGOS is a Rust library for lexers that is SIGNIFICANTLY faster than this abomination. When expanding to Rust, DO THIS FIRST!'''
 
 class GSLexer(QsciLexerCustom):
     def __init__(self, language, editor, path=None, base_config=None):
@@ -58,6 +57,7 @@ class GSLexer(QsciLexerCustom):
         self.FUNCTIONS = 8
         self.CLASSES = 9
         self.FUNCTION_DEF = 10
+        self.PREPROCESSOR = 11
         self.items = [
             "default",
             "keyword",
@@ -69,7 +69,8 @@ class GSLexer(QsciLexerCustom):
             "constants",
             "functions",
             "classes",
-            "function_def"
+            "function_def",
+            "preprocessor"
         ]
 
         self.available_weights = {
@@ -132,6 +133,8 @@ class GSLexer(QsciLexerCustom):
             return "CLASSES"
         elif style == self.FUNCTION_DEF:
             return "FUNCTION_DEF"
+        elif style == self.PREPROCESSOR:
+            return "PREPROCESSOR"
 
         return ""
     
@@ -165,9 +168,150 @@ class GSLexer(QsciLexerCustom):
             i += 1
         return token, i
         
+class RustLexer(GSLexer):
+    def __init__(self, editor):
+        super(RustLexer, self).__init__("Rust", editor)
+        self.editor = editor
+        self.generateKeywords([
+            "as", "break", "const", "continue", "crate", "else", "enum", "extern", "false",
+            "fn", "for", "if", "impl", "in", "let", "loop", "match", "mod", "move", "mut", "pub",
+            "ref", "return", "self", "Self", "static", "struct", "super", "trait", "true", "type",
+            "unsafe", "use", "where", "while", "async", "await", "dyn"
+        ])
+        self.generateSavedNames([
+            "Vec", "String", "HashMap", "Result", "Option", "println", "macro_rules"
+        ])
+    def styleText(self, ipos, epos):
+        self.startStyling(ipos)
 
+        active_text = self.editor.text()[ipos:epos]
+        self.get_token(active_text)
+
+        is_string = False
+        is_comment = False
+        is_attribute = False
+
+        while True:
+            active_token = self.get_next_token()
+            if active_token is None:
+                break
+            token, token_length = active_token
+
+            if is_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/") or token == "\n":
+                    is_comment = False
+                continue
+
+            if is_string:
+                self.setStyling(token_length, self.STRING)
+                if token in ['"', "'"]:
+                    is_string = False
+                continue
+
+            if is_attribute:
+                self.setStyling(token_length, self.KEYARGS) 
+                if token.endswith("]"):
+                    is_attribute = False
+                continue
+
+            if token in self.keywords:
+                self.setStyling(token_length, self.KEYWORD)
+            elif token.startswith("/*"):
+                self.setStyling(token_length, self.COMMENTS)
+                is_comment = True
+            elif token == "//":
+                self.setStyling(token_length, self.COMMENTS)
+                continue  # Consumes the line as a comment
+            elif token in ["(", ")", "{", "}", "[", "]"]:
+                self.setStyling(token_length, self.BRACKETS)
+                if token.startswith("["):
+                    is_attribute = True
+            elif token in ['"', "'"]:
+                self.setStyling(token_length, self.STRING)
+                is_string = True
+            elif token.isdigit() or token.startswith("0x"):
+                self.setStyling(token_length, self.CONSTANTS)
+            elif token in self.saved_names:
+                self.setStyling(token_length, self.FUNCTIONS)
+            else:
+                self.setStyling(token_length, self.DEFAULT)
+
+class CppLexer(GSLexer):
+    def __init__(self, editor):
+        super(CppLexer, self).__init__("C++", editor)
+        self.editor = editor
+        self.generateKeywords([
+            "auto", "bool", "break", "case", "catch", "char", "class", "const", "constexpr",
+            "continue", "default", "delete", "do", "double", "else", "enum", "explicit", "export",
+            "extern", "false", "float", "for", "friend", "goto", "if", "inline", "int", "long",
+            "mutable", "namespace", "new", "noexcept", "nullptr", "operator", "private", "protected",
+            "public", "register", "reinterpret_cast", "return", "short", "signed", "sizeof", "static",
+            "struct", "switch", "template", "this", "throw", "true", "try", "typedef", "typeid",
+            "typename", "union", "unsigned", "using", "virtual", "void", "volatile", "wchar_t", "while"
+        ])
+        self.generateSavedNames([
+            "std", "cout", "cin", "vector", "string", "map", "set", "iostream"
+        ])
+    
+    def styleText(self, ipos, epos):
+        self.startStyling(ipos)
+
+        active_text = self.editor.text()[ipos:epos]
+        self.get_token(active_text)
+
+        is_string = False
+        is_comment = False
+        is_preprocessor = False
+
+        while True:
+            active_token = self.get_next_token()
+            if active_token is None:
+                break
+            token, token_length = active_token
+
+            if is_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/"):
+                    is_comment = False
+                continue
+
+            if is_string:
+                self.setStyling(token_length, self.STRING)
+                if token in ['"', "'"]:
+                    is_string = False
+                continue
+
+            if is_preprocessor:
+                self.setStyling(token_length, self.PREPROCESSOR)
+                if token.startswith("\n"):
+                    is_preprocessor = False
+                continue
+
+            if token in self.keywords:
+                self.setStyling(token_length, self.KEYWORD)
+            elif token == "#":
+                self.setStyling(token_length, self.PREPROCESSOR)
+                is_preprocessor = True
+            elif token.startswith("/*"):
+                self.setStyling(token_length, self.COMMENTS)
+                is_comment = True
+            elif token == "//":
+                self.setStyling(token_length, self.COMMENTS)
+                continue  # Consumes the line as a comment
+            elif token in ["(", ")", "{", "}", "[", "]"]:
+                self.setStyling(token_length, self.BRACKETS)
+            elif token in ['"', "'"]:
+                self.setStyling(token_length, self.STRING)
+                is_string = True
+            elif token.isdigit():
+                self.setStyling(token_length, self.CONSTANTS)
+            elif token in self.saved_names:
+                self.setStyling(token_length, self.FUNCTIONS)
+            else:
+                self.setStyling(token_length, self.DEFAULT)
+    
 class PythonLexer(GSLexer):
-
     def __init__(self, editor):
         super(PythonLexer, self).__init__("Python", editor)
         self.editor = editor
@@ -256,3 +400,123 @@ class PythonLexer(GSLexer):
             else:
                 self.setStyling(token_length, 0)
     
+class CLexer(GSLexer):
+    def __init__(self, editor):
+        super(CLexer, self).__init__("C", editor)
+        self.editor = editor
+        self.generateKeywords([
+            "auto", "break", "case", "char", "const", "continue", "default", "do",
+            "double", "else", "enum", "extern", "float", "for", "goto", "if", 
+            "inline", "int", "long", "register", "restrict", "return", "short", 
+            "signed", "sizeof", "static", "struct", "switch", "typedef", "union", 
+            "unsigned", "void", "volatile", "while", "_Bool", "_Complex", "_Imaginary"
+        ])
+        self.generateSavedNames([
+            "printf", "scanf", "strcpy", "strncpy", "strcat", "strncat", "malloc", 
+            "free", "memset", "memcpy"
+        ])
+
+    def styleText(self, ipos, epos):
+        self.startStyling(ipos)
+
+        active_text = self.editor.text()[ipos:epos]
+        self.get_token(active_text)
+
+        is_string = False
+        is_comment = False
+        is_preprocessor = False
+
+        while True:
+            active_token = self.get_next_token()
+            if active_token is None:
+                break
+            token = active_token[0]
+            token_length= active_token[1]
+
+            if is_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/"):
+                    is_comment = False
+                continue
+
+            if is_string:
+                self.setStyling(token_length, self.STRING)
+                if token == '"' or token == "'":
+                    is_string = False
+                continue
+
+            if is_preprocessor:
+                self.setStyling(token_length, self.PREPROCESSOR)
+                if token.startswith("\n"):
+                    is_preprocessor = False
+                continue
+
+            if token in self.keywords:
+                self.setStyling(token_length, self.KEYWORD)
+            elif token == "#":
+                self.setStyling(token_length, self.PREPROCESSOR)
+                is_preprocessor = True
+            elif token.startswith("/*"):
+                self.setStyling(token_length, self.COMMENTS)
+                is_comment = True
+            elif token == "//":
+                self.setStyling(token_length, self.COMMENTS)
+                # Eat up the rest of the line as a comment
+                nxt_token, jmp = self.see_next(), 1
+                while nxt_token[0] != "\n":
+                    nxt_token, jmp = self.see_next(jmp), jmp + 1
+                self.get_next_token(jmp) # Skip to the end of line
+            elif token in ["(", ")", "{", "}", "[", "]"]:
+                self.setStyling(token_length, self.BRACKETS)
+            elif token == '"' or token == "'":
+                self.setStyling(token_length, self.STRING)
+                is_string = True
+            elif token.isdigit():
+                self.setStyling(token_length, self.CONSTANTS)
+            elif token in self.saved_names:
+                self.setStyling(token_length, self.FUNCTIONS)
+            else:
+                self.setStyling(token_length, self.DEFAULT)
+
+
+
+class JSONLexer(GSLexer):
+    def __init__(self, editor):
+        super(JSONLexer, self).__init__("JSON", editor)
+        self.generateSavedNames([
+            "true",
+            "false"
+        ])
+
+    def styleText(self, start, end):
+        self.startStyling(start)
+        text = self.editor.text()[start:end]
+        self.get_token(text)
+        is_string = False
+        while True:
+            curr_token = self.get_next_token()
+            if curr_token is None:
+                break
+            tok: str = curr_token[0]
+            tok_len: int = curr_token[1]
+
+            if is_string:
+                self.setStyling(curr_token[1], self.STRING)
+                if tok == '"' or tok == "'":
+                    is_string = False
+                continue
+            elif tok.isnumeric():
+                self.setStyling(tok_len, self.CONSTANTS)
+                continue
+            elif tok in ["(", ")", "{", "}", "[", "]"]:
+                self.setStyling(tok_len, self.BRACKETS)
+                continue
+            elif tok == '"' or tok == "'":
+                self.setStyling(tok_len, self.STRING)
+                is_string = True
+                continue
+            elif tok in self.saved_names:
+                self.setStyling(tok_len, self.TYPES)
+                continue
+            else:
+                self.setStyling(tok_len, self.DEFAULT)

@@ -165,8 +165,8 @@ class MenuBar(QMenuBar):
     def open_folder_command(self):
         new_folder = QFileDialog.getExistingDirectory(self.window, "Pick A Folder", "")
         if new_folder:
-            self.window.file_explorer.file_system_model.setRootPath(new_folder)
-            self.window.file_explorer.setRootIndex(self.window.file_explorer.file_system_model.index(new_folder))
+            self.window.file_explorer_frame.file_explorer.file_system_model.setRootPath(new_folder)
+            self.window.file_explorer_frame.file_explorer.setRootIndex(self.window.file_explorer_frame.file_explorer.file_system_model.index(new_folder))
             self.status_bar.set_timed_message(f"Changed folder to {new_folder}", 2000)
     def open_project_command(self):
         self.status_bar.set_timed_message("Project functionality to be added...", 3000)

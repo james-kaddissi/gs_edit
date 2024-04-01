@@ -5,6 +5,10 @@
         "primary-text": "#00FF22"
     },
     "language-considerations": {
-        "python": [".py"]
+        "python": [".py"],
+        "c": [".c"],
+        "json": [".json"],
+        "rust": [".rs"],
+        "cpp": [".cpp"]
     }
 }

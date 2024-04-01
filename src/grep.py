@@ -73,8 +73,8 @@ class GrepResult(QListWidget):
         for i in content:
             self.addItem(i)
 
-    def text_editor(self, path=None, pyf=True) -> QsciScintilla:
-        editor = TextEditor(self.window, path=path, pyf=pyf)
+    def text_editor(self, path=None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None) -> QsciScintilla:
+        editor = TextEditor(self.window, path=path, pyf=pyf, cf=cf, jsonf=jsonf, rustf=rustf, cppf=cppf)
         return editor
 
     def valid_file_check(self, path):
@@ -88,7 +88,14 @@ class GrepResult(QListWidget):
         if path.is_dir():
             return
 
-        editor = self.text_editor(path, path.suffix in gsconfig.get_consideration("python"))
+        editor = self.text_editor(
+            path, 
+            path.suffix in gsconfig.get_consideration("python"), 
+            path.suffix in gsconfig.get_consideration("c"), 
+            path.suffix in gsconfig.get_consideration("json"),
+            path.suffix in gsconfig.get_consideration("rust"), 
+            path.suffix in gsconfig.get_consideration("cpp")
+        )
         if is_new_file:
             window.tab.addTab(editor, "untitled")
             window.setWindowTitle("untitled - " + window.app_title)

@@ -13,7 +13,7 @@ import gsconfig
 
 from pathlib import Path
 
-from language_lexer import PythonLexer
+from language_lexer import PythonLexer, CLexer, JSONLexer, RustLexer, CppLexer
 from code_completer import Completer
 
 
@@ -21,12 +21,16 @@ if TYPE_CHECKING:
     from main import MainWindow # prevents circular imports
 
 class TextEditor(QsciScintilla):
-    def __init__(self, window, parent = None, path = None, pyf=True):
+    def __init__(self, window, parent = None, path = None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None):
         super(TextEditor, self).__init__(parent)
         self.window = window
         self.path = path
         self.abs_path = self.path.absolute()
         self.pyf = pyf
+        self.cf = cf
+        self.jsonf = jsonf
+        self.rustf = rustf
+        self.cppf = cppf
         self.setUtf8(True)
 
         self.window_font = QFont("Fire Code")
@@ -61,15 +65,39 @@ class TextEditor(QsciScintilla):
         self.first_access = True
 
         # syntax highlighting
-        self.python_lexer = PythonLexer(self)
-        self.python_lexer.setDefaultFont(self.window_font)
+        self.lexer = PythonLexer(self)
+        self.lexer.setDefaultFont(self.window_font)
 
         if self.pyf:
-            self.python_lexer = PythonLexer(self)
-            self.python_lexer.setDefaultFont(self.window_font)
-            self.api = QsciAPIs(self.python_lexer)
+            self.lexer = PythonLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
             self.code_completer = Completer(self.abs_path, self.api)
-            self.setLexer(self.python_lexer)
+            self.setLexer(self.lexer)
+        elif self.cf:
+            self.lexer = CLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.jsonf:
+            self.lexer = JSONLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.rustf:
+            self.lexer = RustLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.cppf:
+            self.lexer = CppLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
         else:
             self.setPaper(QColor(gsconfig.get_color("primary-background")))
             self.setColor(QColor(gsconfig.get_color("primary-text")))
