@@ -267,12 +267,18 @@ class MenuBar(QMenuBar):
         else:
             self.status_bar.set_timed_message(f"Running files of type {file_path.suffix} is not supported.", 2000)
             return
+        if self.window.main_body_frame.terminal_widget.isVisible():
+            self.status_bar.set_timed_message(f"Running in terminal...", 2000)
+        else:
+            self.window.main_body_frame.terminal_widget.show()
+            self.status_bar.set_timed_message(f"Running in opened terminal...", 2000)
 
-        # Execute the command in the integrated terminal
         if command:
             terminal_process = self.window.main_body_frame.terminal_widget.terminal.process
             terminal_process.write(command.encode())
             terminal_process.waitForBytesWritten()
+        
+
     def run_main_command(self):
         pass
     def run_in_new_terminal_option(self):
