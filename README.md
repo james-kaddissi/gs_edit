@@ -6,3 +6,47 @@ Some new core features i've decided on is the implementation of rust into the pr
 The idea is that the base gs-edit will have python managing the frontend and rust managing the backend. This way the project
 has easy to code gui with pyqt5, vs more difficult gui if it was all in rust. Perhaps alternate distributions will be made entirely in rust
 but for now the main goal is to use rust to cleanup as match of the backend as possible. Power of Rust + Easy to Use Python
+
+Files and Languages With Supported Lexers: (* - supports run functionality)
+.py *
+.c *
+.cpp *
+.rs *
+.json 
+
+To be addded (in no particular order):
+.html - html
+.js - javascript
+.css - css
+.cs - c#
+.java - java
+.txt - plaintext
+.hs - haskell
+.go - go
+.rb - ruby
+.kt - kotlin
+.kts - kotlin script
+.ktm - kotlin module
+.php - php
+.swift - swift
+.ts - typescript
+.jsx - jsx
+.tsx - tsx
+.scss, .sass - sass
+.less - less
+.xml - xml
+.yaml, .yml - yaml
+.lua - lua
+.perl - perl
+.sh - shell script
+.md - markdown
+.r - r
+.dart - dart
+.groovy - groovy
+.pascal - pascal
+.scala - scala
+.vim - vim script
+.sqp - sql
+.pl - prolog
+.asm - assembly
+.vbs - VBScript

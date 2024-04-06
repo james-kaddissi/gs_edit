@@ -3,10 +3,10 @@ from PyQt5 import *
 from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-from PyQt5.QtWidgets import QWidget
 from pathlib import Path
 
 import os
+import subprocess
 
 class MenuBar(QMenuBar):
     def __init__(self, main_window, status_bar, file_explorer) -> None:
@@ -25,6 +25,7 @@ class MenuBar(QMenuBar):
         self.initialize_file_menu()
         self.initialize_edit_menu()
         self.initialize_selection_menu()
+        self.initialize_run_menu()
         self.initialize_terminal_menu()
     
     def initialize_file_menu(self):
@@ -45,6 +46,10 @@ class MenuBar(QMenuBar):
     def initialize_selection_menu(self):
         self.selection_menu = self.addMenu("Selection")
         self.selecting_options()
+    
+    def initialize_run_menu(self):
+        self.run_menu = self.addMenu("Run")
+        self.run_options()
 
     def initialize_terminal_menu(self):
         self.terminal_menu = self.addMenu("Terminal")
@@ -137,6 +142,20 @@ class MenuBar(QMenuBar):
         select_all.setShortcut("Ctrl+A")
         select_all.triggered.connect(self.select_all_command)
 
+    def run_options(self):
+        self.run_file_option()
+        self.run_main_option()
+        self.run_in_new_terminal_option()
+    def run_file_option(self):
+        run_file = self.run_menu.addAction("Run File")
+        run_file.triggered.connect(self.run_file_command)
+    def run_main_option(self):
+        run_main = self.run_menu.addAction("Run Main")
+        run_main.triggered.connect(self.run_main_command)
+    def run_in_new_terminal_option(self):
+        run_in_new_terminal = self.run_menu.addAction("Run in New Terminal")
+        run_in_new_terminal.triggered.connect(self.run_in_new_terminal_command)
+    
     def terminal_options(self):
         self.toggle_terminal_option()
     def toggle_terminal_option(self):
@@ -226,6 +245,41 @@ class MenuBar(QMenuBar):
         editor = self.window.tab.currentWidget()
         if editor is not None:
             editor.selectAll()
+    def run_file_command(self):
+        if self.window.current_file is None:
+            self.status_bar.set_timed_message("No file selected.", 2000)
+            return
+
+        file_path = Path(self.window.current_file)
+        command = None
+
+        if file_path.suffix == ".py":
+            command = f'python "{file_path}"\n' 
+        elif file_path.suffix == ".c":
+
+            command = f'gcc "{file_path}" -o "{file_path.stem}" && "{file_path.stem}"\n'
+        elif file_path.suffix == ".cpp":
+
+            command = f'g++ "{file_path}" -o "{file_path.stem}" && "{file_path.stem}"\n'
+        elif file_path.suffix == ".rs":
+            cargo_manifest_path = file_path.parent / "Cargo.toml"
+            command = f'cargo run --manifest-path "{cargo_manifest_path}"\n'
+        else:
+            self.status_bar.set_timed_message(f"Running files of type {file_path.suffix} is not supported.", 2000)
+            return
+
+        # Execute the command in the integrated terminal
+        if command:
+            terminal_process = self.window.main_body_frame.terminal_widget.terminal.process
+            terminal_process.write(command.encode())
+            terminal_process.waitForBytesWritten()
+    def run_main_command(self):
+        pass
+    def run_in_new_terminal_option(self):
+        pass
+
     def toggle_terminal(self):
         self.window.toggle_terminal()
+
+
     

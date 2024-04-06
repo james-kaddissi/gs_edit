@@ -71,7 +71,6 @@ class MainWindow(QMainWindow):
             self.main_body_frame.terminal_widget.hide()
         else:
             self.main_body_frame.terminal_widget.show()
-            self.main_body_frame.vertical_split.setSizes([self.height() * 0.75, self.height() * 0.25])
 
 
 if __name__ == '__main__':
