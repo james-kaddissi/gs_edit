@@ -158,9 +158,13 @@ class MenuBar(QMenuBar):
     
     def terminal_options(self):
         self.toggle_terminal_option()
+        self.new_terminal_option()
     def toggle_terminal_option(self):
-        toggle_terminal = self.terminal_menu.addAction("Toggle")
-        toggle_terminal.triggered.connect(self.toggle_terminal)
+        toggle_terminal = self.terminal_menu.addAction("Toggle Terminals")
+        toggle_terminal.triggered.connect(self.toggle_terminal_command)
+    def new_terminal_option(self):
+        new_terminal = self.terminal_menu.addAction("New Terminal")
+        new_terminal.triggered.connect(self.new_terminal_command)
 
     def new_file_command(self):
         self.window.add_tab(Path("untitled"), is_new_file=True)
@@ -284,8 +288,11 @@ class MenuBar(QMenuBar):
     def run_in_new_terminal_option(self):
         pass
 
-    def toggle_terminal(self):
+    def toggle_terminal_command(self):
         self.window.toggle_terminal()
+
+    def new_terminal_command(self):
+        self.window.main_body_frame.terminal_widget.add_new_terminal_tab()
 
 
     

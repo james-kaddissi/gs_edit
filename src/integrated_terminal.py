@@ -76,5 +76,17 @@ class IntegratedTerminal(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.layout = QVBoxLayout(self)
-        self.terminal = IntegratedTerminalTextEdit()
-        self.layout.addWidget(self.terminal)
+        self.tab_widget = QTabWidget()
+        self.layout.addWidget(self.tab_widget)
+        self.add_new_terminal_tab()
+
+    def add_new_terminal_tab(self):
+        terminal = IntegratedTerminalTextEdit()
+        self.tab_widget.addTab(terminal, "Terminal")
+        index = self.tab_widget.indexOf(terminal)
+        self.tab_widget.setCurrentIndex(index)
+        
+    def close_current_terminal_tab(self):
+        current_index = self.tab_widget.currentIndex()
+        if current_index != -1:
+            self.tab_widget.removeTab(current_index)
