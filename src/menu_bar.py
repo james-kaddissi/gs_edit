@@ -159,12 +159,16 @@ class MenuBar(QMenuBar):
     def terminal_options(self):
         self.toggle_terminal_option()
         self.new_terminal_option()
+        self.split_terminal_option()
     def toggle_terminal_option(self):
         toggle_terminal = self.terminal_menu.addAction("Toggle Terminals")
         toggle_terminal.triggered.connect(self.toggle_terminal_command)
     def new_terminal_option(self):
         new_terminal = self.terminal_menu.addAction("New Terminal")
         new_terminal.triggered.connect(self.new_terminal_command)
+    def split_terminal_option(self):
+        split_terminal = self.terminal_menu.addAction("Split Terminal")
+        split_terminal.triggered.connect(self.split_terminal_command)
 
     def new_file_command(self):
         self.window.add_tab(Path("untitled"), is_new_file=True)
@@ -293,6 +297,9 @@ class MenuBar(QMenuBar):
 
     def new_terminal_command(self):
         self.window.main_body_frame.terminal_widget.add_new_terminal_tab()
+
+    def split_terminal_command(self):
+        self.window.main_body_frame.terminal_widget.split_terminal_tab()
 
 
     
