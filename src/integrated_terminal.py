@@ -18,12 +18,6 @@ class IntegratedTerminalTextEdit(QTextEdit):
         self.command_start_position = self.textCursor().position()
         self.clicked = pyqtSignal()
 
-    def mouseReleaseEvent(self, event):
-        super().mouseReleaseEvent(event)
-        parent_widget = self.parent().parent().parent().parent()  
-        if isinstance(parent_widget, IntegratedTerminal):
-            parent_widget.update_active_terminal(self.parent().parent().currentIndex())
-
     def refresh_style(self):
         self.setStyleSheet(open("./src/css/integratedTerminal.qss", "r").read())
 
@@ -79,50 +73,28 @@ class IntegratedTerminalTextEdit(QTextEdit):
                 self.setTextCursor(cursor)
 
 
+
 class IntegratedTerminal(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.layout = QVBoxLayout(self)
-        self.splitter = QSplitter(Qt.Horizontal)
         self.tab_widget = QTabWidget()
-        self.splitter.addWidget(self.tab_widget)
-        self.layout.addWidget(self.splitter)
-        self.active_terminal = self.tab_widget
+        self.layout.addWidget(self.tab_widget)
         self.add_new_terminal_tab()
-        self.tab_widget.currentChanged.connect(self.update_active_terminal)
 
     def add_new_terminal_tab(self):
+        splitter = QSplitter(Qt.Horizontal)
         terminal = IntegratedTerminalTextEdit()
-        self.active_terminal.addTab(terminal, "Terminal")
-        index = self.tab_widget.indexOf(terminal)
-        self.active_terminal.setCurrentIndex(index)
+        splitter.addWidget(terminal)
+        self.tab_widget.addTab(splitter, "Terminal")
 
-
-    def update_active_terminal(self, index):
-        sender = self.sender()
-        if isinstance(sender, QTabWidget):
-            print(sender)
-            self.active_terminal = sender
-        
     def split_terminal_tab(self):
-        new_tab_widget = QTabWidget()
-        self.splitter.addWidget(new_tab_widget)
+        current_widget = self.tab_widget.currentWidget()
+        if isinstance(current_widget, QSplitter):
+            new_terminal = IntegratedTerminalTextEdit()
+            current_widget.addWidget(new_terminal)
 
-        if self.active_terminal.count() < 2:
-            self.add_new_terminal_tab()
-
-        for _ in range(self.active_terminal.count() // 2):
-            terminal_widget = self.active_terminal.widget(0)
-            terminal_index = self.active_terminal.indexOf(terminal_widget)
-            self.active_terminal.removeTab(terminal_index)
-            new_tab_widget.addTab(terminal_widget, "Terminal")
-        
-        self.active_terminal = new_tab_widget
-        self.active_terminal.currentChanged.connect(self.update_active_terminal)
-        self.active_terminal.tabBarClicked.connect(self.update_active_terminal)
-
-        
-    def close_current_terminal_tab(self):
-        current_index = self.active_terminal.currentIndex()
-        if current_index != -1:
-            self.active_terminal.removeTab(current_index)
+    def close_current_terminal(self):
+        current_widget = self.tab_widget.currentWidget()
+        if isinstance(current_widget, QSplitter) and current_widget.count() > 1:
+            current_widget.widget(current_widget.count() - 1).deleteLater()
