@@ -81,6 +81,11 @@ class IntegratedTerminal(QWidget):
         self.tab_widget = QTabWidget()
         self.layout.addWidget(self.tab_widget)
         self.add_new_terminal_tab()
+        self.refresh_style()
+
+
+    def refresh_style(self):
+        self.setStyleSheet(open("./src/css/integratedTerminal.qss", "r").read())
 
     def add_new_terminal_tab(self):
         splitter = QSplitter(Qt.Horizontal)

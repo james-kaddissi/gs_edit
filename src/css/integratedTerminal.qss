@@ -1,6 +1,31 @@
+QTabWidget::pane {
+    border: 0;
+}
+
+QTabBar::tab {
+    background-color: "black";
+    color: "green";
+    padding: 10px;
+    border: 1px solid "green";
+    border-left-color: "black"; 
+    width: 50px;
+    height: 20px;
+    
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background-color: "white";
+    border-color: "black";
+}
+
 QTextEdit {
     background-color: "black";
     color: "green";
     font-family: "Fixedsys";
-    border: none;
+    border: 1px solid "green";
+}
+
+QVBoxLayout {
+    margin: -10px;
+    padding: -10px;
 }
