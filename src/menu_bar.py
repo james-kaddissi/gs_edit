@@ -265,7 +265,7 @@ class MenuBar(QMenuBar):
         
         self.status_bar.showMessage("No folder open", 2000)
     def close_window_command(self):
-        pass
+        self.window.close()
     def undo_command(self):
         editor = self.window.tab.currentWidget()
         if editor is not None:
