@@ -27,6 +27,7 @@ class MenuBar(QMenuBar):
         self.initialize_selection_menu()
         self.initialize_run_menu()
         self.initialize_terminal_menu()
+        self.initialize_style_menu()
     
     def initialize_file_menu(self):
         self.file_menu = self.addMenu("File")
@@ -64,6 +65,10 @@ class MenuBar(QMenuBar):
     def initialize_terminal_menu(self):
         self.terminal_menu = self.addMenu("Terminal")
         self.terminal_options()
+    
+    def initialize_style_menu(self):
+        self.style_menu = self.addMenu("Styling")
+        self.style_options()
 
     def new_options(self): 
         self.new_file_option()
@@ -196,6 +201,13 @@ class MenuBar(QMenuBar):
     def split_terminal_option(self):
         split_terminal = self.terminal_menu.addAction("Split Terminal")
         split_terminal.triggered.connect(self.split_terminal_command)
+
+    def style_options(self):
+        self.edit_style_option()
+    def edit_style_option(self):
+        edit_css = QAction("Edit Styles", self)
+        edit_css.triggered.connect(self.edit_style_command)
+        self.style_menu.addAction(edit_css)
 
     def new_file_command(self):
         self.window.add_tab(Path("untitled"), is_new_file=True)
@@ -337,6 +349,9 @@ class MenuBar(QMenuBar):
 
     def split_terminal_command(self):
         self.window.main_body_frame.terminal_widget.split_terminal_tab()
+    
+    def edit_style_command(self):
+        self.window.open_css_editor()
 
 
     

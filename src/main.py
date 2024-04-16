@@ -17,6 +17,7 @@ from tab_bar import TabBar
 from main_body import MainBodyFrame
 from sidebar import Sidebar
 from tools import FileExplorerFrame, GrepFrame
+from css_editor import CSSEditor
 # Other function imports
 import gsconfig
 
@@ -31,6 +32,7 @@ class MainWindow(QMainWindow):
         self.initialize_window()
         self.current_file = None
         self.current_tool = "folder"
+        self.css_editor = CSSEditor(self)
 
     def initialize_window(self):
         # window configuration
@@ -71,6 +73,12 @@ class MainWindow(QMainWindow):
             self.main_body_frame.terminal_widget.hide()
         else:
             self.main_body_frame.terminal_widget.show()
+
+    def open_css_editor(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open CSS File", "./src/css", "CSS Files (*.qss)")
+        if file_path:
+            self.css_editor.load_css(file_path)
+            self.css_editor.show()
 
 
 if __name__ == '__main__':
