@@ -36,6 +36,8 @@ class MenuBar(QMenuBar):
         self.file_menu.addSeparator()
         self.save_options()
         self.file_menu.addSeparator()
+        self.close_options()
+        self.file_menu.addSeparator()
         self.exit_option()
     
     def exit_option(self):
@@ -113,6 +115,23 @@ class MenuBar(QMenuBar):
         save_all = self.file_menu.addAction("Save All")
         save_all.setShortcut("Ctrl+K S")
         save_all.triggered.connect(self.save_all_command)
+    
+    def close_options(self):
+        self.close_editor_option()
+        self.close_folder_option()
+        self.close_window_option()
+    def close_editor_option(self): 
+        close_editor = self.file_menu.addAction("Close Editor")
+        close_editor.setShortcut("Ctrl+F4")
+        close_editor.triggered.connect(self.close_editor_command)
+    def close_folder_option(self): 
+        close_folder = self.file_menu.addAction("Close Folder")
+        close_folder.setShortcut("Ctrl+K F")
+        close_folder.triggered.connect(self.close_folder_command)
+    def close_window_option(self): 
+        close_window = self.file_menu.addAction("Close Window")
+        close_window.setShortcut("Alt+F4")
+        close_window.triggered.connect(self.close_window_command)
     
     def undo_redo_options(self): 
         self.undo_option()
@@ -237,6 +256,12 @@ class MenuBar(QMenuBar):
                     self.save_as_command()
                 else:
                     self.save_command()
+    def close_editor_command(self):
+        pass
+    def close_folder_command(self):
+        pass
+    def close_window_command(self):
+        pass
     def undo_command(self):
         editor = self.window.tab.currentWidget()
         if editor is not None:
