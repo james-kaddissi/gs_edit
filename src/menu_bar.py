@@ -257,7 +257,7 @@ class MenuBar(QMenuBar):
                 else:
                     self.save_command()
     def close_editor_command(self):
-        pass
+        self.window.tab.close_current_tab(self.window.tab.currentIndex())
     def close_folder_command(self):
         pass
     def close_window_command(self):
