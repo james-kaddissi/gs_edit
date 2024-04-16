@@ -59,6 +59,20 @@ class FileExplorer(QTreeView):
 
         self.itemDelegate().closeEditor.connect(self.close_editor)
 
+    def set_no_root(self):
+        # Clear the root path
+        self.file_system_model.setRootPath("No Folder Opened")
+        self.setRootIndex(QModelIndex()) 
+        self.setEnabled(False) 
+
+    def set_root_path(self, path):
+        self.file_system_model.setRootPath(path)
+        self.setRootIndex(self.file_system_model.index(path))
+        self.setEnabled(True)  
+
+    def enable_explorer(self):
+        self.setEnabled(True)
+
     def close_editor(self, editor):
         if self.rename:
             self.renamefn()

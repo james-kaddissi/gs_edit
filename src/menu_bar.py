@@ -219,9 +219,11 @@ class MenuBar(QMenuBar):
     def open_folder_command(self):
         new_folder = QFileDialog.getExistingDirectory(self.window, "Pick A Folder", "")
         if new_folder:
-            self.window.file_explorer_frame.file_explorer.file_system_model.setRootPath(new_folder)
-            self.window.file_explorer_frame.file_explorer.setRootIndex(self.window.file_explorer_frame.file_explorer.file_system_model.index(new_folder))
+            # Set the root path of the file explorer to the new folder and re-enable it
+            self.file_explorer.set_root_path(new_folder)
             self.status_bar.set_timed_message(f"Changed folder to {new_folder}", 2000)
+        else:
+            self.status_bar.set_timed_message("Folder opening cancelled.", 2000)
     def open_project_command(self):
         self.status_bar.set_timed_message("Project functionality to be added...", 3000)
     def save_command(self):
@@ -259,7 +261,9 @@ class MenuBar(QMenuBar):
     def close_editor_command(self):
         self.window.tab.close_current_tab(self.window.tab.currentIndex())
     def close_folder_command(self):
-        pass
+        self.file_explorer.set_no_root()
+        
+        self.status_bar.showMessage("No folder open", 2000)
     def close_window_command(self):
         pass
     def undo_command(self):
