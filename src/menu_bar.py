@@ -36,6 +36,14 @@ class MenuBar(QMenuBar):
         self.file_menu.addSeparator()
         self.save_options()
         self.file_menu.addSeparator()
+        self.exit_option()
+    
+    def exit_option(self):
+        exit = self.file_menu.addAction("Exit")
+        exit.triggered.connect(self.exit_command)
+    
+    def exit_command(self):
+        self.window.close()
     
     def initialize_edit_menu(self):
         self.edit_menu = self.addMenu("Edit")
