@@ -75,10 +75,7 @@ class MainWindow(QMainWindow):
             self.main_body_frame.terminal_widget.show()
 
     def open_css_editor(self):
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open CSS File", "./src/css", "CSS Files (*.qss)")
-        if file_path:
-            self.css_editor.load_css(file_path)
-            self.css_editor.show()
+        self.css_editor.show()
 
 
 if __name__ == '__main__':
