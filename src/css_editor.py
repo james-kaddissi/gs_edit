@@ -32,18 +32,13 @@ class CSSEditor(QMainWindow):
         self.property_layout = QVBoxLayout(self.property_editor)
         self.property_editor.setLayout(self.property_layout)
 
-        # Save and Reload Buttons
         self.save_button = QPushButton("Save")
         self.save_button.clicked.connect(self.save_css)
         self.apply_button = QPushButton("Apply Styles")
         self.apply_button.clicked.connect(self.apply_styles)
         self.reload_button = QPushButton("Reload")
         self.reload_button.clicked.connect(self.reload_styles)
-        self.buttons_layout = QHBoxLayout()
-        self.buttons_layout.addWidget(self.save_button)
-        self.buttons_layout.addWidget(self.apply_button)
-        self.buttons_layout.addWidget(self.reload_button)
-        self.property_layout.addLayout(self.buttons_layout)
+        
 
         self.statusBar()
         self.load_file_list()
@@ -101,6 +96,12 @@ class CSSEditor(QMainWindow):
         except Exception as e:
             self.statusBar().showMessage(f"Failed to load file: {e}")
         self.property_layout.addWidget(self.list_view)
+
+        self.buttons_layout = QHBoxLayout()
+        self.buttons_layout.addWidget(self.save_button)
+        self.buttons_layout.addWidget(self.apply_button)
+        self.buttons_layout.addWidget(self.reload_button)
+        self.property_layout.addLayout(self.buttons_layout)
 
     def save_css(self):
         css_content = ""
