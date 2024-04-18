@@ -46,6 +46,7 @@ class CSSEditor(QMainWindow):
         if not current:
             return
 
+        # Clear the existing widgets
         for i in reversed(range(self.property_layout.count())): 
             widget_to_remove = self.property_layout.itemAt(i).widget()
             if widget_to_remove is not None:
@@ -60,11 +61,21 @@ class CSSEditor(QMainWindow):
         try:
             with open(file_path, 'r') as file:
                 css_content = file.read()
-                for line in css_content.split(';'):
+
+            # Split content into blocks based on curly braces
+            blocks = self.extract_blocks(css_content)
+
+            for block in blocks:
+                # Create a label for the widget being styled
+                widget_name, styles = block
+                self.list_view.addItem(QListWidgetItem(f"{widget_name} Styles:"))
+
+                # Process each property within the block
+                for line in styles.split(';'):
                     if ':' in line:
                         prop, value = line.split(':')
                         prop, value = prop.strip(), value.strip()
-                        
+
                         widget = QWidget()
                         row_layout = QHBoxLayout(widget)
 
@@ -73,7 +84,7 @@ class CSSEditor(QMainWindow):
                         if is_color_property(prop):
                             color_button = QPushButton()
                             color_button.setStyleSheet(f"background-color: {value}; border: none;")
-                            color_button.clicked.connect(lambda _, p=prop, v=value: self.change_color(p, v, color_button))
+                            color_button.clicked.connect(lambda _, p=prop, v=value, b=color_button: self.change_color(p, v, b))
                             row_layout.addWidget(color_button)
                         else:
                             editor = QLineEdit(value)
@@ -88,6 +99,12 @@ class CSSEditor(QMainWindow):
             self.statusBar().showMessage(f"Failed to load file: {e}")
 
         self.property_layout.addWidget(self.list_view)
+
+    def extract_blocks(self, css_content):
+        import re
+        pattern = r"(\w+[^{]*)\s*\{([^\}]*)\}"
+        matches = re.findall(pattern, css_content)
+        return [(match[0].strip(), match[1].strip()) for match in matches]
 
     def change_color(self, property_name, current_color, button):
         color = QColorDialog.getColor(css_to_qcolor(current_color))
