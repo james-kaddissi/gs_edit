@@ -50,7 +50,7 @@ class GrepResult(QListWidget):
         self.initialize_results()
 
     def initialize_results(self):
-        self.setFont(QFont("Consolas", 14))
+        self.setFont(QFont("Fixedsys", 14))
         self.setStyleSheet("""
             QListWidget {
                 background-color: #0C0C1A;

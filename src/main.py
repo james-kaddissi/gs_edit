@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
         self.resize(1400, 1000)
         # initialize styles
         self.setStyleSheet(open("./src/css/style.qss", "r").read())
-        self.window_font = QFont("Consolas")
+        self.window_font = QFont("Fixedsys")
         self.window_font.setPointSize(12)
         self.setFont(self.window_font)
         self.configure_statusbar()

@@ -1,1 +1,23 @@
-background-color: "white";
+QListWidget {
+    background-color: "#1F2933";
+    border: none;
+    font-family: "Fixedsys";
+}
+
+QLabel {
+    font-family: "Fixedsys";
+}
+
+QListWidget::item {
+    background-color: "#323F4B";
+    color: "#CBD2D9";
+    font-family: "Fixedsys";
+}
+
+QSplitter::handle {
+    background-color: #52606D;
+}
+
+QScrollArea {
+    background-color: "#1F2933";
+}

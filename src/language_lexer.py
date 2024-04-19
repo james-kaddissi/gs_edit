@@ -29,7 +29,7 @@ class GSLexer(QsciLexerCustom):
             base_config = {}
             base_config["text-color"] = "#ffffff"
             base_config["background-color"] = "#0C0C1A"
-            base_config["font-family"] = "Consolas"
+            base_config["font-family"] = "Fixedsys"
             base_config["font-size"] = 14
 
         self.setDefaultColor(QColor(base_config["text-color"]))

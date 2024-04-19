@@ -7,7 +7,7 @@
                 "default": {
                     "text-color": "#DDEAFC",
                     "page-color": "#0C0C1A",
-                    "font-family": "Consolas",
+                    "font-family": "Fixedsys",
                     "font-size": 14,
                     "font-weight": "normal",
                     "italic": false,
@@ -19,7 +19,7 @@
                 "keyword": {
                     "text-color": "#c678dd",
                     "page-color": "#0C0C1A",
-                    "font-family": "Consolas",
+                    "font-family": "Fixedsys",
                     "font-size": 14, 
                     "font-weight": "normal",
                     "italic": false,
@@ -31,7 +31,7 @@
                 "types": {
                     "text-color": "#56b6c2",
                     "page-color": "#0C0C1A",
-                    "font-family": "Consolas",
+                    "font-family": "Fixedsys",
                     "font-size": 14, 
                     "font-weight": "normal",
                     "italic": false,
@@ -43,7 +43,7 @@
                 "string": {
                     "text-color": "#98c379",
                     "page-color": "#0C0C1A",
-                    "font-family": "Consolas",
+                    "font-family": "Fixedsys",
                     "font-size": 14, 
                     "font-weight": "normal",
                     "italic": false,
@@ -55,7 +55,7 @@
                 "keyargs": {
                     "text-color": "#4D0064",
                     "page-color": "#0C0C1A",
-                    "font-family": "Consolas",
+                    "font-family": "Fixedsys",
                     "font-size": 14, 
                     "font-weight": "normal",
                     "italic": false,
@@ -67,7 +67,7 @@
                 "brackets": {
                     "text-color": "#00F329",
                     "page-color": "#0C0C1A",
-                    "font-family": "Consolas",
+                    "font-family": "Fixedsys",
                     "font-size": 14, 
                     "font-weight": "normal",
                     "italic": false,
@@ -79,7 +79,7 @@
                 "comments": {
                     "text-color": "#777777",
                     "page-color": "#0C0C1A",
-                    "font-family": "Consolas",
+                    "font-family": "Fixedsys",
                     "font-size": 14, 
                     "font-weight": "normal",
                     "italic": false,
@@ -91,7 +91,7 @@
                 "constants": {
                     "text-color": "#d19a5e",
                     "page-color": "#0C0C1A",
-                    "font-family": "Consolas",
+                    "font-family": "Fixedsys",
                     "font-size": 14, 
                     "font-weight": "normal",
                     "italic": false,
@@ -103,7 +103,7 @@
                 "functions": {
                     "text-color": "#61afd1",
                     "page-color": "#0C0C1A",
-                    "font-family": "Consolas",
+                    "font-family": "Fixedsys",
                     "font-size": 14, 
                     "font-weight": "normal",
                     "italic": false,
@@ -115,7 +115,7 @@
                 "classes": {
                     "text-color": "#C68F55",
                     "page-color": "#0C0C1A",
-                    "font-family": "Consolas",
+                    "font-family": "Fixedsys",
                     "font-size": 14, 
                     "font-weight": "normal",
                     "italic": false,
@@ -127,7 +127,7 @@
                 "function_def": {
                     "text-color": "#16C096",
                     "page-color": "#0C0C1A",
-                    "font-family": "Consolas",
+                    "font-family": "Fixedsys",
                     "font-size": 14, 
                     "font-weight": "normal",
                     "italic": false,

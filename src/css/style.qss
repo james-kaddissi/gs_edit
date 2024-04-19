@@ -145,6 +145,6 @@ QListView::item:select {
 
 
 QTreeView {
-    background-color: #0C0C1A; /* This affects the color of the background of the file explorer */
-    color: white; /* This affects the color of the names of files and folders in the file explorer */
+    background-color: #0C0C1A; 
+    color: white;
 }

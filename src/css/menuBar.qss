@@ -4,12 +4,12 @@ QMenuBar {
     padding: 3px;
     color: #c678dd;
     font-size: 14px;
-    font-family: 'Consolas';
+    font-family: 'Fixedsys';
 }
 
 QMenuBar::item {
     background-color:#0C0C1A;
     padding: 3px;
     color: #c678dd;
-    font-family: 'Consolas';
+    font-family: 'Fixedsys';
 }
