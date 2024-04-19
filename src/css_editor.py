@@ -63,6 +63,10 @@ class CSSEditor(QMainWindow):
         self.refresh_css_editor(self.current_file)
 
     def refresh_css_editor(self, file_path):
+        while self.property_layout.count():
+            child = self.property_layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
         self.property_layout.addWidget(QLabel(f"Editing: {file_path}"))
         self.list_view = QListWidget()
         self.list_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
