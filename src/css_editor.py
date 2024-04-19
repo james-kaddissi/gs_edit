@@ -3,7 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import os
 import re
-
+import sys
 def is_color_property(prop_name):
     color_props = ['color', 'background-color', 'border-color']
     return any(prop in prop_name for prop in color_props)
@@ -21,6 +21,7 @@ class CSSEditor(QMainWindow):
 
         self.splitter = QSplitter(self)
         self.setCentralWidget(self.splitter)
+        
 
         self.file_browser = QListWidget(self.splitter)
         self.file_browser.currentItemChanged.connect(self.load_css_properties)
@@ -34,22 +35,20 @@ class CSSEditor(QMainWindow):
 
         self.save_button = QPushButton("Save")
         self.save_button.clicked.connect(self.save_css)
-        self.apply_button = QPushButton("Apply Styles")
-        self.apply_button.clicked.connect(self.apply_styles)
-        self.reload_button = QPushButton("Reload")
-        self.reload_button.clicked.connect(self.reload_styles)
+        self.apply_button = QPushButton("Reload")
+        self.apply_button.clicked.connect(self.restart_program)
+        self.reload_button = QPushButton("Save and Reload")
+        self.reload_button.clicked.connect(self.apply_styles)
         
 
         self.statusBar()
         self.load_file_list()
         self.refresh_style()
+        self.splitter.setSizes([300, 500])
 
     def refresh_style(self):
-        try:
-            with open("./src/css/cssEditor.qss", "r") as f:
-                self.setStyleSheet(f.read())
-        except Exception as e:
-            self.statusBar().showMessage(f"Failed to load style: {e}")
+        with open("./src/css/cssEditor.qss", "r") as f:
+            self.setStyleSheet(f.read())
 
     def load_file_list(self):
         path = './src/css'
@@ -67,27 +66,33 @@ class CSSEditor(QMainWindow):
         self.property_layout.addWidget(QLabel(f"Editing: {file_path}"))
         self.list_view = QListWidget()
         self.list_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.css_blocks = {} 
         try:
             with open(file_path, 'r') as file:
                 css_content = file.read()
             blocks = self.extract_blocks(css_content)
-            for block in blocks:
-                widget_name, styles = block
+            for widget_name, styles in blocks:
+                self.css_blocks[widget_name] = {}
                 self.list_view.addItem(QListWidgetItem(f"{widget_name} Styles:"))
                 for line in styles.split(';'):
                     if ':' in line:
                         prop, value = line.split(':')
                         prop, value = prop.strip(), value.strip()
+                        self.css_blocks[widget_name][prop] = value  
                         widget = QWidget()
+                        widget.setProperty('css_selector', widget_name) 
                         row_layout = QHBoxLayout(widget)
                         row_layout.addWidget(QLabel(prop))
                         if is_color_property(prop):
                             color_button = QPushButton()
                             color_button.setStyleSheet(f"background-color: {value}; border: none;")
-                            color_button.clicked.connect(lambda _, p=prop, v=value, b=color_button: self.change_color(p, v, b))
+                            color_button.clicked.connect(lambda _, p=prop, v=value, b=color_button, s=widget_name:
+                                self.change_color(p, v, b, s))
                             row_layout.addWidget(color_button)
                         else:
                             editor = QLineEdit(value)
+                            editor.textChanged.connect(lambda v, p=prop, s=widget_name:
+                                                       self.update_property_value(s, p, v))
                             row_layout.addWidget(editor)
                         list_item = QListWidgetItem(self.list_view)
                         list_item.setSizeHint(widget.sizeHint())
@@ -105,23 +110,29 @@ class CSSEditor(QMainWindow):
 
     def save_css(self):
         css_content = ""
-        for i in range(self.list_view.count()):
-            item = self.list_view.item(i)
-            widget = self.list_view.itemWidget(item)
-            if widget:
-                layout = widget.layout()
-                if layout:
-                    label = layout.itemAt(0).widget().text()
-                    editor = layout.itemAt(1).widget()
-                    value = editor.text() if isinstance(editor, QLineEdit) else editor.styleSheet().split(':')[1].split(';')[0].strip()
-                    css_content += f"{label}: {value};\n"
+        for selector, properties in self.css_blocks.items():
+            css_content += f"{selector} {{" + "\n"
+            for prop, value in properties.items():
+                css_content += f"    {prop}: {value};\n"
+            css_content += "}\n\n"
         with open(self.current_file, 'w') as file:
             file.write(css_content)
         self.statusBar().showMessage("CSS saved successfully.")
 
-    def apply_styles(self):
-        self.refresh_style()
+    def update_property_value(self, selector, property_name, value):
+        if selector in self.css_blocks:
+            self.css_blocks[selector][property_name] = value
 
+    def restart_program(self):
+        try:
+            python = sys.executable
+            os.execl(python, python, *sys.argv)
+        except Exception as e:
+            self.statusBar().showMessage(f"Failed to restart: {e}")
+
+    def apply_styles(self):
+        self.save_css() 
+        self.restart_program()
     def reload_styles(self):
         self.refresh_css_editor(self.current_file)
 
@@ -130,9 +141,10 @@ class CSSEditor(QMainWindow):
         matches = re.findall(pattern, css_content)
         return [(match[0].strip(), match[1].strip()) for match in matches]
 
-    def change_color(self, property_name, current_color, button):
+    def change_color(self, property_name, current_color, button, selector):
         color = QColorDialog.getColor(css_to_qcolor(current_color))
         if color.isValid():
-            button.setStyleSheet(f"background-color: {color.name()}; border: none;")
-            button.setText(color.name()) 
+            new_color = color.name()
+            button.setStyleSheet(f"background-color: {new_color}; border: none;")
+            self.update_property_value(selector, property_name, new_color)
 
