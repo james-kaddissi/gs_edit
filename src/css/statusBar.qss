@@ -1,5 +1,6 @@
 QStatusBar {
     color: #ff0000;
     background-color: #000000;
+    font-size: 14px;
 }
 

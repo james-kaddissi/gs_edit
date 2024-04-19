@@ -19,6 +19,9 @@ class CSSEditor(QMainWindow):
         self.setWindowTitle("CSS Editor")
         self.resize(800, 600)
 
+        self.valid_properties = ['color', 'background-color', 'border-color', 'font-size', 'margin', 'padding']  
+
+
         self.splitter = QSplitter(self)
         self.setCentralWidget(self.splitter)
         
@@ -70,6 +73,8 @@ class CSSEditor(QMainWindow):
         self.property_layout.addWidget(QLabel(f"Editing: {file_path}"))
         self.list_view = QListWidget()
         self.list_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.list_view.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.list_view.customContextMenuRequested.connect(self.show_context_menu)
         self.css_blocks = {} 
         try:
             with open(file_path, 'r') as file:
@@ -77,7 +82,9 @@ class CSSEditor(QMainWindow):
             blocks = self.extract_blocks(css_content)
             for widget_name, styles in blocks:
                 self.css_blocks[widget_name] = {}
-                self.list_view.addItem(QListWidgetItem(f"{widget_name} Styles:"))
+                header_item = QListWidgetItem(f"{widget_name} Styles:")
+                header_item.setData(Qt.UserRole, widget_name)
+                self.list_view.addItem(header_item)
                 for line in styles.split(';'):
                     if ':' in line:
                         prop, value = line.split(':')
@@ -126,6 +133,7 @@ class CSSEditor(QMainWindow):
     def update_property_value(self, selector, property_name, value):
         if selector in self.css_blocks:
             self.css_blocks[selector][property_name] = value
+            self.save_css() 
 
     def restart_program(self):
         try:
@@ -151,4 +159,25 @@ class CSSEditor(QMainWindow):
             new_color = color.name()
             button.setStyleSheet(f"background-color: {new_color}; border: none;")
             self.update_property_value(selector, property_name, new_color)
+
+    def show_context_menu(self, position):
+        item = self.list_view.itemAt(position)
+        if item is not None:
+            menu = QMenu()
+            add_property_action = menu.addAction("Add Property")
+            action = menu.exec_(self.list_view.viewport().mapToGlobal(position))
+            if action == add_property_action:
+                self.add_new_property(item)
+
+    def add_new_property(self, item):
+        if item.data(Qt.UserRole):
+            selector = item.data(Qt.UserRole)
+            key, ok = QInputDialog.getItem(self, "Select Property", "Choose a CSS property to add:", self.valid_properties, 0, False)
+            if ok and key:
+                value, ok = QInputDialog.getText(self, "Enter Value", "Enter the value for the property:")
+                if ok and value:
+                    if selector in self.css_blocks:
+                        self.css_blocks[selector][key] = value
+                        self.save_css()
+                    self.refresh_css_editor(self.current_file) 
 

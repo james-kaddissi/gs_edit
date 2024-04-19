@@ -3,13 +3,13 @@ QMenuBar {
     border: 1px solid #0C0C1A;
     padding: 3px;
     color: #c678dd;
-    font-size: 14px;
     font-family: 'Fixedsys';
 }
 
 QMenuBar::item {
-    background-color:#0C0C1A;
+    background-color: #0C0C1A;
     padding: 3px;
     color: #c678dd;
     font-family: 'Fixedsys';
 }
+
