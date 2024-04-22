@@ -52,24 +52,38 @@ class ToolLabel(QLabel):
         self.path = path
         self.id = id
         self.window = window
+        self.isSelected = False  # Track if the label is selected
         self.initialize_label()
 
     def initialize_label(self):
         self.setPixmap(QPixmap(self.path).scaled(QSize(35, 35)))
         self.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.setFont(self.window.window_font)
-        if(self.id == "folder"):
-            self.mousePressEvent = lambda e: self.toolbar_toggle(self.id)
-        elif(self.id == "grep"):
-            self.mousePressEvent = lambda e: self.toolbar_toggle(self.id)
-        self.enterEvent = self.change_cursor("pointer")
-        self.leaveEvent = self.change_cursor("arrow")
-    def change_cursor(self, name):
-        if name == "pointer":
-            self.window.setCursor(Qt.PointingHandCursor)
-        elif name == "arrow":
-            self.window.setCursor(Qt.ArrowCursor)
-    
+        self.update_style()
+        self.mousePressEvent = self.on_mouse_press
+        self.enterEvent = self.on_mouse_enter
+        self.leaveEvent = self.on_mouse_leave
+
+    def update_style(self):
+        if self.isSelected:
+            self.setStyleSheet("background-color: #a3be8c;")
+        else:
+            self.setStyleSheet("background-color: none;")  
+
+    def on_mouse_press(self, event):
+        self.isSelected = not self.isSelected 
+        self.update_style()
+        self.toolbar_toggle(self.id)
+
+    def on_mouse_enter(self, event):
+        if not self.isSelected:
+            self.setStyleSheet("background-color: #ebcb8b;")
+        super().enterEvent(event)
+
+    def on_mouse_leave(self, event):
+        self.update_style() 
+        super().leaveEvent(event)
+
     def toolbar_toggle(self, tool):
         if tool == "folder":
             if self.window.current_tool != "folder":

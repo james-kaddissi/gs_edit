@@ -80,11 +80,11 @@ class Grepgine(QThread):
                                     )
                                     self.content.append(prep)
                         except re.error as err:
-                            if gsconfig.get_config("debugMode"):
+                            if gsedit.gsconfig.get_config("debugMode"):
                                 print(err)
                             
                 except:
-                    if gsconfig.get_config("debugMode"):
+                    if gsedit.gsconfig.get_config("debugMode"):
                         print(err)
                     continue
         self.final_result.emit(self.content)

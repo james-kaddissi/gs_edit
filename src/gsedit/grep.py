@@ -94,12 +94,12 @@ class GrepResult(QListWidget):
             return
 
         editor = self.text_editor(
-            path, 
-            path.suffix in gsconfig.get_consideration("python"), 
-            path.suffix in gsconfig.get_consideration("c"), 
-            path.suffix in gsconfig.get_consideration("json"),
-            path.suffix in gsconfig.get_consideration("rust"), 
-            path.suffix in gsconfig.get_consideration("cpp")
+            path,
+            path.suffix in gsedit.gsconfig.get_consideration("python"), 
+            path.suffix in gsedit.gsconfig.get_consideration("c"), 
+            path.suffix in gsedit.gsconfig.get_consideration("json"),
+            path.suffix in gsedit.gsconfig.get_consideration("rust"), 
+            path.suffix in gsedit.gsconfig.get_consideration("cpp")
         )
         if is_new_file:
             window.tab.addTab(editor, "untitled")

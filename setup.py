@@ -12,7 +12,7 @@ setup(
     packages=find_packages(where='src'),
     package_dir={'': 'src'},
     package_data={
-        'gsedit': ['css/*.qss', 'images/*.png', 'images/*.svg'],
+        'gsedit': ['css/*.qss', 'images/*.png', 'images/*.svg', 'images/*.qrc'],
     },
     install_requires=[
         'PyQt5',  

@@ -99,8 +99,8 @@ class TextEditor(QsciScintilla):
             self.code_completer = Completer(self.abs_path, self.api)
             self.setLexer(self.lexer)
         else:
-            self.setPaper(QColor(gsconfig.get_color("primary-background")))
-            self.setColor(QColor(gsconfig.get_color("primary-text")))
+            self.setPaper(QColor(gsedit.gsconfig.get_color("primary-background")))
+            self.setColor(QColor(gsedit.gsconfig.get_color("primary-text")))
 
 
         self.setMarginType(0, QsciScintilla.NumberMargin)
