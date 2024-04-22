@@ -11,22 +11,22 @@ from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 # Class imports
-from status_bar import StatusBar
-from menu_bar import MenuBar
-from tab_bar import TabBar
-from main_body import MainBodyFrame
-from sidebar import Sidebar
-from tools import FileExplorerFrame, GrepFrame
-from css_editor import CSSEditor
+from gsedit.status_bar import StatusBar
+from gsedit.menu_bar import MenuBar
+from gsedit.tab_bar import TabBar
+from gsedit.main_body import MainBodyFrame
+from gsedit.sidebar import Sidebar
+from gsedit.tools import FileExplorerFrame, GrepFrame
+from gsedit.css_editor import CSSEditor
 # Other function imports
-import gsconfig
+import gsedit.gsconfig
 
 class MainWindow(QMainWindow):
     def __init__(self):
         # CONFIG
         super(QMainWindow, self).__init__()
         self.app_title = "GS-Edit"
-        self.app_icon = QIcon("./src/images/icon.png")
+        self.app_icon = QIcon("./src/gsedit/images/icon.png")
         self.setWindowIcon(self.app_icon)
         self.app_version = "0.1.0"
         self.initialize_window()
@@ -38,8 +38,10 @@ class MainWindow(QMainWindow):
         # window configuration
         self.setWindowTitle(self.app_title)
         self.resize(1400, 1000)
-        # initialize styles
-        self.setStyleSheet(open("./src/css/style.qss", "r").read())
+        base_path = os.path.dirname(__file__)
+        style_sheet_path = os.path.join(base_path, 'css', 'style.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read())
         self.window_font = QFont("Fixedsys")
         self.window_font.setPointSize(12)
         self.setFont(self.window_font)

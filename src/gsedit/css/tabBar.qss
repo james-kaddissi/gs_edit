@@ -20,5 +20,5 @@ QTabBar::tab::selected {
 }
 
 QTabBar::close-button {
-    image: url("./src/images/close.svg");
+    image: url("url_placeholder");
 }

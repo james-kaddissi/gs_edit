@@ -5,8 +5,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from pathlib import Path
-from text_editor import TextEditor
-import gsconfig
+from gsedit.text_editor import TextEditor
+import gsedit.gsconfig
+
+import os
 
 class GrepLayout(QVBoxLayout):
     def __init__(self) -> None:
@@ -41,7 +43,10 @@ class GrepToggle(QCheckBox):
         self.setFont(self.window.window_font)
 
     def refresh_style(self):
-        self.setStyleSheet(open("./src/css/grep.qss", "r").read())
+        base_path = os.path.dirname(__file__) 
+        style_sheet_path = os.path.join(base_path, 'css', 'grep.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read())
 
 class GrepResult(QListWidget):
     def __init__(self, window) -> None:

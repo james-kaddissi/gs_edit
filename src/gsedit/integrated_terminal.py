@@ -19,7 +19,10 @@ class IntegratedTerminalTextEdit(QTextEdit):
         self.clicked = pyqtSignal()
 
     def refresh_style(self):
-        self.setStyleSheet(open("./src/css/integratedTerminal.qss", "r").read())
+        base_path = os.path.dirname(__file__)
+        style_sheet_path = os.path.join(base_path, 'css', 'integratedTerminal.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read())
 
     def keyPressEvent(self, event):
         cursor = self.textCursor()
@@ -85,7 +88,10 @@ class IntegratedTerminal(QWidget):
 
 
     def refresh_style(self):
-        self.setStyleSheet(open("./src/css/integratedTerminal.qss", "r").read())
+        base_path = os.path.dirname(__file__) 
+        style_sheet_path = os.path.join(base_path, 'css', 'integratedTerminal.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read())
 
     def add_new_terminal_tab(self):
         splitter = QSplitter(Qt.Horizontal)

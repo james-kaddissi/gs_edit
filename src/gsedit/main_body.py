@@ -4,9 +4,9 @@ from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from integrated_terminal import IntegratedTerminal
+from gsedit.integrated_terminal import IntegratedTerminal
 
-
+import os
 
 class MainBodyFrame(QFrame):
     def __init__(self, window) -> None:
@@ -17,7 +17,10 @@ class MainBodyFrame(QFrame):
         self.set_layout()
 
     def refresh_style(self):
-        self.setStyleSheet(open("./src/css/mainBody.qss", "r").read())
+        base_path = os.path.dirname(__file__) 
+        style_sheet_path = os.path.join(base_path, 'css', 'mainBody.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read())
 
     def initialize_frame(self):
         self.setFrameShape(QFrame.NoFrame)

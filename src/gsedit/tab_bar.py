@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 import os
-from popup import PopupMessage
+from gsedit.popup import PopupMessage
 
 class TabBar(QTabWidget):
     def __init__(self, main_window, status_bar) -> None:
@@ -17,7 +17,17 @@ class TabBar(QTabWidget):
         self.initialize_tabs()
     
     def refresh_style(self):
-        self.setStyleSheet(open("./src/css/tabBar.qss", "r").read())
+        base_path = os.path.dirname(__file__)
+        style_sheet_path = os.path.join(base_path, 'css', 'tabBar.qss')
+
+        with open(style_sheet_path, "r") as style_file:
+            style_content = style_file.read()
+
+        icon_path = os.path.join(base_path, 'images', 'close.svg').replace('\\', '/')
+        style_content = style_content.replace('url_placeholder', icon_path)
+
+        self.setStyleSheet(style_content)
+
 
     def initialize_tabs(self):
         self.setUsesScrollButtons(True)

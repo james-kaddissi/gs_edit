@@ -3,10 +3,11 @@ from PyQt5 import *
 from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+import os
 
-from file_explorer import FileExplorer, FileExplorerLayout
-from grep import GrepLayout, Searchbar, GrepToggle, GrepResult
-from grepgine import Grepgine
+from gsedit.file_explorer import FileExplorer, FileExplorerLayout
+from gsedit.grep import GrepLayout, Searchbar, GrepToggle, GrepResult
+from gsedit.grepgine import Grepgine
 
 class GeneralToolFrame(QFrame):
     def __init__(self) -> None:
@@ -22,7 +23,10 @@ class GeneralToolFrame(QFrame):
         self.setContentsMargins(0, 0, 0, 0)
 
     def refresh_style(self):
-        self.setStyleSheet(open("./src/css/tools.qss", "r").read())
+        base_path = os.path.dirname(__file__) 
+        style_sheet_path = os.path.join(base_path, 'css', 'tools.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read())
 
 class FileExplorerFrame(GeneralToolFrame):
     def __init__(self, window) -> None:

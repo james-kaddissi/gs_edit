@@ -18,7 +18,10 @@ class MenuBar(QMenuBar):
         self.file_explorer = file_explorer
 
     def refresh_style(self):
-        self.setStyleSheet(open("./src/css/menuBar.qss", "r").read())
+        base_path = os.path.dirname(__file__) 
+        style_sheet_path = os.path.join(base_path, 'css', 'menuBar.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read())
 
     def initialize_main_menu_bar(self):
 

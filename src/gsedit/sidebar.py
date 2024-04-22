@@ -4,6 +4,7 @@ from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+import os
 
 class Sidebar(QFrame):
     def __init__(self, window) -> None:
@@ -18,7 +19,10 @@ class Sidebar(QFrame):
         self.setLayout(SidebarLayout(self.window))
 
     def refresh_style(self):
-        self.setStyleSheet(open("./src/css/sidebar.qss", "r").read()) #collin smith
+        base_path = os.path.dirname(__file__)  
+        style_sheet_path = os.path.join(base_path, 'css', 'sidebar.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read()) #collin smith
 
 class SidebarLayout(QVBoxLayout):
     def __init__(self, window) -> None:
@@ -33,9 +37,9 @@ class SidebarLayout(QVBoxLayout):
         self.setAlignment(Qt.AlignTop | Qt.AlignCenter)
     
     def initialize_icons(self):
-        folder_icon = self.tool_bar_icon("./src/images/folder.svg",  "folder")
+        folder_icon = self.tool_bar_icon("./src/gsedit/images/folder.svg",  "folder")
         self.addWidget(folder_icon)
-        grep_icon = self.tool_bar_icon("./src/images/grep.svg", "grep")
+        grep_icon = self.tool_bar_icon("./src/gsedit/images/grep.svg", "grep")
         self.addWidget(grep_icon)
 
     def tool_bar_icon(self, path, id):

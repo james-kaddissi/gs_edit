@@ -50,20 +50,31 @@ class CSSEditor(QMainWindow):
         self.splitter.setSizes([300, 500])
 
     def refresh_style(self):
-        with open("./src/css/cssEditor.qss", "r") as f:
-            self.setStyleSheet(f.read())
+        base_path = os.path.dirname(__file__)
+        style_sheet_path = os.path.join(base_path, 'css', 'cssEditor.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read())
 
     def load_file_list(self):
-        path = './src/css'
-        for file_name in os.listdir(path):
+        base_path = os.path.dirname(__file__) 
+        css_path = os.path.join(base_path, 'css')  
+
+        if not os.path.exists(css_path):
+            self.statusBar().showMessage('CSS directory not found: {}'.format(css_path))
+            return
+
+        for file_name in os.listdir(css_path):
             if file_name.endswith('.qss'):
                 self.file_browser.addItem(file_name)
 
     def load_css_properties(self, current, previous):
         if not current:
             return
-        self.current_file = f"./src/css/{current.text()}"  
-        self.refresh_css_editor(self.current_file)
+
+        base_path = os.path.dirname(__file__)
+        css_path = os.path.join(base_path, 'css', current.text())
+        
+        self.refresh_css_editor(css_path)
 
     def refresh_css_editor(self, file_path):
         while self.property_layout.count():

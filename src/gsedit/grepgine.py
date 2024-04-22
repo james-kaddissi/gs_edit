@@ -10,7 +10,7 @@ from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-import gsconfig
+import gsedit.gsconfig
 
 class GrepListItem(QListWidgetItem):
     def __init__(self, name, path, ln,  endln, lntxt):

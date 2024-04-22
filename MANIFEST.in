@@ -1,0 +1,3 @@
+recursive-include gsedit/css *.qss
+recursive-include gsedit/images *.png
+recursive-include gsedit/images *.svg

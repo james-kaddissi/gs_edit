@@ -8,8 +8,8 @@ from PyQt5.QtCore import *
 from pathlib import Path
 import subprocess, sys, shutil, os
 
-from text_editor import TextEditor
-from popup import PopupMessage
+from gsedit.text_editor import TextEditor
+from gsedit.popup import PopupMessage
 
 class FileExplorer(QTreeView):
     def __init__(self, tab, add_tab, window):

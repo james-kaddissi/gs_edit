@@ -9,16 +9,16 @@ from typing import *
 import pkgutil
 import keyword
 
-import gsconfig
+import gsedit.gsconfig
 
 from pathlib import Path
 
-from language_lexer import PythonLexer, CLexer, JSONLexer, RustLexer, CppLexer
-from code_completer import Completer
+from gsedit.language_lexer import PythonLexer, CLexer, JSONLexer, RustLexer, CppLexer
+from gsedit.code_completer import Completer
 
 
 if TYPE_CHECKING:
-    from main import MainWindow # prevents circular imports
+    from gsedit.main import MainWindow # prevents circular imports
 
 class TextEditor(QsciScintilla):
     def __init__(self, window, parent = None, path = None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None):
