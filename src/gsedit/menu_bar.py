@@ -213,7 +213,7 @@ class MenuBar(QMenuBar):
         self.style_menu.addAction(edit_css)
 
     def new_file_command(self):
-        self.window.add_tab(Path("untitled"), is_new_file=True)
+        self.window.grep_frame.grep_view.add_tab(self.window, Path("untitled"), is_new_file=True)
     def new_folder_command(self):
         folder_path = Path(self.file_explorer.file_system_model.rootPath()) / 'new folder'
         x = 1
@@ -225,12 +225,18 @@ class MenuBar(QMenuBar):
     def new_project_command(self):
         self.status_bar.set_timed_message("Project functionality to be added...", 3000)
     def open_file_command(self):
-        new_file, _ = QFileDialog.getOpenFileName(self.window, "Pick A File", "", "All Files [*];;Python Files [*.py];;JavaScript Files [*.js]")
-        if new_file == '':
+        file_name, filter_type = QFileDialog.getOpenFileName(
+            self.window, 
+            "Pick A File", 
+            "", 
+            "All Files (*);;Python Files (*.py);;JavaScript Files (*.js)"
+        )
+
+        if file_name:  # Check if a file was actually selected
+            path = Path(file_name)
+            self.window.grep_frame.grep_view.add_tab(self.window, path, False)
+        else:
             self.status_bar.set_timed_message("Open cancelled.", 2000)
-            return
-        path = Path(new_file)
-        self.window.add_tab(path)
     def open_folder_command(self):
         new_folder = QFileDialog.getExistingDirectory(self.window, "Pick A Folder", "")
         if new_folder:
