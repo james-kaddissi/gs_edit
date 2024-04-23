@@ -85,17 +85,31 @@ class ToolLabel(QLabel):
         super().leaveEvent(event)
 
     def toolbar_toggle(self, tool):
-        if tool == "folder":
-            if self.window.current_tool != "folder":
-                self.window.horizontal_split.insertWidget(0, self.window.file_explorer_frame)
-        elif tool == "grep":
-            if self.window.current_tool != "grep":
-                self.window.horizontal_split.insertWidget(0, self.window.grep_frame)
+        # Map the tool id to the corresponding frame
+        frame_map = {
+            "folder": self.window.file_explorer_frame,
+            "grep": self.window.grep_frame
+        }
 
-        if self.window.current_tool == tool:
-            temp_frame = self.window.horizontal_split.widget(0)
-            if temp_frame.isHidden():
-                temp_frame.show()
-            else:
-                temp_frame.hide()
-        self.window.current_tool = tool
+        selected_frame = frame_map.get(tool)
+
+        if selected_frame is None:
+            return  # If the tool is unrecognized, do nothing
+
+        # Check if the frame is already in the splitter
+        if selected_frame not in self.window.horizontal_split.children():
+            # If it's not in the splitter, insert it
+            self.window.horizontal_split.insertWidget(0, selected_frame)
+
+        # Toggle the visibility based on current state and selected state
+        if self.isSelected:
+            selected_frame.show()
+        else:
+            selected_frame.hide()
+
+        # Update the current tool tracker
+        if self.isSelected:
+            self.window.current_tool = tool
+        else:
+            # If no tool is selected, clear the current tool
+            self.window.current_tool = None

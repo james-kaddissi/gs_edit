@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         self.app_version = "0.1.0"
         self.initialize_window()
         self.current_file = None
-        self.current_tool = "folder"
+        self.current_tool = None
         self.css_editor = CSSEditor(self)
 
     def initialize_window(self):
@@ -69,6 +69,8 @@ class MainWindow(QMainWindow):
         self.horizontal_split.addWidget(self.tab)
         self.main_body_frame = MainBodyFrame(self)
         self.setCentralWidget(self.main_body_frame)
+        self.file_explorer_frame.hide()
+        self.grep_frame.hide()
 
     def toggle_terminal(self):
         if self.main_body_frame.terminal_widget.isVisible():
