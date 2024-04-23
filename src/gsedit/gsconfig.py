@@ -1,6 +1,8 @@
 import json
+import os
 
-config_path = 'gsconfig.json'
+base_path = os.path.dirname(__file__)
+config_path = os.path.join(base_path, 'gsconfig.json')
 
 def get_config(name):
     try:

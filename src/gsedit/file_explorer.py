@@ -64,6 +64,13 @@ class FileExplorer(QTreeView):
         self.file_system_model.setRootPath("No Folder Opened")
         self.setRootIndex(QModelIndex()) 
         self.setEnabled(False) 
+    
+    def open_file_in_tab(self, file_path):
+        editor = TextEditor()
+        with open(file_path, 'r', encoding='utf-8') as file:
+            editor.setText(file.read())
+        self.tab.addTab(editor, os.path.basename(file_path))
+
 
     def set_root_path(self, path):
         self.file_system_model.setRootPath(path)

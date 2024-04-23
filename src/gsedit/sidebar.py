@@ -38,9 +38,14 @@ class SidebarLayout(QVBoxLayout):
         self.setAlignment(Qt.AlignTop | Qt.AlignCenter)
     
     def initialize_icons(self):
-        folder_icon = self.tool_bar_icon("./src/gsedit/images/folder.svg",  "folder")
+        base_path = os.path.dirname(__file__)
+        folder_icon_path = os.path.join(base_path, 'images', 'folder.svg')
+        grep_icon_path = os.path.join(base_path, 'images', 'grep.svg')
+
+        folder_icon = self.tool_bar_icon(folder_icon_path, "folder")
+        grep_icon = self.tool_bar_icon(grep_icon_path, "grep")
+
         self.addWidget(folder_icon)
-        grep_icon = self.tool_bar_icon("./src/gsedit/images/grep.svg", "grep")
         self.addWidget(grep_icon)
 
     def tool_bar_icon(self, path, id):
@@ -57,7 +62,9 @@ class ToolLabel(QLabel):
         self.initialize_label()
 
     def initialize_label(self):
-        self.setPixmap(QPixmap(self.path).scaled(QSize(35, 35)))
+        icon = QIcon(self.path)
+        pixmap = icon.pixmap(QSize(35, 35))
+        self.setPixmap(pixmap)
         self.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.setFont(self.window.window_font)
         self.update_style()
