@@ -46,3 +46,13 @@ def get_consideration(name):
     except FileNotFoundError:
         print("Config file not found, please ensure the config_path is correct and points to a proper config json.")
         return None
+    
+def get_preference(category, pref):
+    try:
+        with open(config_path, 'r') as file:
+            config = json.load(file)
+
+        return config[category][pref]
+    except FileNotFoundError:
+        print("Config file not found, please ensure the config_path is correct and points to a proper config json.")
+        return None

@@ -10,5 +10,8 @@
         "json": [".json"],
         "rust": [".rs"],
         "cpp": [".cpp"]
+    },
+    "tools-preferences": {
+        "tool-replace": false 
     }
 }

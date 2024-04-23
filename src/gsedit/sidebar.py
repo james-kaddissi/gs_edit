@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 import os
+import gsedit.gsconfig
 
 class Sidebar(QFrame):
     def __init__(self, window) -> None:
@@ -85,7 +86,6 @@ class ToolLabel(QLabel):
         super().leaveEvent(event)
 
     def toolbar_toggle(self, tool):
-        # Map the tool id to the corresponding frame
         frame_map = {
             "folder": self.window.file_explorer_frame,
             "grep": self.window.grep_frame
@@ -94,22 +94,28 @@ class ToolLabel(QLabel):
         selected_frame = frame_map.get(tool)
 
         if selected_frame is None:
-            return  # If the tool is unrecognized, do nothing
+            return  
 
-        # Check if the frame is already in the splitter
+        replace_preference = gsedit.gsconfig.get_preference("tools-preferences", "tool-replace")
+
+        if replace_preference and self.window.current_tool is not None and self.window.current_tool != tool:
+            current_frame = frame_map[self.window.current_tool]
+            current_frame.hide()
+            for widget in self.parent().children():
+                if isinstance(widget, ToolLabel) and widget.id == self.window.current_tool:
+                    widget.isSelected = False
+                    widget.update_style()
+        
         if selected_frame not in self.window.horizontal_split.children():
-            # If it's not in the splitter, insert it
             self.window.horizontal_split.insertWidget(0, selected_frame)
 
-        # Toggle the visibility based on current state and selected state
         if self.isSelected:
             selected_frame.show()
         else:
             selected_frame.hide()
 
-        # Update the current tool tracker
         if self.isSelected:
             self.window.current_tool = tool
         else:
-            # If no tool is selected, clear the current tool
             self.window.current_tool = None
+
