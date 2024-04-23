@@ -13,7 +13,7 @@ import gsedit.gsconfig
 
 from pathlib import Path
 
-from gsedit.language_lexer import PythonLexer, CLexer, JSONLexer, RustLexer, CppLexer
+from gsedit.language_lexer import JavaScriptLexer, PythonLexer, CLexer, JSONLexer, RustLexer, CppLexer
 from gsedit.code_completer import Completer
 
 
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from gsedit.main import MainWindow # prevents circular imports
 
 class TextEditor(QsciScintilla):
-    def __init__(self, window, parent = None, path = None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None):
+    def __init__(self, window, parent = None, path = None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None):
         super(TextEditor, self).__init__(parent)
         self.window = window
         self.path = path
@@ -31,6 +31,7 @@ class TextEditor(QsciScintilla):
         self.jsonf = jsonf
         self.rustf = rustf
         self.cppf = cppf
+        self.jsf = jsf
         self.setUtf8(True)
 
         self.window_font = QFont("Fire Code")
@@ -94,6 +95,12 @@ class TextEditor(QsciScintilla):
             self.setLexer(self.lexer)
         elif self.cppf:
             self.lexer = CppLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.jsf:
+            self.lexer = JavaScriptLexer(self)
             self.lexer.setDefaultFont(self.window_font)
             self.api = QsciAPIs(self.lexer)
             self.code_completer = Completer(self.abs_path, self.api)

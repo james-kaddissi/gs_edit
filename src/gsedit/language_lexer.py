@@ -3,6 +3,7 @@ import keyword
 import re
 import types
 import json
+import os
 
 from PyQt5.Qsci import *
 from PyQt5.QtCore import *
@@ -86,7 +87,9 @@ class GSLexer(QsciLexerCustom):
         }
 
     def _generateTheme(self):
-        with open(self.path, "r") as file:
+        base_path = os.path.dirname(__file__)
+        config_path = os.path.join(base_path, 'active-theme.json')
+        with open(config_path, "r") as file:
             self.theme = json.load(file)
 
         syntax_rules = self.theme["active-theme"]["syntax-rules"]
@@ -478,6 +481,73 @@ class CLexer(GSLexer):
             else:
                 self.setStyling(token_length, self.DEFAULT)
 
+class JavaScriptLexer(GSLexer):
+    def __init__(self, editor):
+        super(JavaScriptLexer, self).__init__("JavaScript", editor)
+        self.generateKeywords([
+            "break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete",
+            "do", "else", "export", "extends", "finally", "for", "function", "if", "import",
+            "in", "instanceof", "let", "new", "return", "super", "switch", "this", "throw",
+            "try", "typeof", "var", "void", "while", "with", "yield", "async", "await"
+        ])
+        self.generateSavedNames([
+            "Array", "Date", "eval", "function", "hasOwnProperty", "Infinity", "isNaN", "isFinite", 
+            "Number", "Object", "parseFloat", "parseInt", "String", "Boolean", "RegExp", "Error",
+            "console", "window", "document"
+        ])
+
+    def styleText(self, start, end):
+        self.startStyling(start)
+
+        text = self.editor.text()[start:end]
+        self.get_token(text)
+
+        is_string = False
+        is_comment = False
+
+        while True:
+            curr_token = self.get_next_token()
+            if curr_token is None:
+                break
+            token, token_length = curr_token
+
+            if is_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/") or token == "\n":
+                    is_comment = False
+                continue
+
+            if is_string:
+                self.setStyling(token_length, self.STRING)
+                if token in ['"', "'"]:
+                    is_string = False
+                continue
+
+            if token in self.keywords:
+                self.setStyling(token_length, self.KEYWORD)
+            elif token.startswith("/*"):
+                self.setStyling(token_length, self.COMMENTS)
+                is_comment = True
+            elif token == "//":
+                self.setStyling(token_length, self.COMMENTS)
+                self.skip_to_end_of_line()
+            elif token in ['"', "'"]:
+                self.setStyling(token_length, self.STRING)
+                is_string = True
+            elif token.isdigit():
+                self.setStyling(token_length, self.CONSTANTS)
+            elif token in self.saved_names:
+                self.setStyling(token_length, self.FUNCTIONS)
+            else:
+                self.setStyling(token_length, self.DEFAULT)
+
+    def skip_to_end_of_line(self):
+        text = self.editor.text()
+        pos = self.currentPosition
+        while pos < len(text) and text[pos] != '\n':
+            pos += 1
+        self.setStyling(pos - self.currentPosition, self.COMMENTS)
+        self.currentPosition = pos
 
 
 class JSONLexer(GSLexer):

@@ -9,7 +9,8 @@
         "c": [".c"],
         "json": [".json"],
         "rust": [".rs"],
-        "cpp": [".cpp"]
+        "cpp": [".cpp"],
+        "javascript": [".js"]
     },
     "tools-preferences": {
         "tool-replace": false 

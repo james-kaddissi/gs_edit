@@ -225,7 +225,7 @@ class MenuBar(QMenuBar):
     def new_project_command(self):
         self.status_bar.set_timed_message("Project functionality to be added...", 3000)
     def open_file_command(self):
-        new_file, _ = QFileDialog.getOpenFileName(self.window, "Pick A File", "", "All Files [*];;Python Files [*.py]")
+        new_file, _ = QFileDialog.getOpenFileName(self.window, "Pick A File", "", "All Files [*];;Python Files [*.py];;JavaScript Files [*.js]")
         if new_file == '':
             self.status_bar.set_timed_message("Open cancelled.", 2000)
             return

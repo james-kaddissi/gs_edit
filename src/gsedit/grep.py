@@ -78,8 +78,8 @@ class GrepResult(QListWidget):
         for i in content:
             self.addItem(i)
 
-    def text_editor(self, path=None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None) -> QsciScintilla:
-        editor = TextEditor(self.window, path=path, pyf=pyf, cf=cf, jsonf=jsonf, rustf=rustf, cppf=cppf)
+    def text_editor(self, path=None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None) -> QsciScintilla:
+        editor = TextEditor(self.window, path=path, pyf=pyf, cf=cf, jsonf=jsonf, rustf=rustf, cppf=cppf, jsf=jsf)
         return editor
 
     def valid_file_check(self, path):
@@ -99,7 +99,8 @@ class GrepResult(QListWidget):
             path.suffix in gsedit.gsconfig.get_consideration("c"), 
             path.suffix in gsedit.gsconfig.get_consideration("json"),
             path.suffix in gsedit.gsconfig.get_consideration("rust"), 
-            path.suffix in gsedit.gsconfig.get_consideration("cpp")
+            path.suffix in gsedit.gsconfig.get_consideration("cpp"),
+            path.suffix in gsedit.gsconfig.get_consideration("javascript")
         )
         if is_new_file:
             window.tab.addTab(editor, "untitled")
