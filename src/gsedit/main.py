@@ -62,6 +62,7 @@ class MainWindow(QMainWindow):
         # main body
         self.sidebar = Sidebar(self)
         self.horizontal_split = QSplitter(Qt.Horizontal)
+        self.horizontal_split.setHandleWidth(2)
         self.tab = TabBar(self, self.bar)
         self.grep_frame = GrepFrame(self)
         self.file_explorer_frame = FileExplorerFrame(self)

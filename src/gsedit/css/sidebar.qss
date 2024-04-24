@@ -1,4 +1,14 @@
 QFrame {
-    background-color: #0C0C1A;
-    border: none;
+    background-color: #0c0f11;
+    border-right: 1px solid black;  
+    border-top: none;              
+    border-bottom: none;           
+    border-left: none;             
 }
+
+
+QLabel {
+    padding: 10px;
+    border:none;
+}
+

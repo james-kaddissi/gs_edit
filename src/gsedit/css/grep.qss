@@ -2,3 +2,11 @@ QCheckBox {
     color: white;
     margin-bottom: 10px;
 }
+
+QListWidget {
+    background-color: #0c0f11;
+    border-radius: 5px;
+    border: 1px solid #CDCDCD;
+    padding: 5px;
+    color: #CDCDCD;
+}

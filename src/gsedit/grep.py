@@ -53,18 +53,16 @@ class GrepResult(QListWidget):
         super(GrepResult, self).__init__()
         self.window = window
         self.initialize_results()
+        self.refresh_style()
+
+    def refresh_style(self):
+        base_path = os.path.dirname(__file__) 
+        style_sheet_path = os.path.join(base_path, 'css', 'grep.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read())
 
     def initialize_results(self):
         self.setFont(QFont("Fixedsys", 14))
-        self.setStyleSheet("""
-            QListWidget {
-                background-color: #0C0C1A;
-                border-radius: 5px;
-                border: 1px solid #CDCDCD;
-                padding: 5px;
-                color: #CDCDCD;
-            }
-        """)
         self.itemClicked.connect(self.grep_view_clicked)
 
     def grep_view_clicked(self, content):

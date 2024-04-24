@@ -1,14 +1,18 @@
 QMainWindow {
-    background-color: #0C0C1A;
-    color: #bebebe
+    background-color: red;
+    color: #bebebe;
+    padding: 0px;
+    margin: 0px;
 }
 
 QSplitter {
     background-color: #32303d;
+    padding: 0px;
+    margin: 0px;
 }
 
 QSplitter::handle {
-    background-color: #c678dd;
+    background-color: black;
 }
 
 QScrollBar:vertical {

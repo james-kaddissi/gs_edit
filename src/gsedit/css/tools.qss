@@ -1,8 +1,8 @@
 QFrame {
-    background-color: #0C0C1A;
+    background-color: #0c0f11;
     border: none;
     padding: 5px;
-    color: rgb(255, 255, 255);
+    color: #7a7e82;
 }
 QFrame:hover {
     color: white;

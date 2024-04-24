@@ -33,7 +33,7 @@ class SidebarLayout(QVBoxLayout):
         self.initialize_icons()
     
     def initialize_layout(self):
-        self.setContentsMargins(5, 10, 5, 0)
+        self.setContentsMargins(0, 0, 0, 0)
         self.setSpacing(0)
         self.setAlignment(Qt.AlignTop | Qt.AlignCenter)
     
@@ -63,7 +63,7 @@ class ToolLabel(QLabel):
 
     def initialize_label(self):
         icon = QIcon(self.path)
-        pixmap = icon.pixmap(QSize(35, 35))
+        pixmap = icon.pixmap(QSize(40, 40))
         self.setPixmap(pixmap)
         self.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.setFont(self.window.window_font)

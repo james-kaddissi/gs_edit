@@ -1,15 +1,21 @@
 QMenuBar {
-    background-color: #0C0C1A;
-    border: 1px solid #0C0C1A;
+    background-color: #040506;
+    border-bottom: 1px solid black;
+    border-top: none;
+    border-right: none;
+    border-left: none;
     padding: 3px;
-    color: #c678dd;
+    color: #7a7e82;
     font-family: 'Fixedsys';
 }
 
 QMenuBar::item {
-    background-color: #0C0C1A;
-    padding: 3px;
-    color: #c678dd;
+    background-color: #040506;
+    padding: 2px 6px;
+    color: #7a7e82;
     font-family: 'Fixedsys';
+    border-radius: 3px;
 }
-
+QMenuBar::item:selected {
+    background-color: rgba(255, 255, 255, 0.1);
+}

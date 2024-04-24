@@ -11,10 +11,10 @@ import os
 class MainBodyFrame(QFrame):
     def __init__(self, window) -> None:
         super(MainBodyFrame, self).__init__()
-        self.refresh_style()
         self.window = window
         self.initialize_frame()
         self.set_layout()
+        self.refresh_style()
 
     def refresh_style(self):
         base_path = os.path.dirname(__file__) 
@@ -27,11 +27,13 @@ class MainBodyFrame(QFrame):
         self.setFrameShadow(QFrame.Plain)
         self.setLineWidth(0)
         self.setMidLineWidth(0)
-        self.setContentsMargins(0, 0, 0, 0,)
+        self.setContentsMargins(0, 0, 0, 0)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
     
     def set_layout(self):
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
         self.vertical_split = QSplitter(Qt.Vertical)  # This splitter will manage the main content and the terminal
         
         self.editor_area = QWidget()  # Container for the main editor layout
