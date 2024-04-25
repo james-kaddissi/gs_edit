@@ -18,10 +18,13 @@ from gsedit.main_body import MainBodyFrame
 from gsedit.sidebar import Sidebar
 from gsedit.tools import FileExplorerFrame, GrepFrame
 from gsedit.css_editor import CSSEditor
+from gsedit.top_bar import TopBar
 # Other function imports
 import gsedit.gsconfig
 
-class MainWindow(QMainWindow):
+from qframelesswindow import FramelessMainWindow
+
+class MainWindow(FramelessMainWindow):
     def __init__(self):
         # CONFIG
         super(QMainWindow, self).__init__()
@@ -42,24 +45,20 @@ class MainWindow(QMainWindow):
         style_sheet_path = os.path.join(base_path, 'css', 'style.qss')
         with open(style_sheet_path, "r") as style_file:
             self.setStyleSheet(style_file.read())
-        self.window_font = QFont("Fixedsys")
+        self.window_font = QFont("Consolas")
         self.window_font.setPointSize(12)
         self.setFont(self.window_font)
         self.configure_statusbar()
         self.configure_body()
-        self.configure_menu()
         self.show()
 
     def configure_statusbar(self):
         self.bar = StatusBar()
         self.setStatusBar(self.bar)
 
-    def configure_menu(self):
-        top_menu_bar = MenuBar(self, self.bar, self.file_explorer_frame.file_explorer)
-        self.setMenuBar(top_menu_bar)
-
     def configure_body(self):
         # main body
+        
         self.sidebar = Sidebar(self)
         self.horizontal_split = QSplitter(Qt.Horizontal)
         self.horizontal_split.setHandleWidth(2)
@@ -68,6 +67,8 @@ class MainWindow(QMainWindow):
         self.file_explorer_frame = FileExplorerFrame(self)
         self.horizontal_split.addWidget(self.file_explorer_frame)
         self.horizontal_split.addWidget(self.tab)
+        self.top_bar = TopBar(self)
+        self.top_bar.setStyleSheet(self.top_bar.styleSheet() + "border: none; border-bottom: 1px solid #333641; border-bottom-left-radius: 0; border-bottom-right-radius: 0;")
         self.main_body_frame = MainBodyFrame(self)
         self.setCentralWidget(self.main_body_frame)
         self.file_explorer_frame.hide()
@@ -84,6 +85,12 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == '__main__':
+    QApplication.setHighDpiScaleFactorRoundingPolicy(
+    Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
     app = QApplication(sys.argv)
+    app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
     window = MainWindow()
+    app.installEventFilter(window.top_bar)
     sys.exit(app.exec())

@@ -46,6 +46,7 @@ class MainBodyFrame(QFrame):
         self.terminal_widget = IntegratedTerminal(self)  
         
         # Add the editor area and the terminal to the vertical splitter
+        self.vertical_split.addWidget(self.window.top_bar)
         self.vertical_split.addWidget(self.editor_area)
         self.vertical_split.addWidget(self.terminal_widget)
         layout.addWidget(self.vertical_split)

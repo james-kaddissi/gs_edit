@@ -19,7 +19,7 @@ class FileExplorer(QTreeView):
         self.add_tab = add_tab
         self.window = window
 
-        self.ui_font = QFont("Fixedsys", 14) 
+        self.ui_font = QFont("Consolas", 14) 
 
         self.file_system_model = QFileSystemModel()
         self.file_system_model.setRootPath(os.getcwd())

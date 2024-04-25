@@ -4,8 +4,8 @@ QTabWidget {
 }
 
 QTabBar::tab {
-    background-color: #0C0C1A;
-    color: #c678dd;
+    background-color: #0c0f11;
+    color: #7a7e82;
     min-width: 10ex;
     min-height: 5ex;
     padding: 10px 25px;
@@ -13,10 +13,10 @@ QTabBar::tab {
 }
 
 QTabBar::tab::selected {
-    color: #0C0C1A;
+    color: #279fc4;
     border-style: none;
-    background-color: #c678dd;
-    border-bottom: 2px solid #c678dd;
+    background-color: #101316;
+    border-bottom: none;
 }
 
 QTabBar::close-button {

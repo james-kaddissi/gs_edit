@@ -112,8 +112,8 @@ class TextEditor(QsciScintilla):
 
         self.setMarginType(0, QsciScintilla.NumberMargin)
         self.setMarginWidth(0, "000")
-        self.setMarginsForegroundColor(QColor("white"))
-        self.setMarginsBackgroundColor((QColor("#0C0C1A")))
+        self.setMarginsForegroundColor(QColor("#7a7e82"))
+        self.setMarginsBackgroundColor((QColor("#101316")))
         self.setMarginsFont(self.window_font)
     
     @property

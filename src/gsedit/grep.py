@@ -62,7 +62,7 @@ class GrepResult(QListWidget):
             self.setStyleSheet(style_file.read())
 
     def initialize_results(self):
-        self.setFont(QFont("Fixedsys", 14))
+        self.setFont(QFont("Consolas", 14))
         self.itemClicked.connect(self.grep_view_clicked)
 
     def grep_view_clicked(self, content):

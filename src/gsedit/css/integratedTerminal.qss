@@ -21,7 +21,7 @@ QTabBar::tab:selected, QTabBar::tab:hover {
 QTextEdit {
     background-color: "black";
     color: "green";
-    font-family: "Fixedsys";
+    font-family: "Consolas";
     border: 1px solid "green";
 }
 

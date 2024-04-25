@@ -28,9 +28,9 @@ class GSLexer(QsciLexerCustom):
         self.saved_names = []
         if base_config is None:
             base_config = {}
-            base_config["text-color"] = "#ffffff"
-            base_config["background-color"] = "#0C0C1A"
-            base_config["font-family"] = "Fixedsys"
+            base_config["text-color"] = "#bfc3c4"
+            base_config["background-color"] = "#101316"
+            base_config["font-family"] = "Fire Code"
             base_config["font-size"] = 14
 
         self.setDefaultColor(QColor(base_config["text-color"]))

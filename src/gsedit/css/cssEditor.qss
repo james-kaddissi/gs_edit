@@ -1,17 +1,17 @@
 QListWidget {
     background-color: "#1F2933";
     border: none;
-    font-family: "Fixedsys";
+    font-family: "Consolas";
 }
 
 QLabel {
-    font-family: "Fixedsys";
+    font-family: "Consolas";
 }
 
 QListWidget::item {
     background-color: "#323F4B";
     color: "#CBD2D9";
-    font-family: "Fixedsys";
+    font-family: "Consolas";
 }
 
 QSplitter::handle {
