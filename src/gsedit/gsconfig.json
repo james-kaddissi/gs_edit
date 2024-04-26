@@ -24,12 +24,3 @@
         "tool-replace": true 
     }
 }
-
-.html - html
-.css - css
-.cs - c#
-.java - java
-.txt - plaintext
-.hs - haskell
-.go - go
-.rb - ruby
