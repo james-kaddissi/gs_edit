@@ -54,10 +54,10 @@ class TextEditor(QsciScintilla):
         self.setAutoCompletionCaseSensitivity(False)
         self.setAutoCompletionUseSingle(QsciScintilla.AcusNever)
 
-        self.setCaretForegroundColor(QColor("#dedcdc"))
+        self.setCaretForegroundColor(QColor("#5ad8b2"))
         self.setCaretLineVisible(True)
         self.setCaretWidth(2)
-        self.setCaretLineBackgroundColor(QColor("#2c312d"))
+        self.setCaretLineBackgroundColor(QColor("#121621"))
 
         self.setEolMode(QsciScintilla.EolWindows)
         self.setEolVisibility(False)

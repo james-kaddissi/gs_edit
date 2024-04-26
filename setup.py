@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='GS-Edit', 
-    version='0.2.4',
+    version='0.2.5',
     description='The Best Code Editor - GS',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',  
@@ -17,7 +17,8 @@ setup(
     install_requires=[
         'PyQt5',  
         'QScintilla',
-        'jedi'
+        'jedi',
+        'PyQt5-Frameless-Window'
     ],
     entry_points={
         'console_scripts': [

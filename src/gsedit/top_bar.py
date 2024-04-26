@@ -7,6 +7,8 @@ from PyQt5.QtGui import QPixmap, QIcon, QImage
 
 from gsedit.menu_bar import MenuBar
 
+import os
+
 class MenuItems(QWidget):
 
     def __init__(self, main_window) -> None:
@@ -16,7 +18,7 @@ class MenuItems(QWidget):
         self.is_menu_open = False
         self.lay = QHBoxLayout(self)
         self.lay.setContentsMargins(0, 0, 0, 0)
-        self.lay.setSpacing(3)
+        self.lay.setSpacing(0)
 
         self.add_menu_bar()
 
@@ -32,7 +34,7 @@ class TopBar(QFrame):
     def __init__(self, main_window) -> None:
         super().__init__(None)
         self.main_window = main_window
-        self.setFixedHeight(45)
+        self.setFixedHeight(40)
         
         main_layout = QHBoxLayout(self)
         self.setMouseTracking(True)  # Enable mouse tracking
@@ -44,23 +46,29 @@ class TopBar(QFrame):
         self.title_lbl = QLabel()
         self.title_lbl.setStyleSheet(f"font-family: Arial; font-size: 16px; font-weight: 500; color: white; margin-left: 10px; border: none;") 
         self.title_lbl.setPixmap(logo)
-        main_layout.addWidget(self.title_lbl, alignment=Qt.AlignmentFlag.AlignLeft) 
+        # main_layout.addWidget(self.title_lbl, alignment=Qt.AlignmentFlag.AlignLeft) 
 
         menu = MenuItems(self.main_window)
         main_layout.addWidget(menu, alignment=Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignCenter) 
 
-        self.path_lbl = QLabel("")
-        self.path_lbl.setStyleSheet(f"font-size: 14px; font-weight: bold; color: white; margin-right: 10px; border: none;") 
-        main_layout.addWidget(self.path_lbl, alignment=Qt.AlignmentFlag.AlignCenter)  
+        self.top_label = QLabel("")
+        self.top_label.setStyleSheet(f"font-size: 14px; font-weight: bold; color: white; margin-right: 10px; border: none;") 
+        main_layout.addWidget(self.top_label, alignment=Qt.AlignmentFlag.AlignCenter)  
 
         nav_layout = QHBoxLayout()
         nav_layout.setContentsMargins(4, 0, 4, 0)
         nav_layout.setSpacing(10)
         nav_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
-        self._icon_close = QIcon("./src/gsedit/images/close_icon.png")
-        self._icon_minimize = QIcon("./src/gsedit/images/minimize_icon.png")
-        self._icon_restore = QIcon("./src/gsedit/images/restore_icon.png")   
+        base_path = os.path.dirname(__file__) 
+        imageclose_path = os.path.join(base_path, 'images', 'close_icon.png')
+        imagemin_path = os.path.join(base_path, 'images', 'min_icon.png')
+        imagefull_path = os.path.join(base_path, 'images', 'full_icon.png')
+
+
+        self._icon_close = QIcon(imageclose_path)
+        self._icon_minimize = QIcon(imagemin_path)
+        self._icon_restore = QIcon(imagefull_path)   
 
         self._transparent_bg = "background: transparent; border: none;"
 
@@ -93,15 +101,18 @@ class TopBar(QFrame):
         nav_layout.addWidget(close_lbl)
 
         main_layout.addLayout(nav_layout)
-             
+        self.refresh_style()
+    def refresh_style(self):
+        base_path = os.path.dirname(__file__) 
+        style_sheet_path = os.path.join(base_path, 'css', 'topBar.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read())         
 
     def restore_window(self):
         if self.main_window.window().isMaximized():
             self.main_window.window().showNormal() 
-            self.main_window.centralWidget().setStyleSheet(self.main_window.frame_stlye)
         else:
             self.main_window.window().showMaximized()   
-            self.main_window.centralWidget().setStyleSheet(self.main_window.frame_style_no_border)
 
     def eventFilter(self, obj, event):
         if obj == self:

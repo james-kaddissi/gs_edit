@@ -34,22 +34,30 @@ class MainBodyFrame(QFrame):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
-        self.vertical_split = QSplitter(Qt.Vertical)  # This splitter will manage the main content and the terminal
         
-        self.editor_area = QWidget()  # Container for the main editor layout
+        self.vertical_split = QSplitter(Qt.Vertical)
+        self.vertical_split.setHandleWidth(2)  
+        
+        combined_widget = QWidget()
+        combined_layout = QVBoxLayout(combined_widget)
+        combined_layout.setContentsMargins(0, 0, 0, 0)
+        combined_layout.setSpacing(0)
+        
+        combined_layout.addWidget(self.window.top_bar)
+        self.editor_area = QWidget()
         editor_layout = QHBoxLayout(self.editor_area)
         editor_layout.setContentsMargins(0, 0, 0, 0)
         editor_layout.setSpacing(0)
         editor_layout.addWidget(self.window.sidebar)
         editor_layout.addWidget(self.window.horizontal_split)
+        combined_layout.addWidget(self.editor_area)  
         
-        self.terminal_widget = IntegratedTerminal(self)  
         
-        # Add the editor area and the terminal to the vertical splitter
-        self.vertical_split.addWidget(self.window.top_bar)
-        self.vertical_split.addWidget(self.editor_area)
+
+        self.terminal_widget = IntegratedTerminal(self)
+        
+        self.vertical_split.addWidget(combined_widget)
         self.vertical_split.addWidget(self.terminal_widget)
         layout.addWidget(self.vertical_split)
         
-        self.terminal_widget.hide()  # Initially hide the terminal
-        
+        self.terminal_widget.hide()

@@ -13,6 +13,6 @@
         "javascript": [".js"]
     },
     "tools-preferences": {
-        "tool-replace": false 
+        "tool-replace": true 
     }
 }

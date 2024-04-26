@@ -74,7 +74,7 @@ class ToolLabel(QLabel):
 
     def update_style(self):
         if self.isSelected:
-            self.setStyleSheet("background-color: #a3be8c;")
+            self.setStyleSheet("background-color: #4e2132;border-left: 2px solid #5ad8b2; border-top: none; border-bottom: none; border-right: none;")
         else:
             self.setStyleSheet("background-color: none;")  
 

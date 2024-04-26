@@ -31,7 +31,7 @@ class MainWindow(FramelessMainWindow):
         self.app_title = "GS-Edit"
         self.app_icon = QIcon("./src/gsedit/images/icon.png")
         self.setWindowIcon(self.app_icon)
-        self.app_version = "0.1.0"
+        self.app_version = "0.2.6"
         self.initialize_window()
         self.current_file = None
         self.current_tool = None

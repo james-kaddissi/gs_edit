@@ -1,6 +1,19 @@
 QTabWidget {
     background-color: #32303d;
     color: #bebebe;
+    border: none;
+    margin: 0px;
+}
+
+QTabWidget::pane {
+    border-color: black;
+}
+
+QTabBar {
+    border-bottom: 1px solid black;
+    border-top: none;
+    border-right: none;
+    border-left: none;
 }
 
 QTabBar::tab {
@@ -10,6 +23,8 @@ QTabBar::tab {
     min-height: 5ex;
     padding: 10px 25px;
     border-style: none;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
 }
 
 QTabBar::tab::selected {
@@ -17,6 +32,9 @@ QTabBar::tab::selected {
     border-style: none;
     background-color: #101316;
     border-bottom: none;
+
+    border-top: 1px solid #279fc4;
+    border-right: 1px solid black;
 }
 
 QTabBar::close-button {
