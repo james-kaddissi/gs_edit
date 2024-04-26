@@ -10,9 +10,26 @@
         "json": [".json"],
         "rust": [".rs"],
         "cpp": [".cpp"],
-        "javascript": [".js"]
+        "javascript": [".js"],
+        "html": [".html"],
+        "css": [".css"],
+        "cs": [".cs"],
+        "java": [".java"],
+        "txt": [".txt"],
+        "haskell": [".hs"],
+        "go": [".go"],
+        "ruby": [".rb"]
     },
     "tools-preferences": {
         "tool-replace": true 
     }
 }
+
+.html - html
+.css - css
+.cs - c#
+.java - java
+.txt - plaintext
+.hs - haskell
+.go - go
+.rb - ruby
