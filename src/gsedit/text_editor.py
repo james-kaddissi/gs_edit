@@ -1,3 +1,4 @@
+from difflib import HtmlDiff
 from PyQt5.QtGui import QKeyEvent
 from PyQt5.QtWidgets import *
 from PyQt5 import *
@@ -13,7 +14,7 @@ import gsedit.gsconfig
 
 from pathlib import Path
 
-from gsedit.language_lexer import JavaScriptLexer, PythonLexer, CLexer, JSONLexer, RustLexer, CppLexer
+from gsedit.language_lexer import JavaScriptLexer, PythonLexer, CLexer, JSONLexer, RustLexer, CppLexer, HTMLLexer, CSSLexer, CSLexer, JavaLexer, TxtLexer, GoLexer, HaskellLexer, RubyLexer
 from gsedit.code_completer import Completer
 
 
@@ -21,7 +22,7 @@ if TYPE_CHECKING:
     from gsedit.main import MainWindow # prevents circular imports
 
 class TextEditor(QsciScintilla):
-    def __init__(self, window, parent = None, path = None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None):
+    def __init__(self, window, parent = None, path = None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None, htmlf=None, cssf=None, csf=None, javaf=None, txtf=None, gof=None, hsf=None, rbf=None):
         super(TextEditor, self).__init__(parent)
         self.window = window
         self.path = path
@@ -32,6 +33,14 @@ class TextEditor(QsciScintilla):
         self.rustf = rustf
         self.cppf = cppf
         self.jsf = jsf
+        self.htmlf = htmlf
+        self.cssf = cssf
+        self.csf = csf
+        self.javaf = javaf
+        self.txtf = txtf
+        self.gof = gof
+        self.hsf = hsf
+        self.rbf = rbf
         self.setUtf8(True)
 
         self.window_font = QFont("Fire Code")
@@ -101,6 +110,54 @@ class TextEditor(QsciScintilla):
             self.setLexer(self.lexer)
         elif self.jsf:
             self.lexer = JavaScriptLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.htmlf:
+            self.lexer = HTMLLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.cssf:
+            self.lexer = CSSLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.csf:
+            self.lexer = CSLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.javaf:
+            self.lexer = JavaLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.txtf:
+            self.lexer = TxtLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.gof:
+            self.lexer = GoLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.hsf:
+            self.lexer = HaskellLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.rbf:
+            self.lexer = RubyLexer(self)
             self.lexer.setDefaultFont(self.window_font)
             self.api = QsciAPIs(self.lexer)
             self.code_completer = Completer(self.abs_path, self.api)

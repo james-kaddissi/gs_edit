@@ -76,8 +76,8 @@ class GrepResult(QListWidget):
         for i in content:
             self.addItem(i)
 
-    def text_editor(self, path=None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None) -> QsciScintilla:
-        editor = TextEditor(self.window, path=path, pyf=pyf, cf=cf, jsonf=jsonf, rustf=rustf, cppf=cppf, jsf=jsf)
+    def text_editor(self, path=None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None, htmlf=None, cssf=None, csf=None, javaf=None, txtf=None, gof=None, hsf=None, rbf=None) -> QsciScintilla:
+        editor = TextEditor(self.window, path=path, pyf=pyf, cf=cf, jsonf=jsonf, rustf=rustf, cppf=cppf, jsf=jsf, htmlf=htmlf, cssf=cssf, csf=csf, javaf=javaf, txtf=txtf, gof=gof, hsf=hsf, rbf=rbf)
         return editor
 
     def valid_file_check(self, path):
@@ -98,7 +98,15 @@ class GrepResult(QListWidget):
             path.suffix in gsedit.gsconfig.get_consideration("json"),
             path.suffix in gsedit.gsconfig.get_consideration("rust"), 
             path.suffix in gsedit.gsconfig.get_consideration("cpp"),
-            path.suffix in gsedit.gsconfig.get_consideration("javascript")
+            path.suffix in gsedit.gsconfig.get_consideration("javascript"),
+            path.suffix in gsedit.gsconfig.get_consideration("html"),
+            path.suffix in gsedit.gsconfig.get_consideration("css"),
+            path.suffix in gsedit.gsconfig.get_consideration("cs"),
+            path.suffix in gsedit.gsconfig.get_consideration("java"),
+            path.suffix in gsedit.gsconfig.get_consideration("text"),
+            path.suffix in gsedit.gsconfig.get_consideration("go"),
+            path.suffix in gsedit.gsconfig.get_consideration("haskell"),
+            path.suffix in gsedit.gsconfig.get_consideration("ruby"),
         )
         if is_new_file:
             window.tab.addTab(editor, "untitled")
