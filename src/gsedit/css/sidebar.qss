@@ -3,7 +3,7 @@ QFrame {
     border-right: 1px solid black;  
     border-top: none;              
     border-bottom: none;           
-    border-left: none;             
+    border-left: none;           
 }
 
 

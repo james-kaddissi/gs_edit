@@ -58,3 +58,13 @@ def get_preference(category, pref):
     except FileNotFoundError:
         print("Config file not found, please ensure the config_path is correct and points to a proper config json.")
         return None
+
+def get_layout(layout):
+    try:
+        with open(config_path, 'r') as file:
+            config = json.load(file)
+
+        return config["layouts"][layout]
+    except FileNotFoundError:
+        print("Config file not found, please ensure the config_path is correct and points to a proper config json.")
+        return None

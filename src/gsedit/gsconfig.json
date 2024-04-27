@@ -15,12 +15,15 @@
         "css": [".css"],
         "cs": [".cs"],
         "java": [".java"],
-        "txt": [".txt"],
+        "text": [".txt"],
         "haskell": [".hs"],
         "go": [".go"],
         "ruby": [".rb"]
     },
     "tools-preferences": {
         "tool-replace": true 
+    },
+    "layouts": {
+        "terminal-span": "partial"
     }
 }

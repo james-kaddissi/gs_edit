@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from gsedit.integrated_terminal import IntegratedTerminal
+import gsedit.gsconfig
 
 import os
 
@@ -31,33 +32,58 @@ class MainBodyFrame(QFrame):
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
     
     def set_layout(self):
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
+        if(gsedit.gsconfig.get_layout("terminal-span") == "full"):
+            layout = QVBoxLayout(self)
+            layout.setContentsMargins(0, 0, 0, 0)
+            layout.setSpacing(0)
+            
+            self.vertical_split = QSplitter(Qt.Vertical)
+            self.vertical_split.setHandleWidth(2)  
+            
+            combined_widget = QWidget()
+            combined_layout = QVBoxLayout(combined_widget)
+            combined_layout.setContentsMargins(0, 0, 0, 0)
+            combined_layout.setSpacing(0)
+            
+            combined_layout.addWidget(self.window.top_bar)
+            self.editor_area = QWidget()
+            editor_layout = QHBoxLayout(self.editor_area)
+            editor_layout.setContentsMargins(0, 0, 0, 0)
+            editor_layout.setSpacing(0)
+            editor_layout.addWidget(self.window.sidebar)
+            editor_layout.addWidget(self.window.horizontal_split)
+            combined_layout.addWidget(self.editor_area)
+            self.terminal_widget = IntegratedTerminal(self)
         
-        self.vertical_split = QSplitter(Qt.Vertical)
-        self.vertical_split.setHandleWidth(2)  
-        
-        combined_widget = QWidget()
-        combined_layout = QVBoxLayout(combined_widget)
-        combined_layout.setContentsMargins(0, 0, 0, 0)
-        combined_layout.setSpacing(0)
-        
-        combined_layout.addWidget(self.window.top_bar)
-        self.editor_area = QWidget()
-        editor_layout = QHBoxLayout(self.editor_area)
-        editor_layout.setContentsMargins(0, 0, 0, 0)
-        editor_layout.setSpacing(0)
-        editor_layout.addWidget(self.window.sidebar)
-        editor_layout.addWidget(self.window.horizontal_split)
-        combined_layout.addWidget(self.editor_area)  
-        
-        
-
-        self.terminal_widget = IntegratedTerminal(self)
-        
-        self.vertical_split.addWidget(combined_widget)
-        self.vertical_split.addWidget(self.terminal_widget)
-        layout.addWidget(self.vertical_split)
-        
-        self.terminal_widget.hide()
+            self.vertical_split.addWidget(combined_widget)
+            self.vertical_split.addWidget(self.terminal_widget)
+            layout.addWidget(self.vertical_split)
+            
+            self.terminal_widget.hide()
+        else:
+            layout = QVBoxLayout(self)
+            layout.setContentsMargins(0, 0, 0, 0)
+            layout.setSpacing(0)
+            self.terminal_widget = IntegratedTerminal(self)
+            self.vertical_split = QSplitter(Qt.Vertical)
+            self.vertical_split.setHandleWidth(2)  
+            
+            combined_widget = QWidget()
+            combined_layout = QVBoxLayout(combined_widget)
+            combined_layout.setContentsMargins(0, 0, 0, 0)
+            combined_layout.setSpacing(0)
+            
+            combined_layout.addWidget(self.window.top_bar)
+            self.editor_area = QWidget()
+            editor_layout = QHBoxLayout(self.editor_area)
+            editor_layout.setContentsMargins(0, 0, 0, 0)
+            editor_layout.setSpacing(0)
+            self.window.sidebar.setFixedWidth(63) 
+            editor_layout.addWidget(self.window.sidebar)
+            self.vertical_split.addWidget(self.window.horizontal_split)
+            self.vertical_split.addWidget(self.terminal_widget)
+            editor_layout.addWidget(self.vertical_split)
+            combined_layout.addWidget(self.editor_area)  
+            layout.addWidget(combined_widget)
+            
+            self.terminal_widget.hide()
