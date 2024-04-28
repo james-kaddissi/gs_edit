@@ -1,9 +1,6 @@
-from PyQt5.QtWidgets import (
-   QFrame, QHBoxLayout, QLabel, QWidget, QMenu, QAction, QMenuBar, QPushButton
-)
-
-from PyQt5.QtCore import Qt, QEvent, QSize
-from PyQt5.QtGui import QPixmap, QIcon, QImage
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
 from gsedit.menu_bar import MenuBar
 
@@ -21,6 +18,7 @@ class MenuItems(QWidget):
         self.lay.setSpacing(0)
 
         self.add_menu_bar()
+        self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
 
     def add_menu_bar(self):
         menu_bar = MenuBar(self.main_window, self.main_window.bar, self.main_window.file_explorer_frame.file_explorer)
@@ -37,20 +35,22 @@ class TopBar(QFrame):
         self.setFixedHeight(40)
         
         main_layout = QHBoxLayout(self)
-        self.setMouseTracking(True)  # Enable mouse tracking
+        main_layout.setSpacing(0)
+        self.setMouseTracking(True)
         self.drag_position = None
         self.installEventFilter(self) 
-        img_logo = QImage(25, 25, QImage.Format.Format_Alpha8)
-        img_logo.fill(Qt.GlobalColor.transparent)
-        logo = QPixmap.fromImage(img_logo)
+        base_path = os.path.dirname(__file__)
+        image_path = os.path.join(base_path, 'images', 'icon.png')
+        logo = QPixmap(image_path)
+        small_logo = logo.scaled(QSize(25, 25), Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.title_lbl = QLabel()
-        self.title_lbl.setStyleSheet(f"font-family: Arial; font-size: 16px; font-weight: 500; color: white; margin-left: 10px; border: none;") 
-        self.title_lbl.setPixmap(logo)
-        # main_layout.addWidget(self.title_lbl, alignment=Qt.AlignmentFlag.AlignLeft) 
+        self.title_lbl.setPixmap(small_logo)
+        self.title_lbl.setMaximumWidth(small_logo.width())
+        main_layout.addWidget(self.title_lbl, alignment=Qt.AlignmentFlag.AlignLeft) 
 
         menu = MenuItems(self.main_window)
-        main_layout.addWidget(menu, alignment=Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignCenter) 
-
+        main_layout.addWidget(menu, alignment=Qt.AlignmentFlag.AlignLeft) 
+        main_layout.addStretch(1)
         self.top_label = QLabel("")
         self.top_label.setStyleSheet(f"font-size: 14px; font-weight: bold; color: white; margin-right: 10px; border: none;") 
         main_layout.addWidget(self.top_label, alignment=Qt.AlignmentFlag.AlignCenter)  

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='GS-Edit', 
-    version='0.2.5',
+    version='0.2.6',
     description='The Best Code Editor - GS',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',  
