@@ -138,15 +138,16 @@ class FileExplorer(QTreeView):
     
     def delete_command(self, i):
         name = self.file_system_model.fileName(i)
-        delete_confirm = PopupMessage("Delete", f"Confirm deletion of '{name}'?")
-        if delete_confirm == QMessageBox.Yes:
-            if self.selectionModel().selectedRows():
-                for j in self.selectionModel().selectedRows():
-                    path = Path(self.file_system_model.filePath(i))
-                    self.delete(path)
-                    for k in self.tab.findChildren(TextEditor):
-                        if k.path.name == path.name:
-                            self.tab.removeTab(self.tab.indexOf(k))
+        reply = QMessageBox.question(None, "Delete", f"Confirm deletion of '{name}'?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            path = Path(self.file_system_model.filePath(i))
+            if path.is_file():
+                try:
+                    path.unlink()  
+                    print(f"Deleted: {path}")
+                except Exception as e:
+                    QMessageBox.critical(None, "Error", f"Failed to delete {name}: {str(e)}")
     
     def newfile_command(self, i):
         root = self.file_system_model.rootPath()
