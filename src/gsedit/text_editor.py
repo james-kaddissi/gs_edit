@@ -6,9 +6,10 @@ from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from typing import *
-
 import pkgutil
 import keyword
+
+from gsedit import vc
 
 import gsedit.gsconfig
 
@@ -243,5 +244,9 @@ class TextEditor(QsciScintilla):
             self.unsaved_changes = True
         if self.first_access:
             self.first_access = False
+        vcdb = vc.create_version_control()
+        vcdb.save_version("example.txt", "Initial commit")
+        print(vcdb)
+        
     
     

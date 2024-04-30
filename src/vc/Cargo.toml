@@ -1,0 +1,11 @@
+[package]
+name = "vc"
+version = "0.1.0"
+
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies.pyo3]
+version = "0.21.2"
+features = ["extension-module"]
