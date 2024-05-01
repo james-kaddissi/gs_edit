@@ -36,6 +36,7 @@ class MainWindow(FramelessMainWindow):
         self.current_file = None
         self.current_tool = None
         self.css_editor = CSSEditor(self)
+        self.center_window()
 
     def initialize_window(self):
         # window configuration
@@ -51,6 +52,12 @@ class MainWindow(FramelessMainWindow):
         self.configure_statusbar()
         self.configure_body()
         self.show()
+    
+    def center_window(self):
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
 
     def configure_statusbar(self):
         self.bar = StatusBar()
