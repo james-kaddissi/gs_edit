@@ -173,7 +173,25 @@ class TextEditor(QsciScintilla):
         self.setMarginsForegroundColor(QColor("#7a7e82"))
         self.setMarginsBackgroundColor((QColor("#101316")))
         self.setMarginsFont(self.window_font)
+
+        self.vcdb = vc.create_version_control()
+        self.save_initial_version()
     
+    def save_initial_version(self):
+        if self.path:
+            initial_content = self.text()
+            self.vcdb.save_version(self.path.as_posix(), initial_content)
+    
+    def print_edit_history(self):
+        if self.path:
+            try:
+                history = self.vcdb.get_full_history(self.path.as_posix())
+                print(f"Edit History for {self.path.name}:")
+                for index, version in enumerate(history):
+                    print(f"Version {index + 1}:\n{version}\n{'-' * 40}")
+            except Exception as e:
+                print(f"Failed to retrieve history: {str(e)}")
+
     @property
     def unsaved_changes(self):
         return self._unsaved_changes
@@ -244,9 +262,8 @@ class TextEditor(QsciScintilla):
             self.unsaved_changes = True
         if self.first_access:
             self.first_access = False
-        vcdb = vc.create_version_control()
-        vcdb.save_version("example.txt", "Initial commit")
-        print(vcdb)
+        self.vcdb.save_version(self.path.as_posix(), self.text())
+        self.print_edit_history()
         
     
     
