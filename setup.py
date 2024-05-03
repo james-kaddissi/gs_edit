@@ -12,7 +12,7 @@ setup(
     packages=find_packages(where='src'),
     package_dir={'': 'src'},
     package_data={
-        'gsedit': ['css/*.qss', 'images/*.png', 'images/*.svg', 'images/*.qrc'],
+        'gsedit': ['css/*.qss', 'images/*.png', 'images/*.svg', 'images/*.qrc', '*.json'],
     },
     rust_extensions=[RustExtension("gsedit.vc", "src/vc/Cargo.toml", binding=Binding.PyO3)],
     install_requires=[
