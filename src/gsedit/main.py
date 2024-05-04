@@ -16,7 +16,7 @@ from gsedit.menu_bar import MenuBar
 from gsedit.tab_bar import TabBar
 from gsedit.main_body import MainBodyFrame
 from gsedit.sidebar import Sidebar
-from gsedit.tools import FileExplorerFrame, GrepFrame
+from gsedit.tools import FileExplorerFrame, GrepFrame, VersionControlFrame
 from gsedit.css_editor import CSSEditor
 from gsedit.top_bar import TopBar
 # Other function imports
@@ -72,6 +72,7 @@ class MainWindow(FramelessMainWindow):
         self.tab = TabBar(self, self.bar)
         self.grep_frame = GrepFrame(self)
         self.file_explorer_frame = FileExplorerFrame(self)
+        self.vc_frame = VersionControlFrame(self)
         self.horizontal_split.addWidget(self.file_explorer_frame)
         self.horizontal_split.addWidget(self.tab)
         self.top_bar = TopBar(self)

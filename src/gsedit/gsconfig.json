@@ -24,6 +24,6 @@
         "tool-replace": true 
     },
     "layouts": {
-        "terminal-span": "partial"
+        "terminal-span": "tab"
     }
 }

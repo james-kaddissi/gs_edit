@@ -41,12 +41,15 @@ class SidebarLayout(QVBoxLayout):
         base_path = os.path.dirname(__file__)
         folder_icon_path = os.path.join(base_path, 'images', 'folder.svg')
         grep_icon_path = os.path.join(base_path, 'images', 'grep.svg')
+        vc_icon_path = os.path.join(base_path, 'images', 'vc.svg')
 
         folder_icon = self.tool_bar_icon(folder_icon_path, "folder")
         grep_icon = self.tool_bar_icon(grep_icon_path, "grep")
+        vc_icon = self.tool_bar_icon(vc_icon_path, "vc")
 
         self.addWidget(folder_icon)
         self.addWidget(grep_icon)
+        self.addWidget(vc_icon)
 
     def tool_bar_icon(self, path, id):
         label = ToolLabel(path, id, self.window)
@@ -95,7 +98,8 @@ class ToolLabel(QLabel):
     def toolbar_toggle(self, tool):
         frame_map = {
             "folder": self.window.file_explorer_frame,
-            "grep": self.window.grep_frame
+            "grep": self.window.grep_frame,
+            "vc": self.window.vc_frame
         }
 
         selected_frame = frame_map.get(tool)

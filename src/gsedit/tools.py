@@ -6,6 +6,7 @@ from PyQt5.QtCore import *
 import os
 
 from gsedit.file_explorer import FileExplorer, FileExplorerLayout
+from gsedit.version_control import VersionControlLayout
 from gsedit.grep import GrepLayout, Searchbar, GrepToggle, GrepResult
 from gsedit.grepgine import Grepgine
 
@@ -60,3 +61,9 @@ class GrepFrame(GeneralToolFrame):
         grep_layout.addWidget(self.grep_view)
 
         self.setLayout(grep_layout)
+    
+class VersionControlFrame(GeneralToolFrame):
+    def __init__(self, window) -> None:
+        super(VersionControlFrame, self).__init__()
+        self.window = window
+        self.vclayout = VersionControlLayout()       
