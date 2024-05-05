@@ -66,4 +66,5 @@ class VersionControlFrame(GeneralToolFrame):
     def __init__(self, window) -> None:
         super(VersionControlFrame, self).__init__()
         self.window = window
-        self.vclayout = VersionControlLayout()       
+        self.vclayout = VersionControlLayout(self.window)
+        self.setLayout(self.vclayout)       

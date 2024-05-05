@@ -8,6 +8,7 @@ use std::sync::{Arc, Mutex};
 #[pyclass]
 struct VersionControl {
     versions: Arc<Mutex<HashMap<String, Vec<String>>>>,
+    initial_versions: Arc<Mutex<HashMap<String, String>>>,
 }
 
 #[pymethods]
@@ -16,12 +17,19 @@ impl VersionControl {
     fn new() -> Self {
         VersionControl {
             versions: Arc::new(Mutex::new(HashMap::new())),
+            initial_versions: Arc::new(Mutex::new(HashMap::new())),
         }
     }
 
     fn save_version(&self, path: String, content: String) {
         let mut versions = self.versions.lock().expect("Lock acquisition failed");
-        versions.entry(path).or_insert_with(Vec::new).push(content);
+        let mut initial_versions = self.initial_versions.lock().expect("Lock acquisition failed");
+        
+        if !initial_versions.contains_key(&path) {
+            initial_versions.insert(path.clone(), content.clone());
+        }
+
+        versions.entry(path.clone()).or_insert_with(Vec::new).push(content);
     }
 
     fn get_version(&self, path: String, version_number: usize) -> PyResult<String> {
@@ -38,6 +46,13 @@ impl VersionControl {
             .cloned()
             .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyIndexError, _>("No history available for the specified path"))
     }
+
+    fn get_initial_version(&self, path: String) -> PyResult<String> {
+        let initial_versions = self.initial_versions.lock().expect("Lock acquisition failed");
+        initial_versions.get(&path)
+            .cloned()
+            .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyIndexError, _>("No initial version available for the specified path"))
+    }
 }
 
 #[pyfunction]
@@ -51,4 +66,3 @@ fn vc(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(create_version_control, m)?)?;
     Ok(())
 }
-

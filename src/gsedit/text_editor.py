@@ -17,6 +17,7 @@ from pathlib import Path
 
 from gsedit.language_lexer import JavaScriptLexer, PythonLexer, CLexer, JSONLexer, RustLexer, CppLexer, HTMLLexer, CSSLexer, CSLexer, JavaLexer, TxtLexer, GoLexer, HaskellLexer, RubyLexer
 from gsedit.code_completer import Completer
+from gsedit.version_control import VersionControlLayout
 
 
 if TYPE_CHECKING:
@@ -26,6 +27,7 @@ class TextEditor(QsciScintilla):
     def __init__(self, window, parent = None, path = None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None, htmlf=None, cssf=None, csf=None, javaf=None, txtf=None, gof=None, hsf=None, rbf=None):
         super(TextEditor, self).__init__(parent)
         self.window = window
+        self.vcl = self.window.vc_frame.vclayout
         self.path = path
         self.abs_path = self.path.absolute()
         self.pyf = pyf
@@ -208,6 +210,15 @@ class TextEditor(QsciScintilla):
                 self.window.tab.setWindowTitle(self.window.windowTitle()[1:])
         self._unsaved_changes = i
 
+    def get_unsaved_changes(self):
+        current_text = self.text()
+
+        initial_content = self.vcdb.get_initial_version(self.path.as_posix())
+        if initial_content != current_text:
+            return current_text
+        else:
+            return None
+
     def comment_shortcut(self, txt):
         sep = txt.split('\n')
         sep.pop()
@@ -263,7 +274,7 @@ class TextEditor(QsciScintilla):
         if self.first_access:
             self.first_access = False
         self.vcdb.save_version(self.path.as_posix(), self.text())
-        self.print_edit_history()
+        self.vcl.update_changes()
         
     
     
