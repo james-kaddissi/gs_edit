@@ -6,6 +6,10 @@ version = "0.1.0"
 [lib]
 crate-type = ["cdylib"]
 
+[dependencies]
+chrono = "0.4.38"
+difference = "2.0.0"
+
 [dependencies.pyo3]
-version = "0.21.2"
+version = "0.15"
 features = ["extension-module"]

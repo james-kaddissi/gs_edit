@@ -28,7 +28,9 @@ class TextEditor(QsciScintilla):
         super(TextEditor, self).__init__(parent)
         self.window = window
         self.vcl = self.window.vc_frame.vclayout
-        self.path = path
+        self.path = path or "Untitled"
+        self.file_path = str(path) if path else "New File"
+        self.saved_version_id = 0
         self.abs_path = self.path.absolute()
         self.pyf = pyf
         self.cf = cf
@@ -211,13 +213,20 @@ class TextEditor(QsciScintilla):
         self._unsaved_changes = i
 
     def get_unsaved_changes(self):
-        current_text = self.text()
-
-        initial_content = self.vcdb.get_initial_version(self.path.as_posix())
-        if initial_content != current_text:
-            return current_text
-        else:
-            return None
+        if self.path:
+            try:
+                current_text = self.text()
+                initial_content = self.vcdb.get_initial_version(self.path.as_posix())
+                if initial_content != current_text:
+                    # Assuming version counting starts from 0 and increments
+                    latest_version_id = self.vcdb.get_latest_version_id(self.path.as_posix())
+                    diff = self.vcdb.diff_versions(self.path.as_posix(), latest_version_id)
+                    return diff
+                else:
+                    return "No unsaved changes."
+            except Exception as e:
+                print(f"Error getting unsaved changes: {str(e)}")
+                return "Error retrieving changes."
 
     def comment_shortcut(self, txt):
         sep = txt.split('\n')
@@ -269,12 +278,15 @@ class TextEditor(QsciScintilla):
             self.code_completer.retrieve(ln + 1, char, self.text())
 
     def text_change(self):
-        if not self.unsaved_changes and not self.first_access:
+        if not self._unsaved_changes and not self.first_access:
             self.unsaved_changes = True
         if self.first_access:
             self.first_access = False
-        self.vcdb.save_version(self.path.as_posix(), self.text())
-        self.vcl.update_changes()
+        current_text = self.text()
+        if self.path:  
+            print("Current text being saved:", current_text)
+            self.vcdb.save_version(self.path.as_posix(), current_text)
+            self.vcl.update_changes()
         
     
     

@@ -8,10 +8,11 @@ import os
 from gsedit import vc
 
 class VersionControlLayout(QVBoxLayout):
-    def __init__(self, window) -> None:
+    def __init__(self, window):
         super(VersionControlLayout, self).__init__()
         self.window = window
         self.editor = self.window.tab.currentWidget()
+        self.vc = vc.VersionControl() 
         self.initialize_layout()
 
     def initialize_layout(self):
@@ -25,8 +26,6 @@ class VersionControlLayout(QVBoxLayout):
         self.unsaved_changes_text.setReadOnly(True)
         self.addWidget(self.unsaved_changes_text)
 
-        self.vcdb = vc.create_version_control()
-
         self.print_unsaved_changes()
 
     def update_changes(self):
@@ -34,12 +33,26 @@ class VersionControlLayout(QVBoxLayout):
         self.print_unsaved_changes()
 
     def print_unsaved_changes(self):
-        if self.editor != None:
-            if self.editor.unsaved_changes:
-                unsaved_changes = self.get_unsaved_changes()
-                self.unsaved_changes_text.setPlainText(unsaved_changes)
-            else:
-                self.unsaved_changes_text.setPlainText("No unsaved changes.")
+        if self.editor is not None:
+            path = self.editor.file_path
+            try:
+                unsaved_changes = self.get_unsaved_changes(path)
+                formatted_changes = self.format_changes(unsaved_changes)
+                self.unsaved_changes_text.setPlainText(formatted_changes)
+            except Exception as e:
+                self.unsaved_changes_text.setPlainText(str(e))
+        else:
+            self.unsaved_changes_text.setPlainText("No file selected")
 
-    def get_unsaved_changes(self):
-        return self.editor.get_unsaved_changes()
+    def get_unsaved_changes(self, path):
+        saved_version_id = self.editor.saved_version_id
+        return self.vc.get_unsaved_changes(path, saved_version_id)
+
+    def format_changes(self, changes):
+        formatted_text = ""
+        for change in changes:
+            line = change['line']
+            change_type = change['type']
+            text = change['text']
+            formatted_text += f"Line {line}: {change_type} -> {text}\n"
+        return formatted_text if formatted_text else "No unsaved changes."

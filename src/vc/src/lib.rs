@@ -1,14 +1,24 @@
+extern crate chrono;
 extern crate pyo3;
+extern crate difference;
 
+use chrono::{DateTime, Utc};
 use pyo3::prelude::*;
-use pyo3::wrap_pyfunction;
+use pyo3::types::PyDict;
+use pyo3::Python;
+
+use difference::{Changeset, Difference};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
+type VersionId = usize;
+type TextData = String;
+type Timestamp = DateTime<Utc>;
+type FileHistory = Vec<(VersionId, Timestamp, TextData)>;
+
 #[pyclass]
 struct VersionControl {
-    versions: Arc<Mutex<HashMap<String, Vec<String>>>>,
-    initial_versions: Arc<Mutex<HashMap<String, String>>>,
+    histories: Arc<Mutex<HashMap<String, FileHistory>>>,
 }
 
 #[pymethods]
@@ -16,53 +26,73 @@ impl VersionControl {
     #[new]
     fn new() -> Self {
         VersionControl {
-            versions: Arc::new(Mutex::new(HashMap::new())),
-            initial_versions: Arc::new(Mutex::new(HashMap::new())),
+            histories: Arc::new(Mutex::new(HashMap::new())),
         }
     }
 
-    fn save_version(&self, path: String, content: String) {
-        let mut versions = self.versions.lock().expect("Lock acquisition failed");
-        let mut initial_versions = self.initial_versions.lock().expect("Lock acquisition failed");
-        
-        if !initial_versions.contains_key(&path) {
-            initial_versions.insert(path.clone(), content.clone());
+    fn save_version(&self, path: String, content: String) -> PyResult<()> {
+        let mut histories = self.histories.lock().unwrap();
+        let history = histories.entry(path).or_insert_with(Vec::new);
+        let version_id = history.len() + 1;
+        let timestamp = Utc::now();
+
+        history.push((version_id, timestamp, content));
+        Ok(())
+    }
+
+    fn get_unsaved_changes(&self, path: String, saved_version_id: VersionId) -> PyResult<Vec<PyObject>> {
+        let gil = Python::acquire_gil();
+        let py = gil.python();
+    
+        let histories = self.histories.lock().unwrap();
+        println!("{}", &path);
+        let history = histories.get(&path).ok_or_else(|| {
+            PyErr::new::<pyo3::exceptions::PyIndexError, _>("No history available for the specified path")
+        })?;
+    
+        if let Some(&(last_version_id, _, ref last_text)) = history.last() {
+            if last_version_id == saved_version_id {
+                return Ok(vec![]); 
+            }
+    
+            let saved_text = &history[saved_version_id - 1].2;
+            let changeset = Changeset::new(saved_text, last_text, "\n");
+    
+            let changes: Vec<PyObject> = changeset.diffs.iter().enumerate().map(|(i, diff)| {
+                let dict = PyDict::new(py);
+                dict.set_item("line", i + 1)?;
+                match diff {
+                    Difference::Same(ref x) => {
+                        dict.set_item("type", "same")?;
+                        dict.set_item("text", x)?;
+                    },
+                    Difference::Add(ref x) => {
+                        dict.set_item("type", "add")?;
+                        dict.set_item("text", x)?;
+                    },
+                    Difference::Rem(ref x) => {
+                        dict.set_item("type", "remove")?;
+                        dict.set_item("text", x)?;
+                    }
+                }
+                Ok(dict.to_object(py))
+            }).collect::<PyResult<Vec<PyObject>>>()?;
+    
+            Ok(changes)
+        } else {
+            Ok(vec![])
         }
-
-        versions.entry(path.clone()).or_insert_with(Vec::new).push(content);
-    }
-
-    fn get_version(&self, path: String, version_number: usize) -> PyResult<String> {
-        let versions = self.versions.lock().expect("Lock acquisition failed");
-        versions.get(&path)
-            .and_then(|history| history.get(version_number))
-            .map(|version| version.clone())
-            .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyIndexError, _>("Version number out of range"))
-    }
-
-    fn get_full_history(&self, path: String) -> PyResult<Vec<String>> {
-        let versions = self.versions.lock().expect("Lock acquisition failed");
-        versions.get(&path)
-            .cloned()
-            .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyIndexError, _>("No history available for the specified path"))
-    }
-
-    fn get_initial_version(&self, path: String) -> PyResult<String> {
-        let initial_versions = self.initial_versions.lock().expect("Lock acquisition failed");
-        initial_versions.get(&path)
-            .cloned()
-            .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyIndexError, _>("No initial version available for the specified path"))
     }
 }
 
 #[pyfunction]
-pub fn create_version_control() -> VersionControl {
+fn create_version_control() -> VersionControl {
     VersionControl::new()
 }
 
 #[pymodule]
-fn vc(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_class::<VersionControl>()?;
+fn vc(py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(create_version_control, m)?)?;
+    m.add_class::<VersionControl>()?;
     Ok(())
 }
