@@ -5,14 +5,13 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import os
 
-from gsedit import vc
 
 class VersionControlLayout(QVBoxLayout):
     def __init__(self, window):
         super(VersionControlLayout, self).__init__()
         self.window = window
         self.editor = self.window.tab.currentWidget()
-        self.vc = vc.VersionControl() 
+        self.vc = self.window.get_version_control()
         self.initialize_layout()
 
     def initialize_layout(self):
@@ -30,29 +29,10 @@ class VersionControlLayout(QVBoxLayout):
 
     def update_changes(self):
         self.editor = self.window.tab.currentWidget()
-        self.print_unsaved_changes()
-
-    def print_unsaved_changes(self):
-        if self.editor is not None:
-            path = self.editor.file_path
-            try:
-                unsaved_changes = self.get_unsaved_changes(path)
-                formatted_changes = self.format_changes(unsaved_changes)
-                self.unsaved_changes_text.setPlainText(formatted_changes)
-            except Exception as e:
-                self.unsaved_changes_text.setPlainText(str(e))
+        if self.editor:
+            self.print_unsaved_changes()
         else:
             self.unsaved_changes_text.setPlainText("No file selected")
 
-    def get_unsaved_changes(self, path):
-        saved_version_id = self.editor.saved_version_id
-        return self.vc.get_unsaved_changes(path, saved_version_id)
-
-    def format_changes(self, changes):
-        formatted_text = ""
-        for change in changes:
-            line = change['line']
-            change_type = change['type']
-            text = change['text']
-            formatted_text += f"Line {line}: {change_type} -> {text}\n"
-        return formatted_text if formatted_text else "No unsaved changes."
+    def print_unsaved_changes(self):
+        self.unsaved_changes_text.setPlainText(self.window.get_version_control().get_full_hisotry())

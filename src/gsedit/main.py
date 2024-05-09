@@ -22,12 +22,15 @@ from gsedit.top_bar import TopBar
 # Other function imports
 import gsedit.gsconfig
 
+from gsedit import vc
+
 from qframelesswindow import FramelessMainWindow
 
 class MainWindow(FramelessMainWindow):
     def __init__(self):
         # CONFIG
         super(QMainWindow, self).__init__()
+        self.version_control = vc.VersionControl("./version_data.json")
         self.app_title = "GS-Edit"
         self.app_icon = QIcon("./src/gsedit/images/icon.png")
         self.setWindowIcon(self.app_icon)
@@ -37,6 +40,9 @@ class MainWindow(FramelessMainWindow):
         self.current_tool = None
         self.css_editor = CSSEditor(self)
         self.center_window()
+
+    def get_version_control(self):
+        return self.version_control
 
     def initialize_window(self):
         # window configuration

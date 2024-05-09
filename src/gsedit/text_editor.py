@@ -9,7 +9,6 @@ from typing import *
 import pkgutil
 import keyword
 
-from gsedit import vc
 
 import gsedit.gsconfig
 
@@ -178,18 +177,19 @@ class TextEditor(QsciScintilla):
         self.setMarginsBackgroundColor((QColor("#101316")))
         self.setMarginsFont(self.window_font)
 
-        self.vcdb = vc.create_version_control()
+        self.vc = self.window.get_version_control()
         self.save_initial_version()
     
     def save_initial_version(self):
         if self.path:
             initial_content = self.text()
-            self.vcdb.save_version(self.path.as_posix(), initial_content)
+            self.vc.save_version(self.path.as_posix(), initial_content)
+            self.saved_version_id = 1
     
     def print_edit_history(self):
         if self.path:
             try:
-                history = self.vcdb.get_full_history(self.path.as_posix())
+                history = self.vc.get_full_history(self.path.as_posix())
                 print(f"Edit History for {self.path.name}:")
                 for index, version in enumerate(history):
                     print(f"Version {index + 1}:\n{version}\n{'-' * 40}")
@@ -212,21 +212,6 @@ class TextEditor(QsciScintilla):
                 self.window.tab.setWindowTitle(self.window.windowTitle()[1:])
         self._unsaved_changes = i
 
-    def get_unsaved_changes(self):
-        if self.path:
-            try:
-                current_text = self.text()
-                initial_content = self.vcdb.get_initial_version(self.path.as_posix())
-                if initial_content != current_text:
-                    # Assuming version counting starts from 0 and increments
-                    latest_version_id = self.vcdb.get_latest_version_id(self.path.as_posix())
-                    diff = self.vcdb.diff_versions(self.path.as_posix(), latest_version_id)
-                    return diff
-                else:
-                    return "No unsaved changes."
-            except Exception as e:
-                print(f"Error getting unsaved changes: {str(e)}")
-                return "Error retrieving changes."
 
     def comment_shortcut(self, txt):
         sep = txt.split('\n')
@@ -276,17 +261,10 @@ class TextEditor(QsciScintilla):
     def on_cursor_position_changed(self, ln, char):
         if self.pyf:
             self.code_completer.retrieve(ln + 1, char, self.text())
-
+    
     def text_change(self):
-        if not self._unsaved_changes and not self.first_access:
-            self.unsaved_changes = True
-        if self.first_access:
-            self.first_access = False
-        current_text = self.text()
-        if self.path:  
-            print("Current text being saved:", current_text)
-            self.vcdb.save_version(self.path.as_posix(), current_text)
-            self.vcl.update_changes()
+        current_text = self.text().strip()
+        self.window.get_version_control.save_version(self.path.as_posix(), current_text)
         
     
     
