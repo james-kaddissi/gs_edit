@@ -178,12 +178,17 @@ class TextEditor(QsciScintilla):
         self.setMarginsFont(self.window_font)
 
         self.vc = self.window.get_version_control()
-        self.save_initial_version()
+        QTimer.singleShot(100, self.save_initial_version) 
     
     def save_initial_version(self):
         if self.path:
             initial_content = self.text()
             self.vc.add_save(self.path.as_posix(), initial_content)
+
+    def save_version(self):
+        if self.path:
+            content = self.text()
+            self.vc.add_save(self.path.as_posix(), content)
 
     @property
     def unsaved_changes(self):
@@ -252,7 +257,7 @@ class TextEditor(QsciScintilla):
             self.code_completer.retrieve(ln + 1, char, self.text())
     
     def text_change(self):
-        current_text = self.text().strip()
+        current_text = self.text()
         print(self.path.as_posix())
         self.vc.add_change(self.path.as_posix(), current_text)
         

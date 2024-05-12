@@ -250,7 +250,7 @@ class MenuBar(QMenuBar):
     def save_command(self):
         if self.window.current_file is None and self.window.tab.count() > 0:
             self.save_as_command()
-
+        self.window.tab.currentWidget().save_version()
         save_editor = self.window.tab.currentWidget()
         self.window.current_file.write_text(save_editor.text())
         self.status_bar.set_timed_message(f"Saved {self.window.current_file.name}", 2000)
@@ -260,7 +260,7 @@ class MenuBar(QMenuBar):
         save_editor = self.window.tab.currentWidget()
         if save_editor is None:
             return
-
+        self.window.tab.currentWidget().save_version()
         path_to_file = QFileDialog.getSaveFileName(self.window, "Save As", os.getcwd())[0]
         if path_to_file == '':
             self.status_bar.set_timed_message("Save cancelled.", 2000)
