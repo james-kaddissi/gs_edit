@@ -183,18 +183,7 @@ class TextEditor(QsciScintilla):
     def save_initial_version(self):
         if self.path:
             initial_content = self.text()
-            self.vc.save_version(self.path.as_posix(), initial_content)
-            self.saved_version_id = 1
-    
-    def print_edit_history(self):
-        if self.path:
-            try:
-                history = self.vc.get_full_history(self.path.as_posix())
-                print(f"Edit History for {self.path.name}:")
-                for index, version in enumerate(history):
-                    print(f"Version {index + 1}:\n{version}\n{'-' * 40}")
-            except Exception as e:
-                print(f"Failed to retrieve history: {str(e)}")
+            self.vc.add_save(self.path.as_posix(), initial_content)
 
     @property
     def unsaved_changes(self):
@@ -264,7 +253,8 @@ class TextEditor(QsciScintilla):
     
     def text_change(self):
         current_text = self.text().strip()
-        self.window.get_version_control.save_version(self.path.as_posix(), current_text)
+        print(self.path.as_posix())
+        self.vc.add_change(self.path.as_posix(), current_text)
         
     
     

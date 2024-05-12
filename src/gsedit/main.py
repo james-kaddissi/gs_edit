@@ -30,7 +30,7 @@ class MainWindow(FramelessMainWindow):
     def __init__(self):
         # CONFIG
         super(QMainWindow, self).__init__()
-        self.version_control = vc.VersionControl("./version_data.json")
+        self.version_control = vc.VersionControl()
         self.app_title = "GS-Edit"
         self.app_icon = QIcon("./src/gsedit/images/icon.png")
         self.setWindowIcon(self.app_icon)
