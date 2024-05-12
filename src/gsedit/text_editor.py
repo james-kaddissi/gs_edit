@@ -178,8 +178,13 @@ class TextEditor(QsciScintilla):
         self.setMarginsFont(self.window_font)
 
         self.vc = self.window.get_version_control()
-        QTimer.singleShot(100, self.save_initial_version) 
+        QTimer.singleShot(10, self.save_initial_version) 
+        self.initializing = True
+        QTimer.singleShot(10, self.finalize_initialization)
     
+    def finalize_initialization(self):
+        self.initializing = False
+
     def save_initial_version(self):
         if self.path:
             initial_content = self.text()
@@ -189,6 +194,7 @@ class TextEditor(QsciScintilla):
         if self.path:
             content = self.text()
             self.vc.add_save(self.path.as_posix(), content)
+            self.unsaved_changes = False
 
     @property
     def unsaved_changes(self):
@@ -197,13 +203,15 @@ class TextEditor(QsciScintilla):
     @unsaved_changes.setter
     def unsaved_changes(self, i):
         ci = self.window.tab.currentIndex()
+        current_tab_text = self.window.tab.tabText(ci)
+
         if i:
-            self.window.tab.setTabText(ci, "*"+self.path.name)
-            self.window.setWindowTitle(f"*{self.path.name} - {self.window.app_title}")
+            if not current_tab_text.startswith("*"):
+                self.window.tab.setTabText(ci, "*" + current_tab_text)
         else:
-            if self.window.tab.tabText(ci).startswith("*"):
-                self.window.tab.setTabText(ci, self.window.tab.tabText(ci)[1:])
-                self.window.tab.setWindowTitle(self.window.windowTitle()[1:])
+            if current_tab_text.startswith("*"):
+                self.window.tab.setTabText(ci, current_tab_text[1:])
+
         self._unsaved_changes = i
 
 
@@ -220,6 +228,7 @@ class TextEditor(QsciScintilla):
         return '\n'.join(clines)
 
     def keyPressEvent(self, e: QKeyEvent) -> None:
+        super().keyPressEvent(e)
         if e.modifiers() == Qt.ControlModifier and e.key() == Qt.Key_Space:
             if self.pyf:
                 cursor_position = self.getCursorPosition()
@@ -250,16 +259,17 @@ class TextEditor(QsciScintilla):
                 self.setSelection(-1, -1, -1, -1)
                 self.setCursorPosition(i, j)
             return    
-        return super().keyPressEvent(e)
+        
         
     def on_cursor_position_changed(self, ln, char):
         if self.pyf:
             self.code_completer.retrieve(ln + 1, char, self.text())
     
     def text_change(self):
-        current_text = self.text()
-        print(self.path.as_posix())
-        self.vc.add_change(self.path.as_posix(), current_text)
+        if not self.initializing:
+            self.unsaved_changes = True
+            current_text = self.text()
+            self.vc.add_change(self.path.as_posix(), current_text)
         
     
     
