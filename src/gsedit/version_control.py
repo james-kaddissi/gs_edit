@@ -40,11 +40,10 @@ class VersionControlLayout(QVBoxLayout):
         self.scroll_area.setWidget(self.scroll_area_widget_contents)
         self.addWidget(self.scroll_area)
 
-        # Ensure the scroll area is sufficiently sized
         self.scroll_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.scroll_area.setMinimumHeight(200)
 
-    def get_unsaved_widget(self, filename, diff):
+    def get_unsaved_widget(self, filepath, diff):
         widget = QWidget()
         layout = QHBoxLayout(widget)
         
@@ -56,18 +55,31 @@ class VersionControlLayout(QVBoxLayout):
             icon_label.setPixmap(self.icons['removed'])
         else:
             icon_label.setPixmap(self.icons['neutral'])
-        layout.addWidget(icon_label)
+        
 
-        text_label = QLabel(f"{filename}: {diff}")
+        filename = os.path.basename(filepath)
+
+        parts = diff.split() 
+        if len(parts) > 1:
+            if parts[1] =="changes" or parts[1] == "comparable":
+                change_count = '0'
+            else:
+                change_count = parts[1] 
+        else:
+            change_count = '0'
+
+        text_label = QLabel(f"{change_count} in {filename}")
         text_label.setAlignment(Qt.AlignVCenter)
         text_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        layout.addWidget(icon_label)
         layout.addWidget(text_label)
+
 
         widget.setLayout(layout)
         return widget
 
     def update_changes(self):
-        self.scroll_area_widget_contents.clear()  # Clear all items
+        self.scroll_area_widget_contents.clear()  
         for i in range(self.window.tab.count()):
             editor = self.window.tab.widget(i)
             if hasattr(editor, 'path'):
@@ -75,17 +87,15 @@ class VersionControlLayout(QVBoxLayout):
                 diff = self.vc.get_difference(file_path)
                 item = QListWidgetItem(self.scroll_area_widget_contents)
                 widget = self.get_unsaved_widget(file_path, diff)
-                item.setSizeHint(widget.sizeHint())  # Set the size hint
+                item.setSizeHint(widget.sizeHint())  
                 self.scroll_area_widget_contents.addItem(item)
                 self.scroll_area_widget_contents.setItemWidget(item, widget)
 
     def resizeEvent(self, event):
-        # Adjust the height of the scroll area based on the window size
         new_height = self.window.height() / 3
         self.scroll_area.setFixedHeight(new_height)
         super().resizeEvent(event)
 
-    # Other methods remain unchanged
 
     def get_current_file_path(self):
         editor = self.window.tab.currentWidget()
