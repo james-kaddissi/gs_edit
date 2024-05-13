@@ -12,10 +12,19 @@ class VersionControlLayout(QVBoxLayout):
         self.window = window
         self.editor = self.window.tab.currentWidget()
         self.vc = self.window.get_version_control()
+        self.icons = self.load_icons()
         self.initialize_layout()
         self.update_timer = QTimer(self)
         self.update_timer.timeout.connect(self.update_changes)
         self.update_timer.start(100)
+
+    def load_icons(self):
+        base_path = os.path.dirname(__file__)
+        icons = {}
+        icons['added'] = QPixmap(os.path.join(base_path, 'images', 'add_icon.png')).scaled(16, 16, Qt.KeepAspectRatio)
+        icons['removed'] = QPixmap(os.path.join(base_path, 'images', 'remove_icon.png')).scaled(16, 16, Qt.KeepAspectRatio)
+        icons['neutral'] = QPixmap(os.path.join(base_path, 'images', 'neutral_icon.png')).scaled(16, 16, Qt.KeepAspectRatio)
+        return icons
 
     def initialize_layout(self):
         self.setContentsMargins(0, 0, 0, 0)
@@ -36,23 +45,21 @@ class VersionControlLayout(QVBoxLayout):
         self.scroll_area.setMinimumHeight(200)
 
     def get_unsaved_widget(self, filename, diff):
-        # Create the layout and widgets for each list item
         widget = QWidget()
         layout = QHBoxLayout(widget)
         
-        # Configure icon label
         icon_label = QLabel()
-        icon_path = os.path.join(os.path.dirname(__file__), 'images',
-                                'add_icon.png' if "Added" in diff else
-                                'remove_icon.png' if "Removed" in diff else
-                                'neutral_icon.png')
-        icon_label.setPixmap(QPixmap(icon_path).scaled(16, 16, Qt.KeepAspectRatio))
-        icon_label.setAlignment(Qt.AlignCenter)  # Center alignment for icon
+        icon_label.setAlignment(Qt.AlignCenter)
+        if "Added" in diff:
+            icon_label.setPixmap(self.icons['added'])
+        elif "Removed" in diff:
+            icon_label.setPixmap(self.icons['removed'])
+        else:
+            icon_label.setPixmap(self.icons['neutral'])
         layout.addWidget(icon_label)
 
-        # Configure text label
         text_label = QLabel(f"{filename}: {diff}")
-        text_label.setAlignment(Qt.AlignVCenter)  # Vertical center alignment for text
+        text_label.setAlignment(Qt.AlignVCenter)
         text_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         layout.addWidget(text_label)
 
