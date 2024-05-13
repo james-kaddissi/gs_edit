@@ -23,7 +23,7 @@ class Sidebar(QFrame):
         base_path = os.path.dirname(__file__)  
         style_sheet_path = os.path.join(base_path, 'css', 'sidebar.qss')
         with open(style_sheet_path, "r") as style_file:
-            self.setStyleSheet(style_file.read()) #collin smith
+            self.setStyleSheet(style_file.read())
 
 class SidebarLayout(QVBoxLayout):
     def __init__(self, window) -> None:
