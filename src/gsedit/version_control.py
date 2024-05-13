@@ -22,54 +22,64 @@ class VersionControlLayout(QVBoxLayout):
         self.setSpacing(0)
 
         title_label = QLabel("Unsaved Changes:")
+        title_label.setAlignment(Qt.AlignCenter)
         self.addWidget(title_label)
+
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
-        self.scroll_area_widget_contents = QWidget()
+        self.scroll_area_widget_contents = QListWidget()
         self.scroll_area.setWidget(self.scroll_area_widget_contents)
-        self.unsaved_list = QVBoxLayout(self.scroll_area_widget_contents)
         self.addWidget(self.scroll_area)
 
-        self.update_changes()
+        # Ensure the scroll area is sufficiently sized
+        self.scroll_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.scroll_area.setMinimumHeight(200)
 
     def get_unsaved_widget(self, filename, diff):
-        widget = QHBoxLayout()
+        # Create the layout and widgets for each list item
+        widget = QWidget()
+        layout = QHBoxLayout(widget)
+        
+        # Configure icon label
         icon_label = QLabel()
-        # Process the diff string to determine the icon
-        if "Added" in diff:
-            base_path = os.path.dirname(__file__)  
-            image_path = os.path.join(base_path, 'images', 'add_icon.png')
-            icon = QIcon(image_path)
-        elif "Removed" in diff:
-            base_path = os.path.dirname(__file__)  
-            image_path = os.path.join(base_path, 'images', 'remove_icon.png')
-            icon = QIcon(image_path)
-        else:
-            base_path = os.path.dirname(__file__)  
-            image_path = os.path.join(base_path, 'images', 'neutral_icon.png')
-            icon = QIcon(image_path)
-        icon_label.setPixmap(icon.pixmap(QSize(16, 16)))
-        widget.addWidget(icon_label)
+        icon_path = os.path.join(os.path.dirname(__file__), 'images',
+                                'add_icon.png' if "Added" in diff else
+                                'remove_icon.png' if "Removed" in diff else
+                                'neutral_icon.png')
+        icon_label.setPixmap(QPixmap(icon_path).scaled(16, 16, Qt.KeepAspectRatio))
+        icon_label.setAlignment(Qt.AlignCenter)  # Center alignment for icon
+        layout.addWidget(icon_label)
 
+        # Configure text label
         text_label = QLabel(f"{filename}: {diff}")
-        widget.addWidget(text_label)
+        text_label.setAlignment(Qt.AlignVCenter)  # Vertical center alignment for text
+        text_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        layout.addWidget(text_label)
 
-        container_widget = QWidget()
-        container_widget.setLayout(widget)
-        return container_widget
+        widget.setLayout(layout)
+        return widget
 
     def update_changes(self):
-        while self.unsaved_list.count():
-            item = self.unsaved_list.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+        self.scroll_area_widget_contents.clear()  # Clear all items
         for i in range(self.window.tab.count()):
             editor = self.window.tab.widget(i)
             if hasattr(editor, 'path'):
                 file_path = str(editor.path.as_posix())
                 diff = self.vc.get_difference(file_path)
-                unsaved_widget = self.get_unsaved_widget(file_path, diff)
-                self.unsaved_list.addWidget(unsaved_widget)
+                item = QListWidgetItem(self.scroll_area_widget_contents)
+                widget = self.get_unsaved_widget(file_path, diff)
+                item.setSizeHint(widget.sizeHint())  # Set the size hint
+                self.scroll_area_widget_contents.addItem(item)
+                self.scroll_area_widget_contents.setItemWidget(item, widget)
+
+    def resizeEvent(self, event):
+        # Adjust the height of the scroll area based on the window size
+        new_height = self.window.height() / 3
+        self.scroll_area.setFixedHeight(new_height)
+        super().resizeEvent(event)
+
+    # Other methods remain unchanged
+
     def get_current_file_path(self):
         editor = self.window.tab.currentWidget()
         if editor and hasattr(editor, 'path'):
