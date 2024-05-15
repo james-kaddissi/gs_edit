@@ -19,20 +19,20 @@ QScrollBar:vertical {
     border: none;
     width: 12px;
     margin: 15px 0 15px 0;
-    background-color: #2e2e2e;
+    background-color: #101316;
     border-radius: 0px;
 }
 
 QScrollBar:handle:vertical {
-    background-color: #424141;
+    background-color: #171c20;
 }
 
 QScrollBar:handle:vertical:hover {
-    background-color: #535050;
+    background-color: #2a333a;
 }
 
 QScrollBar:handle:vertical:pressed {
-    background-color: #646363;
+    background-color: #3b4852;
 }
 
 QScrollBar::sub-line::vertical {
@@ -63,20 +63,20 @@ QScrollBar:horizontal {
     border: none;
     height: 12px;
     margin: 0 0 0 0;
-    background-color: #2e2e2e;
+    background-color: #101316;
     border-radius: 0px;
 }
 
 QScrollBar:handle:horizontal {
-    background-color: #424141;
+    background-color: #171c20;
 }
 
 QScrollBar:handle:horizontal:hover {
-    background-color: #535050;
+    background-color: #2a333a;
 }
 
 QScrollBar:handle:horizontal:pressed {
-    background-color: #646363;
+    background-color: #3b4852;
 }
 
 QScrollBar::sub-line::horizontal {
@@ -105,7 +105,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 
 QsciScintilla {
     border: none;
-    background-color: #0C0C1A;
+    background-color: #101316;
     color: #d6d6d6;
 }
 

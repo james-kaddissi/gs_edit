@@ -91,10 +91,6 @@ class VersionControlLayout(QVBoxLayout):
                 self.scroll_area_widget_contents.addItem(item)
                 self.scroll_area_widget_contents.setItemWidget(item, widget)
 
-    def resizeEvent(self, event):
-        new_height = self.window.height() / 3
-        self.scroll_area.setFixedHeight(new_height)
-        super().resizeEvent(event)
 
 
     def get_current_file_path(self):
