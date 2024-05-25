@@ -85,10 +85,16 @@ class GrepResult(QListWidget):
             return b'\0' in f.read(1024)
 
     def add_tab(self, window, path: Path, is_new_file=False):
+        if path.is_dir():
+            return
+
+        image_extensions = {".png", ".jpg", ".jpeg", ".gif", ".bmp"}
+        if path.suffix.lower() in image_extensions:
+            self.add_image_tab(window, path)
+            return
+
         if not is_new_file and self.valid_file_check(path):
             window.statusBar().set_timed_message("Cannot open this file type", 2000)
-            return
-        if path.is_dir():
             return
 
         editor = self.text_editor(
@@ -126,6 +132,32 @@ class GrepResult(QListWidget):
 
         if not is_new_file:
             editor.setText(path.read_text(encoding="utf-8"))
+        window.setWindowTitle(path.name)
+        window.current_file = path
+        window.tab.setCurrentIndex(window.tab.count() - 1)
+        window.statusBar().set_timed_message(f"{path.name} opened", 2000)
+
+    def add_image_tab(self, window, path: Path):
+        container = QWidget()
+        layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignCenter)
+        container.setLayout(layout)
+
+        label = QLabel()
+        pixmap = QPixmap(str(path))
+
+
+        max_size = 400 
+        scaled_pixmap = pixmap.scaled(max_size, max_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        label.setPixmap(scaled_pixmap)
+
+        layout.addWidget(label)
+
+        scroll_area = QScrollArea()
+        scroll_area.setWidget(container)
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setStyleSheet("background-color: #101316; border: none;")
+        window.tab.addTab(scroll_area, path.name)
         window.setWindowTitle(path.name)
         window.current_file = path
         window.tab.setCurrentIndex(window.tab.count() - 1)
