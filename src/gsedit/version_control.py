@@ -36,6 +36,7 @@ class VersionControlLayout(QVBoxLayout):
 
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setStyleSheet("background-color: #0c0f11")
         self.scroll_area_widget_contents = QListWidget()
         self.scroll_area.setWidget(self.scroll_area_widget_contents)
         self.addWidget(self.scroll_area)
@@ -76,6 +77,7 @@ class VersionControlLayout(QVBoxLayout):
 
 
         widget.setLayout(layout)
+        widget.setMinimumHeight(45)
         return widget
 
     def update_changes(self):
