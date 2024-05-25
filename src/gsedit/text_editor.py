@@ -16,21 +16,30 @@ from pathlib import Path
 
 from gsedit.language_lexer import JavaScriptLexer, PythonLexer, CLexer, JSONLexer, RustLexer, CppLexer, HTMLLexer, CSSLexer, CSLexer, JavaLexer, TxtLexer, GoLexer, HaskellLexer, RubyLexer
 from gsedit.code_completer import Completer
-from gsedit.version_control import VersionControlLayout
 
 
 if TYPE_CHECKING:
     from gsedit.main import MainWindow # prevents circular imports
+    from gsedit.version_control import VersionControlLayout
 
 class TextEditor(QsciScintilla):
-    def __init__(self, window, parent = None, path = None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None, htmlf=None, cssf=None, csf=None, javaf=None, txtf=None, gof=None, hsf=None, rbf=None):
+    def __init__(self, window, parent = None, path = None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None, htmlf=None, cssf=None, csf=None, javaf=None, txtf=None, gof=None, hsf=None, rbf=None, is_historical=False):
         super(TextEditor, self).__init__(parent)
         self.window = window
         self.vcl = self.window.vc_frame.vclayout
-        self.path = path or "Untitled"
-        self.file_path = str(path) if path else "New File"
-        self.saved_version_id = 0
-        self.abs_path = self.path.absolute()
+        self.is_historical = is_historical
+
+        if self.is_historical:
+            if isinstance(path, Path):
+                path = str(path)
+            self.path = QDir(path) if path else QDir("Untitled")
+            self.file_path = QDir.toNativeSeparators(self.path.path()) if path else "New File"
+            self.abs_path = self.path.absolutePath()
+        else:
+            self.path = path if path else Path("Untitled")
+            self.file_path = str(self.path) if path else "New File"
+            self.abs_path = str(self.path.resolve())
+
         self.pyf = pyf
         self.cf = cf
         self.jsonf = jsonf

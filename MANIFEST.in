@@ -1,4 +1,4 @@
-QScintilla
-PyQt5
-jedi
-PyQt5-Frameless-Window
+recursive-include gsedit/css *.qss
+recursive-include gsedit/images *.png
+recursive-include gsedit/images *.svg
+recursive-include gsedit/images *.qrc

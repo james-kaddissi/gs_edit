@@ -53,6 +53,7 @@ class MainBodyFrame(QFrame):
             editor_layout.addWidget(self.window.sidebar)
             editor_layout.addWidget(self.window.horizontal_split)
             combined_layout.addWidget(self.editor_area)
+
             self.terminal_widget = IntegratedTerminal(self)
         
             self.vertical_split.addWidget(combined_widget)
