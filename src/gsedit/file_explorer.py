@@ -1,8 +1,5 @@
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from PyQt5 import *
-from PyQt5.Qsci import *
-from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from pathlib import Path
@@ -19,14 +16,14 @@ class FileExplorer(QTreeView):
         self.add_tab = add_tab
         self.window = window
 
-        self.ui_font = QFont("Consolas", 14) 
+        self.ui_font = QFont("Consolas", 14)
 
         self.file_system_model = QFileSystemModel()
         self.file_system_model.setRootPath(os.getcwd())
 
         self.file_system_model.setFilter(QDir.NoDotAndDotDot | QDir.AllDirs | QDir.Files | QDir.Drives)
         self.file_system_model.setReadOnly(False)
-        
+
         self.setFocusPolicy(Qt.NoFocus)
 
         self.setFont(self.ui_font)
@@ -35,7 +32,7 @@ class FileExplorer(QTreeView):
         self.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.setSelectionBehavior(QTreeView.SelectRows)
         self.setEditTriggers(QTreeView.EditTrigger.NoEditTriggers)
-        
+
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.show_menu)
 
@@ -57,25 +54,27 @@ class FileExplorer(QTreeView):
         self.rename = False
         self.curr_index = None
 
-        self.itemDelegate().closeEditor.connect(self.close_editor)
+        self.current_editor = None  # To store the current editor instance
+
+        self.setItemDelegate(EditingDelegate(self))
+        self.installEventFilter(self)
 
     def set_no_root(self):
         # Clear the root path
         self.file_system_model.setRootPath("No Folder Opened")
-        self.setRootIndex(QModelIndex()) 
-        self.setEnabled(False) 
-    
+        self.setRootIndex(QModelIndex())
+        self.setEnabled(False)
+
     def open_file_in_tab(self, file_path):
         editor = TextEditor()
         with open(file_path, 'r', encoding='utf-8') as file:
             editor.setText(file.read())
         self.tab.addTab(editor, os.path.basename(file_path))
 
-
     def set_root_path(self, path):
         self.file_system_model.setRootPath(path)
         self.setRootIndex(self.file_system_model.index(path))
-        self.setEnabled(True)  
+        self.setEnabled(True)
 
     def enable_explorer(self):
         self.setEnabled(True)
@@ -83,7 +82,7 @@ class FileExplorer(QTreeView):
     def close_editor(self, editor):
         if self.rename:
             self.renamefn()
-    
+
     def file_explorer_clicked(self, index: QModelIndex):
         path = self.file_system_model.filePath(index)
         p = Path(path)
@@ -114,7 +113,7 @@ class FileExplorer(QTreeView):
         name = self.file_system_model.fileName(self.curr_index)
         if self.last_name == name: return
         for i in self.tab.findChildren(TextEditor):
-            if i.path.name == self. last_name:
+            if i.path.name == self.last_name:
                 i.path = i.path.parent / name
                 self.tab.setTabText(
                     self.tab.indexOf(i), name
@@ -129,13 +128,13 @@ class FileExplorer(QTreeView):
         self.last_name = self.file_system_model.fileName(i)
         self.rename = True
         self.curr_index = i
-    
+
     def delete(self, path):
         if path.is_dir():
             shutil.rmtree(path)
         else:
             path.unlink()
-    
+
     def delete_command(self, i):
         name = self.file_system_model.fileName(i)
         reply = QMessageBox.question(None, "Delete", f"Confirm deletion of '{name}'?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -147,13 +146,13 @@ class FileExplorer(QTreeView):
                 print(f"Deleted: {path}")
             except Exception as e:
                 QMessageBox.critical(None, "Error", f"Failed to delete {name}: {str(e)}")
-    
+
     def newfile_command(self, i):
         root = self.file_system_model.rootPath()
         if i.column() != -1 and self.file_system_model.isDir(i):
             self.expand(i)
             root = self.file_system_model.filePath(i)
-        
+
         file_path = Path(self.file_system_model.rootPath()) / 'new file'
         x = 1
         while file_path.exists():
@@ -162,7 +161,7 @@ class FileExplorer(QTreeView):
         file_path.touch()
         new_index = self.file_system_model.index(str(file_path.absolute()))
         self.edit(new_index)
-    
+
     def newfolder_command(self):
         folder_path = Path(self.file_system_model.rootPath()) / 'new folder'
         x = 1
@@ -175,22 +174,21 @@ class FileExplorer(QTreeView):
     def reveal_command(self, i):
         path = os.path.abspath(self.file_system_model.filePath(i))
         directory_check = self.file_system_model.isDir(i)
-        if os.name == "nt": # WINDOWS OS
+        if os.name == "nt":  # WINDOWS OS
             if directory_check:
                 subprocess.Popen(f'explorer "{path}"')
             else:
                 subprocess.Popen(f'explorer /select,"{path}"')
         elif os.name == "posix":
-            if sys.platform == "darwin": # MAC OS
+            if sys.platform == "darwin":  # MAC OS
                 if directory_check:
                     subprocess.Popen(["open", path])
                 else:
                     subprocess.Popen(["open", "-R", path])
-            else: # LINUX OS
+            else:  # LINUX OS
                 subprocess.Popen(["xdg-open", os.path.dirname(path)])
         else:
-            raise OSError(f"Unsupported platform {os.name}") # adding support would be easy just add a new elif os.name for that plattform, add a directory_check, and then use the right commands for that OS
-
+            raise OSError(f"Unsupported platform {os.name}")  # adding support would be easy just add a new elif os.name for that platform, add a directory_check, and then use the right commands for that OS
 
     def dragEnterEvent(self, e: QDragEnterEvent) -> None:
         if e.mimeData().hasUrls():
@@ -200,11 +198,11 @@ class FileExplorer(QTreeView):
 
     def dropEvent(self, e: QDropEvent) -> None:
         root = Path(self.file_system_model.rootPath())
-        if e.mimeData().hasUrls:
+        if e.mimeData().hasUrls():
             for url in e.mimeData().urls():
                 path = Path(url.toLocalFile())
-                if self.file_system_model.isDir(self.indexAt(e.pos())): # Check if the location you're dropping into is a directory and not a file
-                    if path.is_dir(): # Check if the item you're dropping is a directory and not a file
+                if self.file_system_model.isDir(self.indexAt(e.pos())):  # Check if the location you're dropping into is a directory and not a file
+                    if path.is_dir():  # Check if the item you're dropping is a directory and not a file
                         shutil.copytree(path, root / path.name)
                     else:
                         if root.samefile(self.file_system_model.rootPath()):
@@ -215,14 +213,39 @@ class FileExplorer(QTreeView):
                                 folder = Path(self.file_system_model.filePath(i))
                                 shutil.move(path, folder / path.name)
                         else:
-
                             shutil.copy(path, root / path.name)
                 else:
                     print("NUH UH")
         e.accept()
 
         return super().dropEvent(e)
-    
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton and self.state() == QAbstractItemView.EditingState:
+            if self.current_editor:
+                self.commitData(self.current_editor)
+                self.closeEditor(self.current_editor, QAbstractItemDelegate.NoHint)
+                self.current_editor = None
+        super().mousePressEvent(event)
+
+class EditingDelegate(QStyledItemDelegate):
+    def __init__(self, parent=None):
+        super(EditingDelegate, self).__init__(parent)
+        self.parent = parent
+
+    def createEditor(self, parent, option, index):
+        editor = QLineEdit(parent)
+        self.parent.current_editor = editor
+        editor.installEventFilter(self)
+        return editor
+
+    def eventFilter(self, editor, event):
+        if event.type() == QEvent.FocusOut:
+            self.commitData.emit(editor)
+            self.closeEditor.emit(editor, QAbstractItemDelegate.NoHint)
+            self.parent.current_editor = None
+        return super(EditingDelegate, self).eventFilter(editor, event)
+
 class FileExplorerLayout(QVBoxLayout):
     def __init__(self) -> None:
         super(FileExplorerLayout, self).__init__()
