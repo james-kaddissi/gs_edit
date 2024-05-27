@@ -142,12 +142,11 @@ class FileExplorer(QTreeView):
 
         if reply == QMessageBox.Yes:
             path = Path(self.file_system_model.filePath(i))
-            if path.is_file():
-                try:
-                    path.unlink()  
-                    print(f"Deleted: {path}")
-                except Exception as e:
-                    QMessageBox.critical(None, "Error", f"Failed to delete {name}: {str(e)}")
+            try:
+                self.delete(path)
+                print(f"Deleted: {path}")
+            except Exception as e:
+                QMessageBox.critical(None, "Error", f"Failed to delete {name}: {str(e)}")
     
     def newfile_command(self, i):
         root = self.file_system_model.rootPath()
