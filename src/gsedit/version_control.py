@@ -118,6 +118,8 @@ class VersionControlLayout(QVBoxLayout):
             editor = self.window.tab.widget(i)
             if hasattr(editor, 'path') and not getattr(editor, 'is_historical', False):
                 file_path = editor.abs_path if isinstance(editor.path, Path) else editor.path.path()
+                if not os.path.exists(file_path):
+                    continue
                 diff = self.vc.get_difference(file_path)
                 item = QListWidgetItem(self.scroll_area_widget_contents)
                 widget = self.get_unsaved_widget(file_path, diff)

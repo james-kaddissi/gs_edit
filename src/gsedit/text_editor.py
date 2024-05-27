@@ -1,4 +1,5 @@
 from difflib import HtmlDiff
+import os
 from PyQt5.QtGui import QKeyEvent
 from PyQt5.QtWidgets import *
 from PyQt5 import *
@@ -197,11 +198,18 @@ class TextEditor(QsciScintilla):
     def save_initial_version(self):
         if self.path:
             initial_content = self.text()
+            self.create_file_if_not_exists(self.path.as_posix(), initial_content)
             self.vc.add_save(self.path.as_posix(), initial_content)
+
+    def create_file_if_not_exists(self, file_path, content):
+        if not os.path.exists(file_path):
+            with open(file_path, 'w') as f:
+                f.write(content)
 
     def save_version(self):
         if self.path:
             content = self.text()
+            self.create_file_if_not_exists(self.path.as_posix(), content)
             self.vc.add_save(self.path.as_posix(), content)
             self.unsaved_changes = False
 
