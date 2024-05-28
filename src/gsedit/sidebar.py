@@ -117,8 +117,8 @@ class ToolLabel(QLabel):
                     widget.isSelected = False
                     widget.update_style()
         
-        if selected_frame not in self.window.horizontal_split.children():
-            self.window.horizontal_split.insertWidget(0, selected_frame)
+        if selected_frame not in self.window.main_body_frame.horizontal_split.children():
+            self.window.main_body_frame.horizontal_split.insertWidget(0, selected_frame)
 
         if self.isSelected:
             selected_frame.show()

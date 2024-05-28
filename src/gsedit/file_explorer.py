@@ -54,7 +54,7 @@ class FileExplorer(QTreeView):
         self.rename = False
         self.curr_index = None
 
-        self.current_editor = None  # To store the current editor instance
+        self.current_editor = None 
 
         self.setItemDelegate(EditingDelegate(self))
         self.installEventFilter(self)
