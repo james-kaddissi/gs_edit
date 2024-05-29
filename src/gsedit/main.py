@@ -73,14 +73,12 @@ class MainWindow(FramelessMainWindow):
         # main body
         
         self.sidebar = Sidebar(self)
-        self.horizontal_split = QSplitter(Qt.Horizontal)
-        self.horizontal_split.setHandleWidth(2)
+
         self.tab = TabBar(self, self.bar)
         self.grep_frame = GrepFrame(self)
         self.file_explorer_frame = FileExplorerFrame(self)
         self.vc_frame = VersionControlFrame(self)
-        self.horizontal_split.addWidget(self.file_explorer_frame)
-        self.horizontal_split.addWidget(self.tab)
+        
         self.top_bar = TopBar(self)
         self.top_bar.setStyleSheet(self.top_bar.styleSheet() + "border: none; border-bottom: 1px solid #333641; border-bottom-left-radius: 0; border-bottom-right-radius: 0;")
         self.main_body_frame = MainBodyFrame(self)

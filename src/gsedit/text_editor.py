@@ -246,36 +246,136 @@ class TextEditor(QsciScintilla):
 
     def keyPressEvent(self, e: QKeyEvent) -> None:
         super().keyPressEvent(e)
+        if e.modifiers() == Qt.ControlModifier and e.key() == Qt.Key_Equal:
+            # syntax highlighting
+            self.window_font.setPointSize(18)
+            self.lexer = PythonLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+
+            if self.pyf:
+                self.lexer = PythonLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.cf:
+                self.lexer = CLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.jsonf:
+                self.lexer = JSONLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.rustf:
+                self.lexer = RustLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.cppf:
+                self.lexer = CppLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.jsf:
+                self.lexer = JavaScriptLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.htmlf:
+                self.lexer = HTMLLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.cssf:
+                self.lexer = CSSLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.csf:
+                self.lexer = CSLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.javaf:
+                self.lexer = JavaLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.txtf:
+                self.lexer = TxtLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.gof:
+                self.lexer = GoLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.hsf:
+                self.lexer = HaskellLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.rbf:
+                self.lexer = RubyLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            else:
+                self.setPaper(QColor(gsedit.gsconfig.get_color("primary-background")))
+                self.setColor(QColor(gsedit.gsconfig.get_color("primary-text")))
+
+
+            self.setMarginType(0, QsciScintilla.NumberMargin)
+            self.setMarginWidth(0, "000")
+            self.setMarginsForegroundColor(QColor("#7a7e82"))
+            self.setMarginsBackgroundColor((QColor("#101316")))
+            self.setMarginsFont(self.window_font)
+            return
         if e.modifiers() == Qt.ControlModifier and e.key() == Qt.Key_Space:
             if self.pyf:
                 cursor_position = self.getCursorPosition()
                 self.code_completer.retrieve(cursor_position[0] + 1, cursor_position[1], self.text())
                 self.autoCompleteFromAPIs()
                 return
-        if e.modifiers() == Qt.ControlModifier and e.key() == Qt.Key_X: # Ctrl + X
+        if e.modifiers() == Qt.ControlModifier and e.key() == Qt.Key_X:
             if not self.hasSelectedText():
                 i, j = self.getCursorPosition()
                 self.setSelection(i, 0, i, self.lineLength(i))
                 self.cut()
                 return
-        if e.modifiers() == Qt.ControlModifier and e.text() == "/": # Ctrl + /
+        if e.modifiers() == Qt.ControlModifier and e.text() == "/":
             if self.hasSelectedText():
                 i, j, k, l = self.getSelection()
-                self.setSelection(i, 0, k, self.lineLength(k)) 
+                self.setSelection(i, 0, k, self.lineLength(k))
                 selected_text = self.selectedText()
-                new_text = self.comment_shortcut(selected_text) 
-
-                adjustment = 2 if selected_text[0] != "#" else -2  
-
+                new_text = self.comment_shortcut(selected_text)
+                adjustment = 2 if selected_text[0] != "#" else -2
                 self.replaceSelectedText(new_text)
-                self.setSelection(i, j, k, l + adjustment) 
+                self.setSelection(i, j, k, l + adjustment)
             else:
                 i, j = self.getCursorPosition()
                 self.setSelection(i, 0, i, self.lineLength(i))
                 self.replaceSelectedText(self.comment_shortcut(self.selectedText()))
                 self.setSelection(-1, -1, -1, -1)
                 self.setCursorPosition(i, j)
-            return    
+            return
+
         
         
     def on_cursor_position_changed(self, ln, char):

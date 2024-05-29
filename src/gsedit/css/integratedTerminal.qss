@@ -3,10 +3,10 @@ QTabWidget::pane {
 }
 
 QTabBar::tab {
-    background-color: "black";
-    color: "green";
+    background-color: #101316;
+    color: #2a2b2c;
     padding: 10px;
-    border: 1px solid "green";
+    border: none;
     border-left-color: "black"; 
     width: 50px;
     height: 20px;
@@ -14,15 +14,15 @@ QTabBar::tab {
 }
 
 QTabBar::tab:selected, QTabBar::tab:hover {
-    background-color: "white";
-    border-color: "black";
+    color: #5ad8b2;
+    background-color: #101316;
 }
 
 QTextEdit {
-    background-color: "black";
-    color: "green";
+    background-color: #101316;
+    color: #ebebeb;
     font-family: "Consolas";
-    border: 1px solid "green";
+    border: none;
 }
 
 QVBoxLayout {
