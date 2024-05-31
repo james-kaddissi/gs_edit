@@ -75,6 +75,7 @@ class MainWindow(FramelessMainWindow):
         self.sidebar = Sidebar(self)
 
         self.tab = TabBar(self, self.bar)
+        self.tab.setStyleSheet(self.tab.styleSheet())
         self.grep_frame = GrepFrame(self)
         self.file_explorer_frame = FileExplorerFrame(self)
         self.vc_frame = VersionControlFrame(self)

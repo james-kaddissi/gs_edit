@@ -64,8 +64,8 @@ class MainBodyFrame(QFrame):
             self.vertical_split.addWidget(combined_widget)
             self.vertical_split.addWidget(self.terminal_widget)
             layout.addWidget(self.vertical_split)
-            
             self.terminal_widget.hide()
+
         elif (gsedit.gsconfig.get_layout("terminal-span") == "editor"):
             self.horizontal_split = QSplitter(Qt.Horizontal)
             self.horizontal_split.setHandleWidth(2)
@@ -96,7 +96,6 @@ class MainBodyFrame(QFrame):
             editor_layout.addWidget(self.horizontal_split)
             combined_layout.addWidget(self.editor_area)  
             layout.addWidget(combined_widget)
-            
             self.terminal_widget.hide()
         else:
             self.horizontal_split = QSplitter(Qt.Horizontal)
@@ -127,5 +126,8 @@ class MainBodyFrame(QFrame):
             editor_layout.addWidget(self.vertical_split)
             combined_layout.addWidget(self.editor_area)  
             layout.addWidget(combined_widget)
-            
             self.terminal_widget.hide()
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        QTimer.singleShot(0, lambda: self.vertical_split.setSizes([300, 10]))

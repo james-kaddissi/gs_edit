@@ -63,17 +63,17 @@ class VersionControlLayout(QVBoxLayout):
 
     def create_header_label(self, text):
         label = QLabel(text)
-        label.setAlignment(Qt.AlignCenter)
         label.setStyleSheet("""
             QLabel {
-                font-size: 16pt;
+                font-size: 12pt;
                 font-weight: bold;
-                color: white;
-                background-color: lightgray;
-                padding: 10px;
-                border-radius: 5px;
+                color: #c1c1c1;
+                background-color: #101316;
+                padding: 3px;
+                border-radius: 3px;
                 margin-left: 5px;
                 margin-right: 5px;
+                text-align: left;
             }
         """)
         return label

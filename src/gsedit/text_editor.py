@@ -29,6 +29,7 @@ class TextEditor(QsciScintilla):
         self.window = window
         self.vcl = self.window.vc_frame.vclayout
         self.is_historical = is_historical
+        self.setStyleSheet('''padding-top: 10px;''')
 
         if self.is_historical:
             if isinstance(path, Path):

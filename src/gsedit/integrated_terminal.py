@@ -94,6 +94,7 @@ class IntegratedTerminal(QWidget):
 
     def add_new_terminal_tab(self):
         splitter = QSplitter(Qt.Horizontal)
+        splitter.setHandleWidth(1)
         self.terminal = IntegratedTerminalTextEdit()
         splitter.addWidget(self.terminal)
         self.tab_widget.addTab(splitter, "Terminal")

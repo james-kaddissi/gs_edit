@@ -5,7 +5,8 @@ QTabWidget::pane {
 QTabBar::tab {
     background-color: #101316;
     color: #2a2b2c;
-    padding: 10px;
+    padding: 5px;
+    margin: 5px;
     border: none;
     border-left-color: "black"; 
     width: 50px;
@@ -16,6 +17,9 @@ QTabBar::tab {
 QTabBar::tab:selected, QTabBar::tab:hover {
     color: #5ad8b2;
     background-color: #101316;
+}
+QTabBar::tab:selected {
+    border-bottom: 1px solid #5ad8b2;
 }
 
 QTextEdit {
@@ -28,4 +32,9 @@ QTextEdit {
 QVBoxLayout {
     margin: -10px;
     padding: -10px;
+}
+
+QSplitter::handle {
+    background-color: #5ad8b2;
+    margin-right: 10px;
 }

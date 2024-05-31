@@ -1,21 +1,14 @@
 QTabWidget {
     background-color: #32303d;
     color: #bebebe;
-    border: none;
-    margin: 0px;
-}
 
-QTabWidget::pane {
-    border-color: black;
 }
 
 QTabBar {
     border-bottom: 1px solid black;
-    border-top: none;
-    border-right: none;
-    border-left: none;
+    background-color: #0c0f11;
+    qproperty-drawBase: false;
 }
-
 QTabBar::tab {
     background-color: #0c0f11;
     color: #7a7e82;
