@@ -64,6 +64,7 @@ class MainWindow(FramelessMainWindow):
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+        print("WORK")
 
     def configure_statusbar(self):
         self.bar = StatusBar()

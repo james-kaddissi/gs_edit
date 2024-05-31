@@ -33,6 +33,7 @@ class TopBar(QFrame):
         super().__init__(None)
         self.main_window = main_window
         self.setFixedHeight(40)
+        self.isfull = False
         
         main_layout = QHBoxLayout(self)
         main_layout.setSpacing(0)
@@ -102,6 +103,7 @@ class TopBar(QFrame):
 
         main_layout.addLayout(nav_layout)
         self.refresh_style()
+        self.fflag = False
     def refresh_style(self):
         base_path = os.path.dirname(__file__) 
         style_sheet_path = os.path.join(base_path, 'css', 'topBar.qss')
@@ -111,17 +113,30 @@ class TopBar(QFrame):
     def restore_window(self):
         if self.main_window.window().isMaximized():
             self.main_window.window().showNormal() 
+            QTimer.singleShot(50, self.main_window.center_window)
         else:
             self.main_window.window().showMaximized()   
-
     def eventFilter(self, obj, event):
         if obj == self:
             if event.type() == QEvent.MouseButtonPress:
                 if event.button() == Qt.LeftButton:
                     self.drag_position = event.globalPos() - self.window().frameGeometry().topLeft()
+                    if self.main_window.window().isMaximized():
+                        self.main_window.window().showNormal()
+                        
+
                     return True
+                
             elif event.type() == QEvent.MouseButtonRelease:
                 if event.button() == Qt.LeftButton:
+                    if self.drag_position is not None:
+                        desktop = QApplication.desktop()
+                        top_screen = desktop.screenGeometry().top()
+                        window_rect = self.window().frameGeometry()
+                        if window_rect.top() <= top_screen:
+                            self.main_window.window().showMaximized()
+                        else:
+                            self.main_window.window().showNormal()
                     self.drag_position = None
                     return True
             elif event.type() == QEvent.MouseMove:
