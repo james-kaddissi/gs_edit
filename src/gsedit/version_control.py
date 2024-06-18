@@ -165,12 +165,18 @@ class VersionControlLayout(QVBoxLayout):
             txtf = file_path.endswith(tuple(gsedit.gsconfig.get_consideration("text")))
             gof = file_path.endswith(tuple(gsedit.gsconfig.get_consideration("go")))
             hsf = file_path.endswith(tuple(gsedit.gsconfig.get_consideration("haskell")))
-            rbf = file_path.endswith(tuple(gsedit.gsconfig.get_consideration("ruby")))
+            rbf = file_path.endswith(tuple(gsedit.gsconfig.get_consideration("ruby"))),
+            ktf = file_path.endswith(tuple(gsedit.gsconfig.get_consideration("kotlin"))),
+            phpf = file_path.endswith(tuple(gsedit.gsconfig.get_consideration("php"))),
+            swiftf = file_path.endswith(tuple(gsedit.gsconfig.get_consideration("swift"))),
+            tsf = file_path.endswith(tuple(gsedit.gsconfig.get_consideration("typescript"))),
+            jsxf = file_path.endswith(tuple(gsedit.gsconfig.get_consideration("jsx"))),
+            tsxf = file_path.endswith(tuple(gsedit.gsconfig.get_consideration("tsx"))),
 
             new_editor = TextEditor(self.window, path=Path(file_path), is_historical=True,
                                     pyf=pyf, cf=cf, jsonf=jsonf, rustf=rustf, cppf=cppf, jsf=jsf,
                                     htmlf=htmlf, cssf=cssf, csf=csf, javaf=javaf, txtf=txtf,
-                                    gof=gof, hsf=hsf, rbf=rbf)
+                                    gof=gof, hsf=hsf, rbf=rbf, ktf=ktf, phpf=phpf, swiftf=swiftf, tsf=tsf, jsxf=jsxf, tsxf=tsxf)
             new_editor.setText(save_content)
             self.window.tab.addTab(new_editor, version_title)
             self.window.tab.setCurrentWidget(new_editor)

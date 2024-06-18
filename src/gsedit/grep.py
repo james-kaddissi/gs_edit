@@ -76,8 +76,8 @@ class GrepResult(QListWidget):
         for i in content:
             self.addItem(i)
 
-    def text_editor(self, path=None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None, htmlf=None, cssf=None, csf=None, javaf=None, txtf=None, gof=None, hsf=None, rbf=None) -> QsciScintilla:
-        editor = TextEditor(self.window, path=path, pyf=pyf, cf=cf, jsonf=jsonf, rustf=rustf, cppf=cppf, jsf=jsf, htmlf=htmlf, cssf=cssf, csf=csf, javaf=javaf, txtf=txtf, gof=gof, hsf=hsf, rbf=rbf)
+    def text_editor(self, path=None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None, htmlf=None, cssf=None, csf=None, javaf=None, txtf=None, gof=None, hsf=None, rbf=None, ktf=None, phpf=None, swiftf=None, tsf=None, jsxf=None, tsxf=None) -> QsciScintilla:
+        editor = TextEditor(self.window, path=path, pyf=pyf, cf=cf, jsonf=jsonf, rustf=rustf, cppf=cppf, jsf=jsf, htmlf=htmlf, cssf=cssf, csf=csf, javaf=javaf, txtf=txtf, gof=gof, hsf=hsf, rbf=rbf, ktf=ktf, phpf=phpf, swiftf=swiftf, tsf=tsf, jsxf=jsxf, tsxf=tsxf)
         return editor
 
     def valid_file_check(self, path):
@@ -99,7 +99,7 @@ class GrepResult(QListWidget):
 
         editor = self.text_editor(
             path,
-            path.suffix in gsedit.gsconfig.get_consideration("python"), 
+            path.suffix in gsedit.gsconfig.get_consideration("python"),
             path.suffix in gsedit.gsconfig.get_consideration("c"), 
             path.suffix in gsedit.gsconfig.get_consideration("json"),
             path.suffix in gsedit.gsconfig.get_consideration("rust"), 
@@ -113,6 +113,12 @@ class GrepResult(QListWidget):
             path.suffix in gsedit.gsconfig.get_consideration("go"),
             path.suffix in gsedit.gsconfig.get_consideration("haskell"),
             path.suffix in gsedit.gsconfig.get_consideration("ruby"),
+            path.suffix in gsedit.gsconfig.get_consideration("kotlin"),
+            path.suffix in gsedit.gsconfig.get_consideration("php"),
+            path.suffix in gsedit.gsconfig.get_consideration("swift"),
+            path.suffix in gsedit.gsconfig.get_consideration("typescript"),
+            path.suffix in gsedit.gsconfig.get_consideration("jsx"),
+            path.suffix in gsedit.gsconfig.get_consideration("tsx"),
         )
         if is_new_file:
             window.tab.addTab(editor, "untitled")

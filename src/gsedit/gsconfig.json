@@ -18,7 +18,13 @@
         "text": [".txt"],
         "haskell": [".hs"],
         "go": [".go"],
-        "ruby": [".rb"]
+        "ruby": [".rb"],
+        "kotlin": [".kt", ".kts", ".ktm"],
+        "typescript": [".ts"],
+        "php": [".php"],
+        "swift": [".swift"],
+        "jsx": [".jsx"],
+        "tsx": [".tsx"]
     },
     "tools-preferences": {
         "tool-replace": true 

@@ -1057,3 +1057,410 @@ class RubyLexer(GSLexer):
             pos += 1
         self.setStyling(pos - self.currentPosition, self.COMMENTS)
         self.currentPosition = pos
+
+class KotlinLexer(GSLexer):
+    def __init__(self, editor):
+        super(KotlinLexer, self).__init__("Kotlin", editor)
+        self.editor = editor
+        self.generateKeywords([
+            "as", "break", "class", "continue", "do", "else", "false", "for", "fun", "if", "in", "interface",
+            "is", "null", "object", "package", "return", "super", "this", "throw", "true", "try", "typealias",
+            "val", "var", "when", "while", "by", "catch", "constructor", "delegate", "dynamic", "field",
+            "file", "finally", "get", "import", "init", "param", "property", "receiver", "set", "setparam",
+            "where"
+        ])
+        self.generateSavedNames([
+            "Array", "Boolean", "Byte", "Char", "Double", "Float", "Int", "Long", "Short", "String", "println"
+        ])
+
+    def styleText(self, ipos, epos):
+        self.startStyling(ipos)
+
+        active_text = self.editor.text()[ipos:epos]
+        self.get_token(active_text)
+
+        is_string = False
+        is_comment = False
+        is_kdoc = False
+
+        while True:
+            active_token = self.get_next_token()
+            if active_token is None:
+                break
+            token, token_length = active_token
+
+            if is_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/") or token == "\n":
+                    is_comment = False
+                continue
+
+            if is_kdoc:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/"):
+                    is_kdoc = False
+                continue
+
+            if is_string:
+                self.setStyling(token_length, self.STRING)
+                if token in ['"', "'"]:
+                    is_string = False
+                continue
+
+            if token in self.keywords:
+                self.setStyling(token_length, self.KEYWORD)
+            elif token.startswith("/*"):
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("/**"):
+                    is_kdoc = True
+                else:
+                    is_comment = True
+            elif token == "//":
+                self.setStyling(token_length, self.COMMENTS)
+                continue
+            elif token in ["(", ")", "{", "}", "[", "]"]:
+                self.setStyling(token_length, self.BRACKETS)
+            elif token in ['"', "'"]:
+                self.setStyling(token_length, self.STRING)
+                is_string = True
+            elif token.isdigit():
+                self.setStyling(token_length, self.CONSTANTS)
+            elif token in self.saved_names:
+                self.setStyling(token_length, self.FUNCTIONS)
+            else:
+                self.setStyling(token_length, self.DEFAULT)
+
+class PHPLexer(GSLexer):
+    def __init__(self, editor):
+        super(PHPLexer, self).__init__("PHP", editor)
+        self.editor = editor
+        self.generateKeywords([
+            "abstract", "and", "array", "as", "break", "callable", "case", "catch", "class", "clone", "const",
+            "continue", "declare", "default", "do", "echo", "else", "elseif", "empty", "enddeclare", "endfor",
+            "endforeach", "endif", "endswitch", "endwhile", "extends", "final", "for", "foreach", "function",
+            "global", "goto", "if", "implements", "include", "include_once", "instanceof", "insteadof", "interface",
+            "isset", "list", "namespace", "new", "or", "print", "private", "protected", "public", "require",
+            "require_once", "return", "static", "switch", "throw", "trait", "try", "unset", "use", "var", "while", "xor"
+        ])
+        self.generateSavedNames([
+            "__construct", "__destruct", "__call", "__callStatic", "__get", "__set", "__isset", "__unset", "__sleep",
+            "__wakeup", "__toString", "__invoke", "__set_state", "__clone", "__debugInfo"
+        ])
+
+    def styleText(self, ipos, epos):
+        self.startStyling(ipos)
+
+        active_text = self.editor.text()[ipos:epos]
+        self.get_token(active_text)
+
+        is_string = False
+        is_comment = False
+        is_php = False
+
+        while True:
+            active_token = self.get_next_token()
+            if active_token is None:
+                break
+            token, token_length = active_token
+
+            if is_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/") or token == "\n":
+                    is_comment = False
+                continue
+
+            if is_string:
+                self.setStyling(token_length, self.STRING)
+                if token in ['"', "'"]:
+                    is_string = False
+                continue
+
+            if token == "<?php":
+                self.setStyling(token_length, self.KEYWORD)
+                is_php = True
+                continue
+
+            if is_php:
+                if token in self.keywords:
+                    self.setStyling(token_length, self.KEYWORD)
+                elif token.startswith("/*"):
+                    self.setStyling(token_length, self.COMMENTS)
+                    is_comment = True
+                elif token == "//":
+                    self.setStyling(token_length, self.COMMENTS)
+                    continue
+                elif token in ["(", ")", "{", "}", "[", "]"]:
+                    self.setStyling(token_length, self.BRACKETS)
+                elif token in ['"', "'"]:
+                    self.setStyling(token_length, self.STRING)
+                    is_string = True
+                elif token.isdigit():
+                    self.setStyling(token_length, self.CONSTANTS)
+                elif token in self.saved_names:
+                    self.setStyling(token_length, self.FUNCTIONS)
+                else:
+                    self.setStyling(token_length, self.DEFAULT)
+            else:
+                self.setStyling(token_length, self.DEFAULT)
+class SwiftLexer(GSLexer):
+    def __init__(self, editor):
+        super(SwiftLexer, self).__init__("Swift", editor)
+        self.editor = editor
+        self.generateKeywords([
+            "associatedtype", "class", "deinit", "enum", "extension", "fileprivate", "func", "import", "init", 
+            "inout", "internal", "let", "open", "operator", "private", "protocol", "public", "static", "struct", 
+            "subscript", "typealias", "var", "break", "case", "continue", "default", "defer", "do", "else", "fallthrough", 
+            "for", "guard", "if", "in", "repeat", "return", "switch", "where", "while", "as", "Any", "catch", 
+            "false", "is", "nil", "rethrows", "super", "self", "Self", "throw", "throws", "true", "try"
+        ])
+        self.generateSavedNames([
+            "Array", "Bool", "Character", "Double", "Float", "Int", "Optional", "String", "Dictionary", "Set", "print"
+        ])
+
+    def styleText(self, ipos, epos):
+        self.startStyling(ipos)
+
+        active_text = self.editor.text()[ipos:epos]
+        self.get_token(active_text)
+
+        is_string = False
+        is_comment = False
+        is_multiline_string = False
+
+        while True:
+            active_token = self.get_next_token()
+            if active_token is None:
+                break
+            token, token_length = active_token
+
+            if is_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/") or token == "\n":
+                    is_comment = False
+                continue
+
+            if is_string:
+                self.setStyling(token_length, self.STRING)
+                if token in ['"', "'"]:
+                    if token_length == 1:
+                        is_string = False
+                elif token.startswith('"""'):
+                    is_multiline_string = True
+                    is_string = False
+                continue
+
+            if is_multiline_string:
+                self.setStyling(token_length, self.STRING)
+                if token.endswith('"""'):
+                    is_multiline_string = False
+                continue
+
+            if token in self.keywords:
+                self.setStyling(token_length, self.KEYWORD)
+            elif token.startswith("/*"):
+                self.setStyling(token_length, self.COMMENTS)
+                is_comment = True
+            elif token == "//":
+                self.setStyling(token_length, self.COMMENTS)
+                continue
+            elif token in ["(", ")", "{", "}", "[", "]"]:
+                self.setStyling(token_length, self.BRACKETS)
+            elif token in ['"', "'"]:
+                self.setStyling(token_length, self.STRING)
+                is_string = True
+            elif token.isdigit():
+                self.setStyling(token_length, self.CONSTANTS)
+            elif token in self.saved_names:
+                self.setStyling(token_length, self.FUNCTIONS)
+            else:
+                self.setStyling(token_length, self.DEFAULT)
+class TypeScriptLexer(GSLexer):
+    def __init__(self, editor):
+        super(TypeScriptLexer, self).__init__("TypeScript", editor)
+        self.editor = editor
+        self.generateKeywords([
+            "abstract", "any", "as", "asserts", "bigint", "boolean", "break", "case", "catch", "class", "const",
+            "continue", "debugger", "declare", "default", "delete", "do", "else", "enum", "export", "extends",
+            "false", "finally", "for", "from", "function", "get", "if", "implements", "import", "in", "infer",
+            "instanceof", "interface", "is", "keyof", "let", "module", "namespace", "never", "new", "null",
+            "number", "object", "private", "protected", "public", "readonly", "require", "return", "set", "static",
+            "string", "super", "switch", "symbol", "this", "throw", "true", "try", "type", "typeof", "undefined",
+            "unique", "unknown", "var", "void", "while", "with", "yield"
+        ])
+        self.generateSavedNames([
+            "Array", "Boolean", "Date", "Error", "Function", "JSON", "Math", "Number", "Object", "RegExp",
+            "String", "Promise", "console", "window", "document"
+        ])
+
+    def styleText(self, ipos, epos):
+        self.startStyling(ipos)
+
+        active_text = self.editor.text()[ipos:epos]
+        self.get_token(active_text)
+
+        is_string = False
+        is_comment = False
+
+        while True:
+            active_token = self.get_next_token()
+            if active_token is None:
+                break
+            token, token_length = active_token
+
+            if is_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/") or token == "\n":
+                    is_comment = False
+                continue
+
+            if is_string:
+                self.setStyling(token_length, self.STRING)
+                if token in ['"', "'"]:
+                    is_string = False
+                continue
+
+            if token in self.keywords:
+                self.setStyling(token_length, self.KEYWORD)
+            elif token.startswith("/*"):
+                self.setStyling(token_length, self.COMMENTS)
+                is_comment = True
+            elif token == "//":
+                self.setStyling(token_length, self.COMMENTS)
+                continue
+            elif token in ["(", ")", "{", "}", "[", "]"]:
+                self.setStyling(token_length, self.BRACKETS)
+            elif token in ['"', "'"]:
+                self.setStyling(token_length, self.STRING)
+                is_string = True
+            elif token.isdigit():
+                self.setStyling(token_length, self.CONSTANTS)
+            elif token in self.saved_names:
+                self.setStyling(token_length, self.FUNCTIONS)
+            else:
+                self.setStyling(token_length, self.DEFAULT)
+class JSXLexer(JavaScriptLexer):
+    def __init__(self, editor):
+        super(JSXLexer, self).__init__(editor)
+        self.editor = editor
+        self.generateKeywords(self.keywords)
+        self.generateSavedNames(self.saved_names)
+
+    def styleText(self, ipos, epos):
+        self.startStyling(ipos)
+        active_text = self.editor.text()[ipos:epos]
+        self.get_token(active_text)
+
+        is_string = False
+        is_comment = False
+        is_jsx = False
+        jsx_tag = False
+
+        while True:
+            active_token = self.get_next_token()
+            if active_token is None:
+                break
+            token, token_length = active_token
+
+            if is_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/") or token == "\n":
+                    is_comment = False
+                continue
+
+            if is_string:
+                self.setStyling(token_length, self.STRING)
+                if token in ['"', "'"]:
+                    is_string = False
+                continue
+
+            if jsx_tag:
+                self.setStyling(token_length, self.CONSTANTS)
+                if token == '>':
+                    jsx_tag = False
+                continue
+
+            if token in self.keywords:
+                self.setStyling(token_length, self.KEYWORD)
+            elif token.startswith("/*"):
+                self.setStyling(token_length, self.COMMENTS)
+                is_comment = True
+            elif token == "//":
+                self.setStyling(token_length, self.COMMENTS)
+                continue
+            elif token in ["(", ")", "{", "}", "[", "]"]:
+                self.setStyling(token_length, self.BRACKETS)
+            elif token in ['"', "'"]:
+                self.setStyling(token_length, self.STRING)
+                is_string = True
+            elif token.isdigit():
+                self.setStyling(token_length, self.CONSTANTS)
+            elif token in self.saved_names:
+                self.setStyling(token_length, self.FUNCTIONS)
+            elif token == '<':
+                self.setStyling(token_length, self.CONSTANTS)
+                jsx_tag = True
+            else:
+                self.setStyling(token_length, self.DEFAULT)
+class TSXLexer(TypeScriptLexer):
+    def __init__(self, editor):
+        super(TSXLexer, self).__init__(editor)
+        self.editor = editor
+        self.generateKeywords(self.keywords)
+        self.generateSavedNames(self.saved_names)
+
+    def styleText(self, ipos, epos):
+        self.startStyling(ipos)
+        active_text = self.editor.text()[ipos:epos]
+        self.get_token(active_text)
+
+        is_string = False
+        is_comment = False
+        is_tsx = False
+        tsx_tag = False
+
+        while True:
+            active_token = self.get_next_token()
+            if active_token is None:
+                break
+            token, token_length = active_token
+
+            if is_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/") or token == "\n":
+                    is_comment = False
+                continue
+
+            if is_string:
+                self.setStyling(token_length, self.STRING)
+                if token in ['"', "'"]:
+                    is_string = False
+                continue
+
+            if tsx_tag:
+                self.setStyling(token_length, self.CONSTANTS)
+                if token == '>':
+                    tsx_tag = False
+                continue
+
+            if token in self.keywords:
+                self.setStyling(token_length, self.KEYWORD)
+            elif token.startswith("/*"):
+                self.setStyling(token_length, self.COMMENTS)
+                is_comment = True
+            elif token == "//":
+                self.setStyling(token_length, self.COMMENTS)
+                continue
+            elif token in ["(", ")", "{", "}", "[", "]"]:
+                self.setStyling(token_length, self.BRACKETS)
+            elif token in ['"', "'"]:
+                self.setStyling(token_length, self.STRING)
+                is_string = True
+            elif token.isdigit():
+                self.setStyling(token_length, self.CONSTANTS)
+            elif token in self.saved_names:
+                self.setStyling(token_length, self.FUNCTIONS)
+            elif token == '<':
+                self.setStyling(token_length, self.CONSTANTS)
+                tsx_tag = True
+            else:
+                self.setStyling(token_length, self.DEFAULT)

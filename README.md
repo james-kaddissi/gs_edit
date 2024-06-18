@@ -1,5 +1,5 @@
 # gs-edit
-GS Edit is a bare bones open source multi language IDE, with the goal of giving all the design and customization of the editor to the user.
+GS Edit is a bare bones open source multi language IDE, with the goal of giving all the design and customization of the editor to the user. The frontend uses Python and Qt, while the backend uses Python and some Rust integration for large tasks.
 
 Files and Languages With Supported Lexers: (* - supports run functionality)
 .py * - python
@@ -16,8 +16,6 @@ Files and Languages With Supported Lexers: (* - supports run functionality)
 .hs - haskell
 .go - go
 .rb - ruby
-
-To be addded (in no particular order):
 .kt - kotlin
 .kts - kotlin script
 .ktm - kotlin module
@@ -26,6 +24,8 @@ To be addded (in no particular order):
 .ts - typescript
 .jsx - jsx
 .tsx - tsx
+
+To be addded (in no particular order):
 .scss, .sass - sass
 .less - less
 .xml - xml
