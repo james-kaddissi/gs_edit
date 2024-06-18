@@ -21,3 +21,4 @@ QSplitter::handle {
 QScrollArea {
     background-color: "#1F2933";
 }
+

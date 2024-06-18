@@ -1,30 +1,46 @@
-from setuptools import setup, find_packages
-from setuptools_rust import Binding, RustExtension
-setup(
-    name='GS-Edit', 
-    version='0.2.6',
-    description='The Best Code Editor - GS',
-    long_description=open('README.md').read(),
-    long_description_content_type='text/markdown',  
-    author='James Kaddissi',
-    author_email='jameskaddissi@gmail.com',
-    url='https://github.com/james-kaddissi/gsedit',
-    packages=find_packages(where='src'),
-    package_dir={'': 'src'},
-    package_data={
-        'gsedit': ['css/*.qss', 'images/*.png', 'images/*.svg', 'images/*.qrc', '*.json'],
-    },
-    rust_extensions=[RustExtension("gsedit.vc", "src/vc/Cargo.toml", binding=Binding.PyO3)],
-    install_requires=[
-        'PyQt5',
-        'QScintilla',
-        'jedi',
-        'PyQt5-Frameless-Window'
-    ],
-    entry_points={
-        'console_scripts': [
-            'gs=gsedit.cli:run', 
-        ],
-    },
-    python_requires='>=3.6',
-)
+# gs-edit
+GS Edit is a bare bones open source multi language IDE, with the goal of giving all the design and customization of the editor to the user.
+
+Files and Languages With Supported Lexers: (* - supports run functionality)
+.py * - python
+.c * - c
+.cpp * - c++
+.rs * - rust
+.json - json
+.js - javascript
+.html - html
+.css - css
+.cs - c#
+.java - java
+.txt - plaintext
+.hs - haskell
+.go - go
+.rb - ruby
+
+To be addded (in no particular order):
+.kt - kotlin
+.kts - kotlin script
+.ktm - kotlin module
+.php - php
+.swift - swift
+.ts - typescript
+.jsx - jsx
+.tsx - tsx
+.scss, .sass - sass
+.less - less
+.xml - xml
+.yaml, .yml - yaml
+.lua - lua
+.perl - perl
+.sh - shell script
+.md - markdown
+.r - r
+.dart - dart
+.groovy - groovy
+.pascal - pascal
+.scala - scala
+.vim - vim script
+.sqp - sql
+.pl - prolog
+.asm - assembly
+.vbs - VBScript

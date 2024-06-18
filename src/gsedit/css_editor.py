@@ -18,6 +18,7 @@ class CSSEditor(QMainWindow):
         super(CSSEditor, self).__init__(parent)
         self.setWindowTitle("CSS Editor")
         self.resize(800, 600)
+        self.window = parent
 
         self.valid_properties = ['color', 'background-color', 'border-color', 'font-size', 'margin', 'padding']  
 
@@ -72,9 +73,10 @@ class CSSEditor(QMainWindow):
             return
 
         base_path = os.path.dirname(__file__)
-        css_path = os.path.join(base_path, 'css', current.text())
-        
-        self.refresh_css_editor(css_path)
+        print(base_path)
+        self.current_file = os.path.join(base_path, 'css', current.text())
+        print(self.current_file)
+        self.refresh_css_editor(self.current_file)
 
     def refresh_css_editor(self, file_path):
         while self.property_layout.count():
@@ -148,8 +150,9 @@ class CSSEditor(QMainWindow):
 
     def restart_program(self):
         try:
-            python = sys.executable
-            os.execl(python, python, *sys.argv)
+            self.close()
+            self.window.close()
+            os.system("gs")
         except Exception as e:
             self.statusBar().showMessage(f"Failed to restart: {e}")
 
