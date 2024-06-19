@@ -7,6 +7,26 @@ from PyQt5.QtCore import *
 import os
 import gsedit.gsconfig
 
+class ThemeEditor(QMainWindow):
+    def __init__(self, parent=None):
+        super(ThemeEditor, self).__init__(parent)
+        self.setWindowTitle("Theme Editor")
+        self.resize(800, 600)
+        self.window = parent
+
+        self.main_layout = QVBoxLayout()
+        self.tabs = QTabWidget()
+        main_theme_tab = QWidget()
+        lexer_theme_tab = QWidget()
+        icon_theme_tab = QWidget()
+        self.tabs.addTab(main_theme_tab, "Theme Overview")
+        self.tabs.addTab(lexer_theme_tab, "Lexer Theme")
+        self.tabs.addTab(icon_theme_tab, "Icon Theme")
+        self.main_layout.addWidget(self.tabs)
+        self.main_widget = QWidget()
+        self.main_widget.setLayout(self.main_layout)
+        self.setCentralWidget(self.main_widget)
+
 class Sidebar(QFrame):
     def __init__(self, window) -> None:
         super(Sidebar, self).__init__()
@@ -42,14 +62,18 @@ class SidebarLayout(QVBoxLayout):
         folder_icon_path = os.path.join(base_path, 'images', 'folder.svg')
         grep_icon_path = os.path.join(base_path, 'images', 'grep.svg')
         vc_icon_path = os.path.join(base_path, 'images', 'vc.svg')
+        paint_icon_path = os.path.join(base_path, 'images', 'paint.svg')
 
         folder_icon = self.tool_bar_icon(folder_icon_path, "folder")
         grep_icon = self.tool_bar_icon(grep_icon_path, "grep")
         vc_icon = self.tool_bar_icon(vc_icon_path, "vc")
+        paint_icon = self.tool_bar_icon(paint_icon_path, "paint")
 
         self.addWidget(folder_icon)
         self.addWidget(grep_icon)
         self.addWidget(vc_icon)
+        self.addStretch()
+        self.addWidget(paint_icon)
 
     def tool_bar_icon(self, path, id):
         label = ToolLabel(path, id, self.window)
@@ -61,8 +85,9 @@ class ToolLabel(QLabel):
         self.path = path
         self.id = id
         self.window = window
-        self.isSelected = False  # Track if the label is selected
+        self.isSelected = False
         self.initialize_label()
+        self.theme_editor = ThemeEditor(self.window)
 
     def initialize_label(self):
         icon = QIcon(self.path)
@@ -82,9 +107,30 @@ class ToolLabel(QLabel):
             self.setStyleSheet("background-color: none;")  
 
     def on_mouse_press(self, event):
+        if self.id == "paint":
+            self.show_command_menu()
+            return
         self.isSelected = not self.isSelected 
         self.update_style()
         self.toolbar_toggle(self.id)
+    
+    def show_command_menu(self):
+        menu = QMenu(self)
+        theme = menu.addAction("Theme")
+        theme.triggered.connect(self.theme_triggered)
+        lexer = menu.addAction("Lexer Theme")
+        lexer.triggered.connect(self.lexer_triggered)
+        icon = menu.addAction("Icon Theme")
+        icon.triggered.connect(self.icon_triggered)
+        menu.exec_(QCursor.pos())
+
+    def theme_triggered(self):
+        self.theme_editor.show()
+    def lexer_triggered(self):
+        pass
+    def icon_triggered(self):
+        pass
+
 
     def on_mouse_enter(self, event):
         if not self.isSelected:
