@@ -15,6 +15,8 @@ class ThemeEditor(QMainWindow):
         self.window = parent
 
         self.main_layout = QVBoxLayout()
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.setSpacing(0)  
         self.tabs = QTabWidget()
         main_theme_tab = QWidget()
         lexer_theme_tab = QWidget()
@@ -26,6 +28,22 @@ class ThemeEditor(QMainWindow):
         self.main_widget = QWidget()
         self.main_widget.setLayout(self.main_layout)
         self.setCentralWidget(self.main_widget)
+        self.refresh_style()
+
+    def refresh_style(self):
+        base_path = os.path.dirname(__file__)
+        style_sheet_path = os.path.join(base_path, 'css', 'themeEditor.qss')
+        with open(style_sheet_path, "r") as style_file:
+            self.setStyleSheet(style_file.read())
+    
+    def set_main_theme_tab(self):
+        self.tabs.setCurrentIndex(0)
+
+    def set_lexer_theme_tab(self):
+        self.tabs.setCurrentIndex(1)
+
+    def set_icon_theme_tab(self):
+        self.tabs.setCurrentIndex(2)
 
 class Sidebar(QFrame):
     def __init__(self, window) -> None:
@@ -126,10 +144,13 @@ class ToolLabel(QLabel):
 
     def theme_triggered(self):
         self.theme_editor.show()
+        self.theme_editor.set_main_theme_tab()
     def lexer_triggered(self):
-        pass
+        self.theme_editor.show()
+        self.theme_editor.set_lexer_theme_tab()
     def icon_triggered(self):
-        pass
+        self.theme_editor.show()
+        self.theme_editor.set_icon_theme_tab()
 
 
     def on_mouse_enter(self, event):

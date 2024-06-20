@@ -76,6 +76,8 @@ class IntegratedTerminalTextEdit(QTextEdit):
                 self.setTextCursor(cursor)
 
 
+
+
 class IntegratedTerminal(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)

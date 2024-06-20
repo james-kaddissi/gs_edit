@@ -98,6 +98,7 @@ class MainWindow(FramelessMainWindow):
         self.css_editor.show()
 
 
+
 if __name__ == '__main__':
     QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
