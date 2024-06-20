@@ -73,12 +73,13 @@ class MainWindow(FramelessMainWindow):
     def configure_body(self):
         # main body
         
-        self.sidebar = Sidebar(self)
+        
 
         self.tab = TabBar(self, self.bar)
         self.tab.setStyleSheet(self.tab.styleSheet())
         self.grep_frame = GrepFrame(self)
         self.file_explorer_frame = FileExplorerFrame(self)
+        self.sidebar = Sidebar(self)
         self.vc_frame = VersionControlFrame(self)
         
         self.top_bar = TopBar(self)

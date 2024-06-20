@@ -4,16 +4,39 @@ from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+from qframelesswindow import FramelessMainWindow, TitleBar
+from gsedit.top_bar import TopBarSmall
+
 import os
 import gsedit.gsconfig
+class CustomTitleBar(TitleBar):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setStyleSheet("""border-bottom: 1px solid black;""")
 
-class ThemeEditor(QMainWindow):
+        self.minBtn.setHoverColor(Qt.white)
+        self.minBtn.setHoverBackgroundColor(QColor(0, 100, 182))
+        self.minBtn.setPressedColor(Qt.white)
+        self.minBtn.setPressedBackgroundColor(QColor(54, 57, 65))
+
+        self.maxBtn.setStyleSheet("""
+            TitleBarButton {
+                qproperty-normalColor: black;
+                qproperty-normalBackgroundColor: transparent;
+                qproperty-hoverColor: white;
+                qproperty-hoverBackgroundColor: rgb(0, 100, 182);
+                qproperty-pressedColor: white;
+                qproperty-pressedBackgroundColor: rgb(54, 57, 65);
+            }
+        """)
+
+class ThemeEditor(FramelessMainWindow):
     def __init__(self, parent=None):
         super(ThemeEditor, self).__init__(parent)
         self.setWindowTitle("Theme Editor")
         self.resize(800, 600)
-        self.window = parent
-
+        self.mwindow = parent
+        self.setTitleBar(CustomTitleBar(self))
         self.main_layout = QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.main_layout.setSpacing(0)  
@@ -26,9 +49,12 @@ class ThemeEditor(QMainWindow):
         self.tabs.addTab(icon_theme_tab, "Icon Theme")
         self.main_layout.addWidget(self.tabs)
         self.main_widget = QWidget()
+        self.main_widget.setObjectName("mainWidget")
         self.main_widget.setLayout(self.main_layout)
         self.setCentralWidget(self.main_widget)
         self.refresh_style()
+        self.titleBar.raise_()
+        
 
     def refresh_style(self):
         base_path = os.path.dirname(__file__)

@@ -1,8 +1,8 @@
 
 
 QWidget {
-    margin: -10px;
-    padding: -10px;
+    margin: 0px;
+    padding: 0px;
     background-color: #101316;
 }
 QTabWidget::pane {
@@ -20,6 +20,7 @@ QTabBar::tab {
     border-bottom: 1px solid black;
     border-top: 1px solid transparent;
     border-right: 1px solid black;
+    margin-top: 32px;
 }
 
 QTabBar::selected {
