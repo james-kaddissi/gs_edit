@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 
 from qframelesswindow import FramelessMainWindow, TitleBar
 from gsedit.top_bar import TopBarSmall
-
+import gsedit.theme_editor
 import os
 import gsedit.gsconfig
 class CustomTitleBar(TitleBar):
@@ -28,6 +28,46 @@ class CustomTitleBar(TitleBar):
                 qproperty-pressedBackgroundColor: rgb(54, 57, 65);
             }
         """)
+class ThemeInfoWidget(QWidget):
+    def __init__(self, theme_data, parent=None):
+        super(ThemeInfoWidget, self).__init__(parent)
+        
+        self.theme_data = theme_data
+        self.init_ui()
+        
+    def init_ui(self):
+        layout = QVBoxLayout()
+        title_label = QLabel(f"Theme Name: {self.theme_data['active-theme']['theme-name']}")
+        version_label = QLabel(f"Version: {self.theme_data['active-theme']['version']}")
+        layout.addWidget(title_label)
+        layout.addWidget(version_label)
+        page_color = QColor(self.theme_data['active-theme']['syntax-rules'][0]['default']['page-color'])
+        self.setAutoFillBackground(True)
+        palette = self.palette()
+        palette.setColor(QPalette.Window, page_color)
+        self.setPalette(palette)
+        font_family = self.theme_data['active-theme']['syntax-rules'][0]['default']['font-family']
+        font_label = QLabel(f"Font Family: {font_family}")
+        layout.addWidget(font_label)
+        for rule in self.theme_data['active-theme']['syntax-rules']:
+            for key, value in rule.items():
+                syntax_label = QLabel(f"{key.capitalize()}: example1 example2 example3")
+                font = QFont()
+                font.setFamily(value['font-family'])
+                font.setPointSize(value['font-size'])
+                font.setWeight(QFont.Normal if value['font-weight'] == "normal" else QFont.Bold)
+                font.setItalic(value['italic'])
+                font.setUnderline(value['underlined'])
+                font.setStrikeOut(value['strikethrough'])
+                
+                syntax_label.setFont(font)
+                
+                text_color = QColor(value['text-color'])
+                syntax_label.setStyleSheet(f"color: {text_color.name()};")
+                
+                layout.addWidget(syntax_label)
+        
+        self.setLayout(layout)
 
 
 class ThemeEditor(FramelessMainWindow):
@@ -71,7 +111,7 @@ class ThemeEditor(FramelessMainWindow):
         main_theme_list.addItem("Browse Themes")
         
         stack = QStackedWidget()
-        stack.addWidget(QLabel("Current Theme"))
+        stack.addWidget(ThemeInfoWidget(theme_data=gsedit.theme_editor.read_theme_file()))
         stack.addWidget(QLabel("Customize Current Theme"))
         stack.addWidget(QLabel("Browse Themes"))
         
