@@ -12,7 +12,6 @@ import gsedit.gsconfig
 class CustomTitleBar(TitleBar):
     def __init__(self, parent):
         super().__init__(parent)
-        self.setStyleSheet("""border-bottom: 1px solid black;""")
 
         self.minBtn.setHoverColor(Qt.white)
         self.minBtn.setHoverBackgroundColor(QColor(0, 100, 182))
@@ -30,6 +29,7 @@ class CustomTitleBar(TitleBar):
             }
         """)
 
+
 class ThemeEditor(FramelessMainWindow):
     def __init__(self, parent=None):
         super(ThemeEditor, self).__init__(parent)
@@ -41,12 +41,16 @@ class ThemeEditor(FramelessMainWindow):
         self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.main_layout.setSpacing(0)  
         self.tabs = QTabWidget()
-        main_theme_tab = QWidget()
+        
+        main_theme_tab = self.mainTab()
+        
         lexer_theme_tab = QWidget()
         icon_theme_tab = QWidget()
+        
         self.tabs.addTab(main_theme_tab, "Theme Overview")
         self.tabs.addTab(lexer_theme_tab, "Lexer Theme")
         self.tabs.addTab(icon_theme_tab, "Icon Theme")
+        
         self.main_layout.addWidget(self.tabs)
         self.main_widget = QWidget()
         self.main_widget.setObjectName("mainWidget")
@@ -55,7 +59,29 @@ class ThemeEditor(FramelessMainWindow):
         self.refresh_style()
         self.titleBar.raise_()
         
-
+    def mainTab(self):
+        tab = QWidget()
+        tab_layout = QHBoxLayout()
+        tab_layout.setContentsMargins(0, 0, 0, 0)
+        tab_layout.setSpacing(0)
+        
+        main_theme_list = QListWidget()
+        main_theme_list.addItem("Current Theme")
+        main_theme_list.addItem("Customize Current Theme")
+        main_theme_list.addItem("Browse Themes")
+        
+        stack = QStackedWidget()
+        stack.addWidget(QLabel("Current Theme"))
+        stack.addWidget(QLabel("Customize Current Theme"))
+        stack.addWidget(QLabel("Browse Themes"))
+        
+        main_theme_list.currentRowChanged.connect(stack.setCurrentIndex)
+        
+        tab_layout.addWidget(main_theme_list)
+        tab_layout.addWidget(stack)
+        
+        tab.setLayout(tab_layout)
+        return tab
     def refresh_style(self):
         base_path = os.path.dirname(__file__)
         style_sheet_path = os.path.join(base_path, 'css', 'themeEditor.qss')
