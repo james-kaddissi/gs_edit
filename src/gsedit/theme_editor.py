@@ -9,7 +9,7 @@ def read_theme_file():
     return theme_data
 
 def get_formatted_theme_array():
-    arr = [] # desired array form [theme-name, version, font, colors...]
+    arr = [] 
     data = read_theme_file()
     arr.append(data["active-theme"]["theme-name"])
     arr.append(data["active-theme"]["version"])

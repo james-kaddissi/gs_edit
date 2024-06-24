@@ -80,18 +80,12 @@ class ThemeEditor(FramelessMainWindow):
         self.main_layout = QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.main_layout.setSpacing(0)  
-        self.tabs = QTabWidget()
         
         main_theme_tab = self.mainTab()
         
-        lexer_theme_tab = QWidget()
-        icon_theme_tab = QWidget()
+    
         
-        self.tabs.addTab(main_theme_tab, "Theme Overview")
-        self.tabs.addTab(lexer_theme_tab, "Lexer Theme")
-        self.tabs.addTab(icon_theme_tab, "Icon Theme")
-        
-        self.main_layout.addWidget(self.tabs)
+        self.main_layout.addWidget(main_theme_tab)
         self.main_widget = QWidget()
         self.main_widget.setObjectName("mainWidget")
         self.main_widget.setLayout(self.main_layout)
@@ -236,13 +230,10 @@ class ToolLabel(QLabel):
 
     def theme_triggered(self):
         self.theme_editor.show()
-        self.theme_editor.set_main_theme_tab()
     def lexer_triggered(self):
         self.theme_editor.show()
-        self.theme_editor.set_lexer_theme_tab()
     def icon_triggered(self):
         self.theme_editor.show()
-        self.theme_editor.set_icon_theme_tab()
 
 
     def on_mouse_enter(self, event):
