@@ -89,8 +89,9 @@ class ThemeEditor(FramelessMainWindow):
         self.main_widget = QWidget()
         self.main_widget.setObjectName("mainWidget")
         self.main_widget.setLayout(self.main_layout)
+        self.main_widget.setStyleSheet(self.refresh_style('mainWidgetThemeEditor'))
         self.setCentralWidget(self.main_widget)
-        self.refresh_style()
+        self.setStyleSheet(self.refresh_style('themeEditor'))
         self.titleBar.raise_()
         
     def mainTab(self):
@@ -116,20 +117,12 @@ class ThemeEditor(FramelessMainWindow):
         
         tab.setLayout(tab_layout)
         return tab
-    def refresh_style(self):
+    def refresh_style(self, name):
         base_path = os.path.dirname(__file__)
-        style_sheet_path = os.path.join(base_path, 'css', 'themeEditor.qss')
+        style_sheet_path = os.path.join(base_path, 'css', name+'.qss')
         with open(style_sheet_path, "r") as style_file:
-            self.setStyleSheet(style_file.read())
+            return style_file.read()
     
-    def set_main_theme_tab(self):
-        self.tabs.setCurrentIndex(0)
-
-    def set_lexer_theme_tab(self):
-        self.tabs.setCurrentIndex(1)
-
-    def set_icon_theme_tab(self):
-        self.tabs.setCurrentIndex(2)
 
 class Sidebar(QFrame):
     def __init__(self, window) -> None:
