@@ -17,13 +17,32 @@ class CustomTitleBar(TitleBar):
         self.minBtn.setHoverBackgroundColor(QColor(0, 100, 182))
         self.minBtn.setPressedColor(Qt.white)
         self.minBtn.setPressedBackgroundColor(QColor(54, 57, 65))
-
-        self.maxBtn.setStyleSheet("""
+        self.minBtn.setStyleSheet("""
             TitleBarButton {
-                qproperty-normalColor: black;
+                qproperty-normalColor: white;
                 qproperty-normalBackgroundColor: transparent;
                 qproperty-hoverColor: white;
                 qproperty-hoverBackgroundColor: rgb(0, 100, 182);
+                qproperty-pressedColor: white;
+                qproperty-pressedBackgroundColor: rgb(54, 57, 65);
+            }""")
+        
+        self.maxBtn.setStyleSheet("""
+            TitleBarButton {
+                qproperty-normalColor: white;
+                qproperty-normalBackgroundColor: transparent;
+                qproperty-hoverColor: white;
+                qproperty-hoverBackgroundColor: rgb(0, 100, 182);
+                qproperty-pressedColor: white;
+                qproperty-pressedBackgroundColor: rgb(54, 57, 65);
+            }
+        """)
+        self.closeBtn.setStyleSheet("""
+            TitleBarButton {
+                qproperty-normalColor: white;
+                qproperty-normalBackgroundColor: transparent;
+                qproperty-hoverColor: white;
+                qproperty-hoverBackgroundColor: red;
                 qproperty-pressedColor: white;
                 qproperty-pressedBackgroundColor: rgb(54, 57, 65);
             }
@@ -68,7 +87,39 @@ class ThemeInfoWidget(QWidget):
                 layout.addWidget(syntax_label)
         
         self.setLayout(layout)
+class ColorPickerButton(QWidget):
+    def __init__(self, parent=None):
+        super(ColorPickerButton, self).__init__(parent)
+        self.color_label = QLabel(self)
+        self.color_label.setText("Color Picker")
+        self.color_label.setStyleSheet("background-color: gray; color: white; padding: 5px;")
+        self.color_label.setAlignment(Qt.AlignCenter)
+        self.color_label.setGeometry(10, 550, 100, 40)
 
+        self.color_label.mousePressEvent = self.start_color_picker
+
+    def start_color_picker(self, event):
+        self.grabMouse()
+        self.setCursor(Qt.CrossCursor)
+        self.color_label.setText("Picking...")
+
+    def mouseMoveEvent(self, event):
+        color = QPixmap.grabWindow(QApplication.desktop().winId(), event.globalX(), event.globalY(), 1, 1).toImage().pixel(0, 0)
+        color = QColor(color)
+        hex_color = color.name()
+        self.color_label.setStyleSheet(f"background-color: {hex_color}; color: white; padding: 5px;")
+        self.color_label.setText(hex_color)
+        self.update()
+
+    def mousePressEvent(self, event):
+        color = QPixmap.grabWindow(QApplication.desktop().winId(), event.globalX(), event.globalY(), 1, 1).toImage().pixel(0, 0)
+        color = QColor(color)
+        hex_color = color.name()
+        clipboard = QApplication.clipboard()
+        clipboard.setText(hex_color)
+        self.releaseMouse()
+        self.setCursor(Qt.ArrowCursor)
+        self.color_label.setText(f"Copied: {hex_color}")
 
 class ThemeEditor(FramelessMainWindow):
     def __init__(self, parent=None):
@@ -76,14 +127,14 @@ class ThemeEditor(FramelessMainWindow):
         self.setWindowTitle("Theme Editor")
         self.resize(800, 600)
         self.mwindow = parent
-        self.setTitleBar(CustomTitleBar(self))
+        self.title_bar = CustomTitleBar(self)
+        self.setTitleBar(self.title_bar)
+        self.setWindowTitle("Theme Editor")
         self.main_layout = QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.main_layout.setSpacing(0)  
         
         main_theme_tab = self.mainTab()
-        
-    
         
         self.main_layout.addWidget(main_theme_tab)
         self.main_widget = QWidget()
@@ -92,6 +143,8 @@ class ThemeEditor(FramelessMainWindow):
         self.main_widget.setStyleSheet(self.refresh_style('mainWidgetThemeEditor'))
         self.setCentralWidget(self.main_widget)
         self.setStyleSheet(self.refresh_style('themeEditor'))
+        self.color_picker_button = ColorPickerButton(self.main_widget)
+        self.color_picker_button.setGeometry(10, self.height() - 50, 100, 40)
         self.titleBar.raise_()
         
     def mainTab(self):
