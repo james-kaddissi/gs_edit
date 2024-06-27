@@ -4,13 +4,14 @@ from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+from click import edit
 from pygame import Color
 from qframelesswindow import FramelessMainWindow, TitleBar
 from gsedit.top_bar import TopBarSmall
 import gsedit.theme_editor
 import os
 import gsedit.gsconfig
-
+from functools import partial
 class ColorPickerButton(QWidget):
     def __init__(self, parent=None):
         super(ColorPickerButton, self).__init__(parent)
@@ -96,7 +97,10 @@ class CustomTitleBar(TitleBar):
                 qproperty-pressedBackgroundColor: rgb(54, 57, 65);
             }
         """)
-
+def css_to_qcolor(css_color):
+    if css_color.startswith('#'):
+        return QColor(css_color)
+    return QColor()
 class LexerEditorWidget(QWidget):
     def __init__(self, theme_data, parent=None):
         super(LexerEditorWidget, self).__init__(parent)
@@ -105,11 +109,53 @@ class LexerEditorWidget(QWidget):
 
     def init_ui(self):
         layout = QVBoxLayout()
+        layout.setContentsMargins(0,0,0,0)
+        layout.setSpacing(0)
         title_lbl = QLabel("Customize Lexer")
         title_lbl.setStyleSheet(self.refresh_style("lexerEditorTitle"))
-        
+        title_lbl.setAlignment(Qt.AlignTop)
+        layout.setAlignment(Qt.AlignTop)
         layout.addWidget(title_lbl)
+        
+        for rule in self.theme_data['active-theme']['syntax-rules']:
+            for key, value in rule.items():
+                item_layout = QHBoxLayout()
+                item_layout.setContentsMargins(0, 0, 0, 0)
+                item_layout.setSpacing(0)
+                label = QLabel(f"{key}: {value['text-color']}")
+                label.setStyleSheet(f"""color: {value['text-color']}""")
+                label.setStyleSheet(self.refresh_style('lexerEditorRuleLabel'))
+                edit_color = QPushButton("Edit")
+                button_style = self.refresh_style("lexerEditorRuleButton")
+                button_style = button_style.strip()
+                if button_style.endswith('}'):
+                    button_style = button_style[:-1].strip()
+                new_style_sheet = f"{button_style} background-color: {value['text-color']};}}"
+                edit_color.setStyleSheet(new_style_sheet)
+                edit_color.clicked.connect(lambda _, key=key, value=value, button=edit_color: self.edit_value(key, value, button))
+                spacer_item = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+                item_layout.addWidget(label)
+                item_layout.addItem(spacer_item)
+                item_layout.addWidget(edit_color)
+                layout.addLayout(item_layout)
+                
         self.setLayout(layout)
+    
+    def edit_value(self, key, value, button):
+        color = QColorDialog.getColor(css_to_qcolor(value['text-color']))
+        if color.isValid():
+            new_color = color.name()
+            button_style = self.refresh_style("lexerEditorRuleButton")
+            button_style = button_style.strip()
+            if button_style.endswith('}'):
+                button_style = button_style[:-1].strip()
+            new_style_sheet = f"{button_style} background-color: {new_color};}}"
+
+            print(new_style_sheet)
+            button.setStyleSheet(new_style_sheet)
+            
+
+        
     def refresh_style(self, name):
         base_path = os.path.dirname(__file__)
         style_sheet_path = os.path.join(base_path, 'css', name+'.qss')
