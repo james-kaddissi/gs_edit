@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from click import edit
+from numpy import save
 from pygame import Color
 from qframelesswindow import FramelessMainWindow, TitleBar
 from gsedit.top_bar import TopBarSmall
@@ -12,6 +13,8 @@ import gsedit.theme_editor
 import os
 import gsedit.gsconfig
 from functools import partial
+
+from gsedit.language_lexer import PythonLexer
 class ColorPickerButton(QWidget):
     def __init__(self, parent=None):
         super(ColorPickerButton, self).__init__(parent)
@@ -101,15 +104,73 @@ def css_to_qcolor(css_color):
     if css_color.startswith('#'):
         return QColor(css_color)
     return QColor()
+
+class SimpleScintillaEditor(QsciScintilla):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.setup_editor()
+
+    def setup_editor(self):
+        font = QFont("Fire Code")
+        font.setPointSize(10)
+        self.setFont(font)
+
+        self.setText("""
+# Sample code snippet
+def hello_world():
+    print("Hello, World!")
+    
+for i in range(10):
+    if i % 2 == 0:
+        print(f"Even number: {i}")
+    else:
+        print(f"Odd number: {i}")
+""")
+
+        self.lexer = PythonLexer(self)
+        self.lexer.setDefaultFont(font)
+        self.setLexer(self.lexer)
+        self.setMarginType(0, QsciScintilla.NumberMargin)
+        self.setMarginWidth(0, "000")
+        self.setMarginsForegroundColor(QColor("#7a7e82"))
+        self.setMarginsBackgroundColor(QColor("#101316"))
+        self.setMarginsFont(font)
+        self.setIndentationGuides(True)
+        self.setIndentationsUseTabs(False)
+        self.setTabWidth(4)
+        self.setAutoIndent(True)
+        self.setCaretForegroundColor(QColor("#5ad8b2"))
+        self.setCaretLineVisible(True)
+        self.setCaretWidth(2)
+        self.setCaretLineBackgroundColor(QColor("#121621"))
+        self.setEolMode(QsciScintilla.EolWindows)
+        self.setEolVisibility(False)
+        self.setAutoCompletionSource(QsciScintilla.AcsAll)
+        self.setAutoCompletionThreshold(1)
+        self.setAutoCompletionCaseSensitivity(False)
+        self.setAutoCompletionUseSingle(QsciScintilla.AcusNever)
+
+    def keyPressEvent(self, e):
+        super().keyPressEvent(e)
+
+    def refreshLexer(self, theme_data):
+        for i, rule in enumerate(theme_data['active-theme']['syntax-rules']):
+            for key, value in rule.items():
+                if 'text-color' in value:
+                    color = QColor(value['text-color'])
+                    self.lexer.setColor(color, i)
+        
 class LexerEditorWidget(QWidget):
     def __init__(self, theme_data, parent=None):
         super(LexerEditorWidget, self).__init__(parent)
         self.theme_data=theme_data
+        self.og_theme_data = theme_data
         self.init_ui()
 
     def init_ui(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(0,0,0,0)
+        layout.setContentsMargins(10,10,10,10)
         layout.setSpacing(0)
         title_lbl = QLabel("Customize Lexer")
         title_lbl.setStyleSheet(self.refresh_style("lexerEditorTitle"))
@@ -132,19 +193,31 @@ class LexerEditorWidget(QWidget):
                     button_style = button_style[:-1].strip()
                 new_style_sheet = f"{button_style} background-color: {value['text-color']};}}"
                 edit_color.setStyleSheet(new_style_sheet)
-                edit_color.clicked.connect(lambda _, key=key, value=value, button=edit_color: self.edit_value(key, value, button))
+                edit_color.clicked.connect(lambda _, key=key, value=value, button=edit_color, text=label: self.edit_value(key, value, button, text))
                 spacer_item = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
                 item_layout.addWidget(label)
                 item_layout.addItem(spacer_item)
                 item_layout.addWidget(edit_color)
-                layout.addLayout(item_layout)
-                
+                layout.addLayout(item_layout) 
+        
+        self.editor = SimpleScintillaEditor(self)
+        layout.addWidget(self.editor)
+        save_button = QPushButton("Save Changes")
+        save_button.setStyleSheet(self.refresh_style('lexerEditorSaveButton'))
+        save_button.clicked.connect(self.save_changes)
+        layout.addWidget(save_button)
+        
         self.setLayout(layout)
-    
-    def edit_value(self, key, value, button):
+
+
+    def save_changes(self):
+        gsedit.theme_editor.write_theme_file(self.theme_data)
+
+    def edit_value(self, key, value, button, text):
         color = QColorDialog.getColor(css_to_qcolor(value['text-color']))
         if color.isValid():
             new_color = color.name()
+            text.setText(f"{key}: {new_color}")
             button_style = self.refresh_style("lexerEditorRuleButton")
             button_style = button_style.strip()
             if button_style.endswith('}'):
@@ -153,6 +226,10 @@ class LexerEditorWidget(QWidget):
 
             print(new_style_sheet)
             button.setStyleSheet(new_style_sheet)
+            for rule in self.theme_data['active-theme']['syntax-rules']:
+                if key in rule:
+                    rule[key]['text-color'] = new_color
+                    self.editor.refreshLexer(self.theme_data)
             
 
         

@@ -33,3 +33,9 @@ def get_formatted_theme_array():
             arr.append(None)
 
     return arr
+
+def write_theme_file(theme_data):
+    base_path = os.path.dirname(__file__)
+    theme_file_path = os.path.join(base_path, 'active-theme.json')
+    with open(theme_file_path, 'w') as file:
+        json.dump(theme_data, file, indent=4)
