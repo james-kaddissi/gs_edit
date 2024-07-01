@@ -322,6 +322,7 @@ class ThemeEditor(FramelessMainWindow):
         tab_layout.setSpacing(0)
         
         main_theme_list = QListWidget()
+        main_theme_list.setStyleSheet(self.refresh_style('themeEditorList'))
         main_theme_list.addItem("Current Theme")
         main_theme_list.addItem("Customize Current Theme")
         main_theme_list.addItem("Browse Themes")

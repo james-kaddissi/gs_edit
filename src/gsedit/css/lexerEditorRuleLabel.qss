@@ -3,6 +3,6 @@ QLabel {
     font-family: 'Consolas';
     font-size: 18px;
     margin-right: 20px;
-    color: white;
+    color: #7a7e82;
     margin-top: 15px;
 }
