@@ -4,6 +4,7 @@ from PyQt5.Qsci import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+import json
 from click import edit
 from numpy import save
 from pygame import Color
@@ -193,9 +194,20 @@ class LexerThemeBrowser(QWidget):
 
         scroll_area.setWidget(list_widget)
         layout.addWidget(scroll_area)
-
+        save_button = QPushButton("Save Theme")
+        save_button.setStyleSheet(self.refresh_style('themeBrowserSaveButton'))
+        save_button.clicked.connect(self.save_active_theme)
+        layout.addWidget(save_button)
         self.setLayout(layout)
 
+    def save_active_theme(self):
+        selected_items = self.findChildren(QListWidget)
+        selected_theme = selected_items[0].currentItem().text()
+        theme_path = os.path.join(os.path.dirname(__file__), 'lexer-themes', f'{selected_theme}.json')
+        with open(theme_path, 'r') as file:
+            theme_contents = json.load(file)
+
+        gsedit.theme_editor.write_active_theme(theme_contents)
     def refresh_style(self, name):
         base_path = os.path.dirname(__file__)
         style_sheet_path = os.path.join(base_path, 'css', name+'.qss')

@@ -2,7 +2,7 @@ QListWidget {
     background-color: #101316;
     color: #7a7e82;
     border: none;
-    margin-top: -30px;
+    margin-top: -40px;
 }
 
 QListWidget::item {
