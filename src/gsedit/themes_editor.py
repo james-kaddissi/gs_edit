@@ -249,7 +249,9 @@ class ThemeInfoWidget(QWidget):
     def init_ui(self):
         layout = QVBoxLayout()
         title_label = QLabel(f"Theme Name: {self.theme_data['active-theme']['theme-name']}")
+        title_label.setStyleSheet(self.refresh_style("lexerViewTitleLabel"))
         version_label = QLabel(f"Version: {self.theme_data['active-theme']['version']}")
+        version_label.setStyleSheet(self.refresh_style("lexerViewVersionLabel"))
         layout.addWidget(title_label)
         layout.addWidget(version_label)
         page_color = QColor(self.theme_data['active-theme']['syntax-rules'][0]['default']['page-color'])
@@ -259,10 +261,11 @@ class ThemeInfoWidget(QWidget):
         self.setPalette(palette)
         font_family = self.theme_data['active-theme']['syntax-rules'][0]['default']['font-family']
         font_label = QLabel(f"Font Family: {font_family}")
+        font_label.setStyleSheet(self.refresh_style("lexerViewFontLabel"))
         layout.addWidget(font_label)
         for rule in self.theme_data['active-theme']['syntax-rules']:
             for key, value in rule.items():
-                syntax_label = QLabel(f"{key.capitalize()}: example1 example2 example3")
+                syntax_label = QLabel(f"{key.capitalize()}")
                 font = QFont()
                 font.setFamily(value['font-family'])
                 font.setPointSize(value['font-size'])
@@ -279,6 +282,12 @@ class ThemeInfoWidget(QWidget):
                 layout.addWidget(syntax_label)
         
         self.setLayout(layout)
+
+    def refresh_style(self, name):
+        base_path = os.path.dirname(__file__)
+        style_sheet_path = os.path.join(base_path, 'css', name+'.qss')
+        with open(style_sheet_path, "r") as style_file:
+            return style_file.read()
 
 class ThemeEditor(FramelessMainWindow):
     def __init__(self, parent=None):
@@ -299,6 +308,8 @@ class ThemeEditor(FramelessMainWindow):
         
         bottom_bar_layout = QHBoxLayout()
         bottom_bar_layout.setContentsMargins(0, 0, 0, 0)
+        bottom_bar_layout.setSpacing(0)
+        bottom_bar_layout.setDirection(QBoxLayout.LeftToRight)
         
         self.color_picker = ColorPickerButton()
         self.color_picker.setFixedSize(70, 30)
@@ -317,15 +328,17 @@ class ThemeEditor(FramelessMainWindow):
         
     def mainTab(self):
         tab = QWidget()
+        tab.setObjectName("mainTab")
+        tab.setStyleSheet(self.refresh_style('mainTabThemeEditor'))
         tab_layout = QHBoxLayout()
         tab_layout.setContentsMargins(0, 0, 0, 0)
         tab_layout.setSpacing(0)
         
         main_theme_list = QListWidget()
         main_theme_list.setStyleSheet(self.refresh_style('themeEditorList'))
-        main_theme_list.addItem("Current Theme")
-        main_theme_list.addItem("Customize Current Theme")
-        main_theme_list.addItem("Browse Themes")
+        main_theme_list.addItem("Current Lexer Theme")
+        main_theme_list.addItem("Customize Current Lexer Theme")
+        main_theme_list.addItem("Browse Lexer Themes")
         
         stack = QStackedWidget()
         stack.addWidget(ThemeInfoWidget(theme_data=gsedit.theme_editor.read_theme_file()))
