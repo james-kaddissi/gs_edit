@@ -1,0 +1,138 @@
+{
+    "theme-name": "gs-main-dark",
+    "version": "1.0.0",
+    "syntax-rules": [
+        {
+            "default": {
+                "text-color": "#d6433b",
+                "page-color": "#101316",
+                "font-family": "Consolas",
+                "font-size": 14,
+                "font-weight": "normal",
+                "italic": false,
+                "underlined": false,
+                "strikethrough": false
+            }
+        },
+        {
+            "keyword": {
+                "text-color": "#3acbc9",
+                "page-color": "#101316",
+                "font-family": "Consolas",
+                "font-size": 14,
+                "font-weight": "normal",
+                "italic": false,
+                "underlined": false,
+                "strikethrough": false
+            }
+        },
+        {
+            "types": {
+                "text-color": "#956ce1",
+                "page-color": "#101316",
+                "font-family": "Consolas",
+                "font-size": 14,
+                "font-weight": "normal",
+                "italic": false,
+                "underlined": false,
+                "strikethrough": false
+            }
+        },
+        {
+            "string": {
+                "text-color": "#079972",
+                "page-color": "#101316",
+                "font-family": "Consolas",
+                "font-size": 14,
+                "font-weight": "normal",
+                "italic": false,
+                "underlined": false,
+                "strikethrough": false
+            }
+        },
+        {
+            "keyargs": {
+                "text-color": "#c73230",
+                "page-color": "#101316",
+                "font-family": "Consolas",
+                "font-size": 14,
+                "font-weight": "normal",
+                "italic": false,
+                "underlined": false,
+                "strikethrough": false
+            }
+        },
+        {
+            "brackets": {
+                "text-color": "#06B183",
+                "page-color": "#101316",
+                "font-family": "Consolas",
+                "font-size": 14,
+                "font-weight": "normal",
+                "italic": false,
+                "underlined": false,
+                "strikethrough": false
+            }
+        },
+        {
+            "comments": {
+                "text-color": "#7a7e82",
+                "page-color": "#101316",
+                "font-family": "Consolas",
+                "font-size": 14,
+                "font-weight": "normal",
+                "italic": false,
+                "underlined": false,
+                "strikethrough": false
+            }
+        },
+        {
+            "constants": {
+                "text-color": "#589ff7",
+                "page-color": "#101316",
+                "font-family": "Consolas",
+                "font-size": 14,
+                "font-weight": "normal",
+                "italic": false,
+                "underlined": false,
+                "strikethrough": false
+            }
+        },
+        {
+            "functions": {
+                "text-color": "#48cf6a",
+                "page-color": "#101316",
+                "font-family": "Consolas",
+                "font-size": 14,
+                "font-weight": "normal",
+                "italic": false,
+                "underlined": false,
+                "strikethrough": false
+            }
+        },
+        {
+            "classes": {
+                "text-color": "#956ce1",
+                "page-color": "#101316",
+                "font-family": "Consolas",
+                "font-size": 14,
+                "font-weight": "normal",
+                "italic": false,
+                "underlined": false,
+                "strikethrough": false
+            }
+        },
+        {
+            "function_def": {
+                "text-color": "#C4BFC3",
+                "page-color": "#101316",
+                "font-family": "Consolas",
+                "font-size": 14,
+                "font-weight": "normal",
+                "italic": false,
+                "underlined": false,
+                "strikethrough": false
+            }
+        }
+    ]
+}

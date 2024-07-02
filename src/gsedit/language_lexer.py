@@ -1464,3 +1464,4 @@ class TSXLexer(TypeScriptLexer):
                 tsx_tag = True
             else:
                 self.setStyling(token_length, self.DEFAULT)
+
