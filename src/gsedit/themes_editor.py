@@ -163,9 +163,11 @@ for i in range(10):
                     self.lexer.setColor(color, i)
 
 class LexerThemeBrowser(QWidget):
-    def __init__(self, theme_data, parent=None):
+    def __init__(self, theme_data, parent=None, brother=None):
         super(LexerThemeBrowser, self).__init__(parent)
         self.theme_data = theme_data
+        self.window = parent
+        self.thiswindow = brother
         self.init_ui()
     
     def init_ui(self):
@@ -208,6 +210,13 @@ class LexerThemeBrowser(QWidget):
             theme_contents = json.load(file)
 
         gsedit.theme_editor.write_active_theme(theme_contents)
+
+        try:
+            self.thiswindow.close()
+            self.window.close()
+            os.system("gs")
+        except Exception as e:
+            self.window.statusBar().showMessage(f"Failed to restart: {e}")
     def refresh_style(self, name):
         base_path = os.path.dirname(__file__)
         style_sheet_path = os.path.join(base_path, 'css', name+'.qss')
@@ -215,8 +224,10 @@ class LexerThemeBrowser(QWidget):
             return style_file.read()
 
 class LexerEditorWidget(QWidget):
-    def __init__(self, theme_data, parent=None):
+    def __init__(self, theme_data, parent=None, brother=None):
         super(LexerEditorWidget, self).__init__(parent)
+        self.window = parent
+        self.thiswindow = brother
         self.theme_data=theme_data
         self.og_theme_data = theme_data
         self.init_ui()
@@ -255,7 +266,7 @@ class LexerEditorWidget(QWidget):
         
         self.editor = SimpleScintillaEditor(theme_data=self.theme_data, parent=self)
         layout.addWidget(self.editor)
-        save_button = QPushButton("Save Changes")
+        save_button = QPushButton("Save Changes and Reload")
         save_button.setStyleSheet(self.refresh_style('lexerEditorSaveButton'))
         save_button.clicked.connect(self.save_changes)
         layout.addWidget(save_button)
@@ -265,6 +276,13 @@ class LexerEditorWidget(QWidget):
 
     def save_changes(self):
         gsedit.theme_editor.write_theme_file(self.theme_data)
+        self.editor.refreshLexer(self.theme_data)
+        try:
+            self.thiswindow.close()
+            self.window.close()
+            os.system("gs")
+        except Exception as e:
+            self.window.statusBar().showMessage(f"Failed to restart: {e}")
 
     def edit_value(self, key, value, button, text):
         color = QColorDialog.getColor(css_to_qcolor(value['text-color']))
@@ -395,8 +413,8 @@ class ThemeEditor(FramelessMainWindow):
         
         stack = QStackedWidget()
         stack.addWidget(ThemeInfoWidget(theme_data=gsedit.theme_editor.read_theme_file()))
-        stack.addWidget(LexerEditorWidget(theme_data=gsedit.theme_editor.read_theme_file()))
-        stack.addWidget(LexerThemeBrowser(theme_data=gsedit.theme_editor.read_theme_file()))
+        stack.addWidget(LexerEditorWidget(theme_data=gsedit.theme_editor.read_theme_file(), parent=self.mwindow, brother=self))
+        stack.addWidget(LexerThemeBrowser(theme_data=gsedit.theme_editor.read_theme_file(), parent=self.mwindow, brother=self))
         
         main_theme_list.currentRowChanged.connect(stack.setCurrentIndex)
         
