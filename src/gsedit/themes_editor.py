@@ -107,9 +107,9 @@ def css_to_qcolor(css_color):
     return QColor()
 
 class SimpleScintillaEditor(QsciScintilla):
-    def __init__(self, parent=None):
+    def __init__(self, theme_data, parent=None):
         super().__init__(parent)
-
+        self.theme_data = theme_data
         self.setup_editor()
 
     def setup_editor(self):
@@ -135,7 +135,7 @@ for i in range(10):
         self.setMarginType(0, QsciScintilla.NumberMargin)
         self.setMarginWidth(0, "000")
         self.setMarginsForegroundColor(QColor("#7a7e82"))
-        self.setMarginsBackgroundColor(QColor("#101316"))
+        self.setMarginsBackgroundColor(QColor(self.theme_data['active-theme']['syntax-rules'][0]['default']['page-color']))
         self.setMarginsFont(font)
         self.setIndentationGuides(True)
         self.setIndentationsUseTabs(False)
@@ -253,7 +253,7 @@ class LexerEditorWidget(QWidget):
                 item_layout.addWidget(edit_color)
                 layout.addLayout(item_layout) 
         
-        self.editor = SimpleScintillaEditor(self)
+        self.editor = SimpleScintillaEditor(theme_data=self.theme_data, parent=self)
         layout.addWidget(self.editor)
         save_button = QPushButton("Save Changes")
         save_button.setStyleSheet(self.refresh_style('lexerEditorSaveButton'))

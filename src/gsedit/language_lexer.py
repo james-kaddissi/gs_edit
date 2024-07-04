@@ -22,16 +22,19 @@ class GSLexer(QsciLexerCustom):
             self.path = path
         else:
             self.path = "./active-theme.json"
-        
+        base_path = os.path.dirname(__file__)
+        config_path = os.path.join(base_path, 'active-theme.json')
+        with open(config_path, "r") as file:
+            self.theme = json.load(file)
         self.tokens: list[str, str] = []
         self.keywords = []
         self.saved_names = []
         if base_config is None:
             base_config = {}
-            base_config["text-color"] = "#bfc3c4"
-            base_config["background-color"] = "#101316"
-            base_config["font-family"] = "Fire Code"
-            base_config["font-size"] = 14
+            base_config["text-color"] = self.theme["active-theme"]["syntax-rules"][0]["default"]["text-color"]
+            base_config["background-color"] = self.theme["active-theme"]["syntax-rules"][0]["default"]["page-color"]
+            base_config["font-family"] = self.theme["active-theme"]["syntax-rules"][0]["default"]["font-family"]
+            base_config["font-size"] = self.theme["active-theme"]["syntax-rules"][0]["default"]["font-size"]
 
         self.setDefaultColor(QColor(base_config["text-color"]))
         self.setDefaultPaper(QColor(base_config["background-color"]))
