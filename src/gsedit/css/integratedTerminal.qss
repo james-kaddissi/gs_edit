@@ -3,7 +3,7 @@ QTabWidget::pane {
 }
 
 QTabBar::tab {
-    background-color: #101316;
+    background-color: #0080FF;
     color: #2a2b2c;
     padding: 5px;
     margin: 5px;
@@ -16,14 +16,14 @@ QTabBar::tab {
 
 QTabBar::tab:selected, QTabBar::tab:hover {
     color: #5ad8b2;
-    background-color: #101316;
+    background-color: #0080FF;
 }
 QTabBar::tab:selected {
     border-bottom: 1px solid #5ad8b2;
 }
 
 QTextEdit {
-    background-color: #101316;
+    background-color: #0080FF;
     color: #ebebeb;
     font-family: "Consolas";
     border: none;

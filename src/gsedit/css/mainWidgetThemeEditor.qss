@@ -1,4 +1,4 @@
 QWidget {
     margin-top: 32px; 
-    background-color: #101316;
+    background-color: #0080FF;
 }

@@ -5,7 +5,7 @@ QListWidget {
 }
 QListWidget::item {
     height: 25px;
-    background-color: #101316;
+    background-color: #0080FF;
     color: #7a7e82;
     font-family: "Consolas";
 }

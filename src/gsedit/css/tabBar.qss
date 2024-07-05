@@ -24,7 +24,7 @@ QTabBar::tab {
 QTabBar::tab::selected {
     color: #279fc4;
     border-style: none;
-    background-color: #101316;
+    background-color: #0080FF;
     border-bottom: 1px solid  transparent;
 
     border-top: 1px solid #279fc4;

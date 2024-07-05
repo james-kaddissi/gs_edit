@@ -72,9 +72,6 @@ class MainWindow(FramelessMainWindow):
 
     def configure_body(self):
         # main body
-        
-        
-
         self.tab = TabBar(self, self.bar)
         self.tab.setStyleSheet(self.tab.styleSheet())
         self.grep_frame = GrepFrame(self)
@@ -101,7 +98,6 @@ class MainWindow(FramelessMainWindow):
 
 
 if __name__ == '__main__':
-    print("Yo")
     QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)

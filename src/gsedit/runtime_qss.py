@@ -1,11 +1,19 @@
 import os
+import json
 
 
-main_color = "#101316"
-secondary_color = "#0c0f11"
-font_color = "#7a7e82"
+def get_theme_data():
+    base_path = os.path.dirname(__file__)
+    theme_file_path = os.path.join(base_path, 'active-editor-theme.json')
+    with open(theme_file_path, 'r') as file:
+        theme_data = json.load(file)
+    return theme_data
 
 def replace_qss():
+    theme_data = get_theme_data()
+    main_color = theme_data['active-theme']['colors']['main_color']
+    secondary_color = theme_data['active-theme']['colors']['secondary_color']
+    font_color = theme_data['active-theme']['colors']['font_color']
     base_path = os.path.dirname(__file__)
     original_directory = os.path.join(base_path, 'original-css')
     os.makedirs(original_directory, exist_ok=True)
