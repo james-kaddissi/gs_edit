@@ -1,0 +1,9 @@
+QFrame {
+    background-color: "@secondary_color";
+    border: none;
+    padding: 5px;
+    color: "@font_color";
+}
+QFrame:hover {
+    color: white;
+}

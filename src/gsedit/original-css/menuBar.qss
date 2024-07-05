@@ -1,0 +1,21 @@
+QMenuBar {
+    background-color: #040506;
+    border-bottom: 1px solid black;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    padding: 3px;
+    color: "@font_color";
+    font-family: 'Consolas';
+}
+
+QMenuBar::item {
+    background-color: #040506;
+    padding: 2px 6px;
+    color: "@font_color";
+    font-family: 'Consolas';
+    border-radius: 3px;
+}
+QMenuBar::item:selected {
+    background-color: rgba(255, 255, 255, 0.1);
+}

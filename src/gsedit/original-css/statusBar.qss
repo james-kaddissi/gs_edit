@@ -1,0 +1,10 @@
+QStatusBar {
+    color: "@font_color";
+    background-color: "@secondary_color";
+    font-size: 14px;
+    border-top: 1px solid black;
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
+}
+

@@ -1,0 +1,40 @@
+QTabWidget::pane {
+    border: 0;
+}
+
+QTabBar::tab {
+    background-color: "@main_color";
+    color: #2a2b2c;
+    padding: 5px;
+    margin: 5px;
+    border: none;
+    border-left-color: "black"; 
+    width: 50px;
+    height: 20px;
+    
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    color: #5ad8b2;
+    background-color: "@main_color";
+}
+QTabBar::tab:selected {
+    border-bottom: 1px solid #5ad8b2;
+}
+
+QTextEdit {
+    background-color: "@main_color";
+    color: #ebebeb;
+    font-family: "Consolas";
+    border: none;
+}
+
+QVBoxLayout {
+    margin: -10px;
+    padding: -10px;
+}
+
+QSplitter::handle {
+    background-color: #5ad8b2;
+    margin-right: 10px;
+}

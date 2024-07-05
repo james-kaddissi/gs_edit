@@ -1,0 +1,3 @@
+QSplitter {
+    background-color: "@main_color";
+}

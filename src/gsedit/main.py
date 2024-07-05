@@ -101,6 +101,7 @@ class MainWindow(FramelessMainWindow):
 
 
 if __name__ == '__main__':
+    print("Yo")
     QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)

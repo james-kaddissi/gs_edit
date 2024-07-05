@@ -1,0 +1,24 @@
+QListWidget {
+    background-color: "#1F2933";
+    border: none;
+    font-family: "Consolas";
+}
+
+QLabel {
+    font-family: "Consolas";
+}
+
+QListWidget::item {
+    background-color: "#323F4B";
+    color: "#CBD2D9";
+    font-family: "Consolas";
+}
+
+QSplitter::handle {
+    background-color: #52606D;
+}
+
+QScrollArea {
+    background-color: "#1F2933";
+}
+
