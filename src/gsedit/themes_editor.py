@@ -410,11 +410,21 @@ class ThemeEditor(FramelessMainWindow):
         main_theme_list.addItem("Current Lexer Theme")
         main_theme_list.addItem("Customize Current Lexer Theme")
         main_theme_list.addItem("Browse Lexer Themes")
-        
+        main_theme_list.addItem("Create New Lexer Theme")
+        main_theme_list.addItem("Current Editor Theme")
+        main_theme_list.addItem("Customize Current Editor Theme")
+        main_theme_list.addItem("Browse Editor Themes")
+        main_theme_list.addItem("Create New Editor Theme")
+
         stack = QStackedWidget()
         stack.addWidget(ThemeInfoWidget(theme_data=gsedit.theme_editor.read_theme_file()))
         stack.addWidget(LexerEditorWidget(theme_data=gsedit.theme_editor.read_theme_file(), parent=self.mwindow, brother=self))
         stack.addWidget(LexerThemeBrowser(theme_data=gsedit.theme_editor.read_theme_file(), parent=self.mwindow, brother=self))
+        stack.addWidget(QLabel("Create New Lexer Theme"))
+        stack.addWidget(QLabel("Current Editor Theme"))
+        stack.addWidget(QLabel("Customize Current Editor Theme"))
+        stack.addWidget(QLabel("Browse Editor Themes"))
+        stack.addWidget(QLabel("Create New Editor Theme"))
         
         main_theme_list.currentRowChanged.connect(stack.setCurrentIndex)
         
