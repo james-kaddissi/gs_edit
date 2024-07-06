@@ -8,6 +8,13 @@ def read_theme_file():
         theme_data = json.load(file)
     return theme_data
 
+def read_editor_theme_file():
+    base_path = os.path.dirname(__file__)
+    theme_file_path = os.path.join(base_path, 'active-editor-theme.json')
+    with open(theme_file_path, 'r') as file:
+        theme_data = json.load(file)
+    return theme_data
+
 def get_formatted_theme_array():
     arr = [] 
     data = read_theme_file()

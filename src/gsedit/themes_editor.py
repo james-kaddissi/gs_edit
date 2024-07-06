@@ -1,3 +1,4 @@
+from cgitb import text
 from PyQt5.QtWidgets import *
 from PyQt5 import *
 from PyQt5.Qsci import *
@@ -310,9 +311,42 @@ class LexerEditorWidget(QWidget):
         with open(style_sheet_path, "r") as style_file:
             return style_file.read()
 
-class ThemeInfoWidget(QWidget):
+class EditorThemeInfoWidget(QWidget):
     def __init__(self, theme_data, parent=None):
-        super(ThemeInfoWidget, self).__init__(parent)
+        super(EditorThemeInfoWidget, self).__init__(parent)
+        
+        self.theme_data = theme_data
+        self.init_ui()
+        
+    def init_ui(self):
+        layout = QVBoxLayout()
+        title_label = QLabel(f"Theme Name: {self.theme_data['active-theme']['theme-name']}")
+        title_label.setStyleSheet(self.refresh_style("editorViewTitleLabel"))
+        version_label = QLabel(f"Version: {self.theme_data['active-theme']['version']}")
+        version_label.setStyleSheet(self.refresh_style("editorViewVersionLabel"))
+        layout.addWidget(title_label)
+        layout.addWidget(version_label)
+        for key, value in self.theme_data['active-theme']['colors'].items():
+            syntax_label = QLabel(f"{key.capitalize()}")
+            text_color = QColor(value)
+            if key == "font_color":
+                syntax_label.setStyleSheet(f"color: white; background-color: {self.theme_data['active-theme']['colors']['font_color']}; padding: 5px; border-radius: 5px; font-size: 20px; font-family: Fire Code; font-weight: bold;")
+            elif key == "main_color":
+                syntax_label.setStyleSheet(f"color: white; background-color: {self.theme_data['active-theme']['colors']['main_color']}; padding: 5px; border-radius: 5px; font-size: 20px; font-family: Fire Code; font-weight: bold;")
+            else:
+                syntax_label.setStyleSheet(f"color: white; background-color: {self.theme_data['active-theme']['colors']['secondary_color']};padding: 5px; border-radius: 5px; font-size: 20px; font-family: Fire Code; font-weight: bold;")
+            layout.addWidget(syntax_label)
+        
+        self.setLayout(layout)
+
+    def refresh_style(self, name):
+        base_path = os.path.dirname(__file__)
+        style_sheet_path = os.path.join(base_path, 'css', name+'.qss')
+        with open(style_sheet_path, "r") as style_file:
+            return style_file.read()
+class LexerThemeInfoWidget(QWidget):
+    def __init__(self, theme_data, parent=None):
+        super(LexerThemeInfoWidget, self).__init__(parent)
         
         self.theme_data = theme_data
         self.init_ui()
@@ -417,11 +451,11 @@ class ThemeEditor(FramelessMainWindow):
         main_theme_list.addItem("Create New Editor Theme")
 
         stack = QStackedWidget()
-        stack.addWidget(ThemeInfoWidget(theme_data=gsedit.theme_editor.read_theme_file()))
+        stack.addWidget(LexerThemeInfoWidget(theme_data=gsedit.theme_editor.read_theme_file()))
         stack.addWidget(LexerEditorWidget(theme_data=gsedit.theme_editor.read_theme_file(), parent=self.mwindow, brother=self))
         stack.addWidget(LexerThemeBrowser(theme_data=gsedit.theme_editor.read_theme_file(), parent=self.mwindow, brother=self))
         stack.addWidget(QLabel("Create New Lexer Theme"))
-        stack.addWidget(QLabel("Current Editor Theme"))
+        stack.addWidget(EditorThemeInfoWidget(theme_data=gsedit.theme_editor.read_editor_theme_file()))
         stack.addWidget(QLabel("Customize Current Editor Theme"))
         stack.addWidget(QLabel("Browse Editor Themes"))
         stack.addWidget(QLabel("Create New Editor Theme"))
