@@ -223,6 +223,90 @@ class LexerThemeBrowser(QWidget):
         style_sheet_path = os.path.join(base_path, 'css', name+'.qss')
         with open(style_sheet_path, "r") as style_file:
             return style_file.read()
+        
+class EditorEditorWidget(QWidget):
+    def __init__(self, theme_data, parent=None, brother=None):
+        super(EditorEditorWidget, self).__init__(parent)
+        self.window = parent
+        self.thiswindow = brother
+        self.theme_data=theme_data
+        self.og_theme_data = theme_data
+        self.init_ui()
+
+    def init_ui(self):
+        layout = QVBoxLayout()
+        layout.setContentsMargins(10,10,10,10)
+        layout.setSpacing(0)
+        title_lbl = QLabel("Customize Editor Theme")
+        title_lbl.setStyleSheet(self.refresh_style("lexerEditorTitle"))
+        title_lbl.setAlignment(Qt.AlignTop)
+        layout.setAlignment(Qt.AlignTop)
+        layout.addWidget(title_lbl)
+        for key, value in self.theme_data['active-theme']['colors'].items():
+            item_layout = QHBoxLayout()
+            item_layout.setContentsMargins(0, 0, 0, 0)
+            item_layout.setSpacing(0)
+            label = QLabel(f"{key}: {value}")
+            label.setStyleSheet(f"""color: {value}""")
+            label.setStyleSheet(self.refresh_style('lexerEditorRuleLabel'))
+            edit_color = QPushButton("Edit")
+            button_style = self.refresh_style("lexerEditorRuleButton")
+            button_style = button_style.strip()
+            if button_style.endswith('}'):
+                button_style = button_style[:-1].strip()
+            new_style_sheet = f"{button_style} background-color: {value};}}"
+            edit_color.setStyleSheet(new_style_sheet)
+            edit_color.clicked.connect(lambda _, key=key, value=value, button=edit_color, text=label: self.edit_value(key, value, button, text))
+            spacer_item = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+            item_layout.addWidget(label)
+            item_layout.addItem(spacer_item)
+            item_layout.addWidget(edit_color)
+            layout.addLayout(item_layout)
+        
+        save_button = QPushButton("Save Changes and Reload")
+        save_button.setStyleSheet(self.refresh_style('lexerEditorSaveButton'))
+        save_button.clicked.connect(self.save_changes)
+        layout.addWidget(save_button)
+        
+        self.setLayout(layout)
+
+
+    def save_changes(self):
+        pass
+        gsedit.theme_editor.write_editor_theme_file(self.theme_data)
+        try:
+            self.thiswindow.close()
+            self.window.close()
+            os.system("gs")
+        except Exception as e:
+            self.window.statusBar().showMessage(f"Failed to restart: {e}")
+
+    def edit_value(self, key, value, button, text):
+        color = QColorDialog.getColor(css_to_qcolor(value))
+        if color.isValid():
+            new_color = color.name()
+            text.setText(f"{key}: {new_color}")
+            button_style = self.refresh_style("lexerEditorRuleButton")
+            button_style = button_style.strip()
+            if button_style.endswith('}'):
+                button_style = button_style[:-1].strip()
+            new_style_sheet = f"{button_style} background-color: {new_color};}}"
+
+            print(new_style_sheet)
+            button.setStyleSheet(new_style_sheet)
+            for rule in self.theme_data['active-theme']['colors']:
+                if key in rule:
+                    self.theme_data['active-theme']['colors'][key]= new_color
+                    break
+            
+
+        
+    def refresh_style(self, name):
+        base_path = os.path.dirname(__file__)
+        style_sheet_path = os.path.join(base_path, 'css', name+'.qss')
+        with open(style_sheet_path, "r") as style_file:
+            return style_file.read()
+        
 
 class LexerEditorWidget(QWidget):
     def __init__(self, theme_data, parent=None, brother=None):
@@ -456,7 +540,7 @@ class ThemeEditor(FramelessMainWindow):
         stack.addWidget(LexerThemeBrowser(theme_data=gsedit.theme_editor.read_theme_file(), parent=self.mwindow, brother=self))
         stack.addWidget(QLabel("Create New Lexer Theme"))
         stack.addWidget(EditorThemeInfoWidget(theme_data=gsedit.theme_editor.read_editor_theme_file()))
-        stack.addWidget(QLabel("Customize Current Editor Theme"))
+        stack.addWidget(EditorEditorWidget(theme_data=gsedit.theme_editor.read_editor_theme_file(), parent=self.mwindow, brother=self))
         stack.addWidget(QLabel("Browse Editor Themes"))
         stack.addWidget(QLabel("Create New Editor Theme"))
         

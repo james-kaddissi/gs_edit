@@ -47,6 +47,12 @@ def write_theme_file(theme_data):
     with open(theme_file_path, 'w') as file:
         json.dump(theme_data, file, indent=4)
 
+def write_editor_theme_file(theme_data):
+    base_path = os.path.dirname(__file__)
+    theme_file_path = os.path.join(base_path, 'active-editor-theme.json')
+    with open(theme_file_path, 'w') as file:
+        json.dump(theme_data, file, indent=4)
+
 def write_active_theme(theme_data):
     active_theme = read_theme_file()
     active_theme["active-theme"] = theme_data
