@@ -1,12 +1,12 @@
 {
     "active-theme": {
-        "theme-name": "gs-main-dark",
+        "theme-name": "gs-main-light",
         "version": "1.0.0",
         "syntax-rules": [
             {
                 "default": {
-                    "text-color": "#d6433b",
-                    "page-color": "#101316",
+                    "text-color": "#333333",
+                    "page-color": "#FFFFFF",
                     "font-family": "Consolas",
                     "font-size": 14,
                     "font-weight": "normal",
@@ -17,8 +17,8 @@
             },
             {
                 "keyword": {
-                    "text-color": "#3acbc9",
-                    "page-color": "#101316",
+                    "text-color": "#007ACC",
+                    "page-color": "#FFFFFF",
                     "font-family": "Consolas",
                     "font-size": 14,
                     "font-weight": "normal",
@@ -29,8 +29,8 @@
             },
             {
                 "types": {
-                    "text-color": "#956ce1",
-                    "page-color": "#101316",
+                    "text-color": "#6F42C1",
+                    "page-color": "#FFFFFF",
                     "font-family": "Consolas",
                     "font-size": 14,
                     "font-weight": "normal",
@@ -41,8 +41,8 @@
             },
             {
                 "string": {
-                    "text-color": "#079972",
-                    "page-color": "#101316",
+                    "text-color": "#228B22",
+                    "page-color": "#FFFFFF",
                     "font-family": "Consolas",
                     "font-size": 14,
                     "font-weight": "normal",
@@ -53,8 +53,8 @@
             },
             {
                 "keyargs": {
-                    "text-color": "#c73230",
-                    "page-color": "#101316",
+                    "text-color": "#A52A2A",
+                    "page-color": "#FFFFFF",
                     "font-family": "Consolas",
                     "font-size": 14,
                     "font-weight": "normal",
@@ -65,8 +65,8 @@
             },
             {
                 "brackets": {
-                    "text-color": "#06B183",
-                    "page-color": "#101316",
+                    "text-color": "#006400",
+                    "page-color": "#FFFFFF",
                     "font-family": "Consolas",
                     "font-size": 14,
                     "font-weight": "normal",
@@ -77,8 +77,8 @@
             },
             {
                 "comments": {
-                    "text-color": "#7a7e82",
-                    "page-color": "#101316",
+                    "text-color": "#808080",
+                    "page-color": "#FFFFFF",
                     "font-family": "Consolas",
                     "font-size": 14,
                     "font-weight": "normal",
@@ -89,8 +89,8 @@
             },
             {
                 "constants": {
-                    "text-color": "#589ff7",
-                    "page-color": "#101316",
+                    "text-color": "#0000FF",
+                    "page-color": "#FFFFFF",
                     "font-family": "Consolas",
                     "font-size": 14,
                     "font-weight": "normal",
@@ -101,8 +101,8 @@
             },
             {
                 "functions": {
-                    "text-color": "#48cf6a",
-                    "page-color": "#101316",
+                    "text-color": "#008000",
+                    "page-color": "#FFFFFF",
                     "font-family": "Consolas",
                     "font-size": 14,
                     "font-weight": "normal",
@@ -113,8 +113,8 @@
             },
             {
                 "classes": {
-                    "text-color": "#956ce1",
-                    "page-color": "#101316",
+                    "text-color": "#6F42C1",
+                    "page-color": "#FFFFFF",
                     "font-family": "Consolas",
                     "font-size": 14,
                     "font-weight": "normal",
@@ -125,8 +125,8 @@
             },
             {
                 "function_def": {
-                    "text-color": "#C4BFC3",
-                    "page-color": "#101316",
+                    "text-color": "#808080",
+                    "page-color": "#FFFFFF",
                     "font-family": "Consolas",
                     "font-size": 14,
                     "font-weight": "normal",

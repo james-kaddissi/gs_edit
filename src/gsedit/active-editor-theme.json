@@ -1,11 +1,11 @@
 {
     "active-theme": {
-        "theme-name": "gs-main-dark",
+        "theme-name": "gs-main-light",
         "version": "1.0.0",
         "colors": {
-            "main_color": "#101316",
-            "secondary_color":"#0c0f11",
-            "font_color": "#7a7e82"
+            "main_color": "#FFFFFF",
+            "secondary_color": "#868686",
+            "font_color": "#000000"
         }
     }
 }

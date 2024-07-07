@@ -1,24 +1,26 @@
 QListWidget {
+    background-color: "@main_color";
+    color: "@font_color";
     border: none;
-    border-right: 2px solid black;
-    border-radius: 0px;
+    margin-top: -40px;
 }
+
 QListWidget::item {
     height: 25px;
-    background-color: #FFFFFF;
-    color: #000000;
+    background-color: "@main_color";
+    color: "@font_color";
     font-family: "Consolas";
 }
 QListWidget::item:selected {
     height: 25px;
     background-color: #222a31;
-    color: #000000;
+    color: "@font_color";
     font-family: "Consolas";
     border: none;
 }
 QListWidget::item:hover {
     height: 35px;
     background-color: #35393d;
-    color: #000000;
+    color: "@font_color";
     font-family: "Consolas";
 }

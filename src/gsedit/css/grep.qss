@@ -4,7 +4,7 @@ QCheckBox {
 }
 
 QListWidget {
-    background-color: #0c0f11;
+    background-color: #868686;
     border-radius: 5px;
     border: 1px solid #CDCDCD;
     padding: 5px;

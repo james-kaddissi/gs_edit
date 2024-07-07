@@ -1,0 +1,9 @@
+{
+    "theme-name": "gs-main-light",
+    "version": "1.0.0",
+    "colors": {
+        "main_color": "#FFFFFF",
+        "secondary_color":"#868686",
+        "font_color": "#000000"
+    }
+}

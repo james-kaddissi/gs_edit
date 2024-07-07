@@ -163,6 +163,86 @@ for i in range(10):
                     color = QColor(value['text-color'])
                     self.lexer.setColor(color, i)
 
+
+
+
+
+
+
+
+
+
+class EditorThemeBrowser(QWidget):
+    def __init__(self, theme_data, parent=None, brother=None):
+        super(EditorThemeBrowser, self).__init__(parent)
+        self.theme_data = theme_data
+        self.window = parent
+        self.thiswindow = brother
+        self.init_ui()
+    
+    def init_ui(self):
+        layout = QVBoxLayout()
+        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setSpacing(0)
+        
+        title_lbl = QLabel("View Editor Themes")
+        title_lbl.setStyleSheet(self.refresh_style("editorEditorTitle"))
+        title_lbl.setAlignment(Qt.AlignTop)
+        layout.addWidget(title_lbl)
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setStyleSheet(self.refresh_style("scrollAreaEditorThemes"))
+        list_widget = QListWidget()
+        list_widget.setStyleSheet(self.refresh_style("listWidgetEditorThemes"))
+        list_widget.setMinimumWidth(scroll_area.width())
+
+        theme_dir = os.path.join(os.path.dirname(__file__), 'editor-themes')
+        if os.path.exists(theme_dir) and os.path.isdir(theme_dir):
+            for file_name in os.listdir(theme_dir):
+                if file_name.endswith('.json'):
+                    theme_name = os.path.splitext(file_name)[0]
+                    list_item = QListWidgetItem(theme_name)
+                    list_widget.addItem(list_item)
+
+        scroll_area.setWidget(list_widget)
+        layout.addWidget(scroll_area)
+        save_button = QPushButton("Save Theme")
+        save_button.setStyleSheet(self.refresh_style('themeBrowserSaveButton'))
+        save_button.clicked.connect(self.save_active_theme)
+        layout.addWidget(save_button)
+        self.setLayout(layout)
+
+    def save_active_theme(self):
+        selected_items = self.findChildren(QListWidget)
+        selected_theme = selected_items[0].currentItem().text()
+        theme_path = os.path.join(os.path.dirname(__file__), 'editor-themes', f'{selected_theme}.json')
+        with open(theme_path, 'r') as file:
+            theme_contents = json.load(file)
+
+        gsedit.theme_editor.write_active_editor_theme(theme_contents)
+
+        try:
+            self.thiswindow.close()
+            self.window.close()
+            os.system("gs")
+        except Exception as e:
+            self.window.statusBar().showMessage(f"Failed to restart: {e}")
+    def refresh_style(self, name):
+        base_path = os.path.dirname(__file__)
+        style_sheet_path = os.path.join(base_path, 'css', name+'.qss')
+        with open(style_sheet_path, "r") as style_file:
+            return style_file.read()
+
+
+
+
+
+
+
+
+
+
+
 class LexerThemeBrowser(QWidget):
     def __init__(self, theme_data, parent=None, brother=None):
         super(LexerThemeBrowser, self).__init__(parent)
@@ -541,7 +621,7 @@ class ThemeEditor(FramelessMainWindow):
         stack.addWidget(QLabel("Create New Lexer Theme"))
         stack.addWidget(EditorThemeInfoWidget(theme_data=gsedit.theme_editor.read_editor_theme_file()))
         stack.addWidget(EditorEditorWidget(theme_data=gsedit.theme_editor.read_editor_theme_file(), parent=self.mwindow, brother=self))
-        stack.addWidget(QLabel("Browse Editor Themes"))
+        stack.addWidget(EditorThemeBrowser(theme_data=gsedit.theme_editor.read_editor_theme_file(), parent=self.mwindow, brother=self))
         stack.addWidget(QLabel("Create New Editor Theme"))
         
         main_theme_list.currentRowChanged.connect(stack.setCurrentIndex)

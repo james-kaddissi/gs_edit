@@ -58,3 +58,7 @@ def write_active_theme(theme_data):
     active_theme["active-theme"] = theme_data
     write_theme_file(active_theme)
     
+def write_active_editor_theme(theme_data):
+    active_theme = read_editor_theme_file()
+    active_theme["active-theme"] = theme_data
+    write_editor_theme_file(active_theme)
