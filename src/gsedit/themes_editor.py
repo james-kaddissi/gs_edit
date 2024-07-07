@@ -318,7 +318,7 @@ class EditorEditorWidget(QWidget):
         layout.setContentsMargins(10,10,10,10)
         layout.setSpacing(0)
         title_lbl = QLabel("Customize Editor Theme")
-        title_lbl.setStyleSheet(self.refresh_style("lexerEditorTitle"))
+        title_lbl.setStyleSheet(self.refresh_style("editorEditorTitle"))
         title_lbl.setAlignment(Qt.AlignTop)
         layout.setAlignment(Qt.AlignTop)
         layout.addWidget(title_lbl)
@@ -328,9 +328,9 @@ class EditorEditorWidget(QWidget):
             item_layout.setSpacing(0)
             label = QLabel(f"{key}: {value}")
             label.setStyleSheet(f"""color: {value}""")
-            label.setStyleSheet(self.refresh_style('lexerEditorRuleLabel'))
+            label.setStyleSheet(self.refresh_style('editorEditorRuleLabel'))
             edit_color = QPushButton("Edit")
-            button_style = self.refresh_style("lexerEditorRuleButton")
+            button_style = self.refresh_style("editorEditorRuleButton")
             button_style = button_style.strip()
             if button_style.endswith('}'):
                 button_style = button_style[:-1].strip()
@@ -344,7 +344,7 @@ class EditorEditorWidget(QWidget):
             layout.addLayout(item_layout)
         
         save_button = QPushButton("Save Changes and Reload")
-        save_button.setStyleSheet(self.refresh_style('lexerEditorSaveButton'))
+        save_button.setStyleSheet(self.refresh_style('editorEditorSaveButton'))
         save_button.clicked.connect(self.save_changes)
         layout.addWidget(save_button)
         
@@ -366,7 +366,7 @@ class EditorEditorWidget(QWidget):
         if color.isValid():
             new_color = color.name()
             text.setText(f"{key}: {new_color}")
-            button_style = self.refresh_style("lexerEditorRuleButton")
+            button_style = self.refresh_style("editorEditorRuleButton")
             button_style = button_style.strip()
             if button_style.endswith('}'):
                 button_style = button_style[:-1].strip()

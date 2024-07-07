@@ -1,0 +1,8 @@
+QLabel {
+    margin-left: 25px;
+    font-family: 'Consolas';
+    font-size: 18px;
+    margin-right: 20px;
+    color: #000000;
+    margin-top: 15px;
+}
