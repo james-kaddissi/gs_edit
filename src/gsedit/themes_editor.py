@@ -387,7 +387,6 @@ class EditorEditorWidget(QWidget):
         style_sheet_path = os.path.join(base_path, 'css', name+'.qss')
         with open(style_sheet_path, "r") as style_file:
             return style_file.read()
-        
 
 class LexerEditorWidget(QWidget):
     def __init__(self, theme_data, parent=None, brother=None):
@@ -619,7 +618,6 @@ class ThemeEditor(FramelessMainWindow):
         main_theme_list.addItem("Current Lexer Theme")
         main_theme_list.addItem("Customize Current Lexer Theme")
         main_theme_list.addItem("Browse Lexer Themes")
-        main_theme_list.addItem("Create New Lexer Theme")
         separator1 = QListWidgetItem("Editor")
         separator1.setFlags(separator1.flags() & ~Qt.ItemIsSelectable)
         separator1.setFlags(separator1.flags() & ~Qt.ItemIsEnabled) 
@@ -632,19 +630,16 @@ class ThemeEditor(FramelessMainWindow):
         main_theme_list.addItem("Current Editor Theme")
         main_theme_list.addItem("Customize Current Editor Theme")
         main_theme_list.addItem("Browse Editor Themes")
-        main_theme_list.addItem("Create New Editor Theme")
 
         stack = QStackedWidget()
         stack.addWidget(LexerThemeInfoWidget(theme_data=gsedit.theme_editor.read_theme_file()))
         stack.addWidget(LexerThemeInfoWidget(theme_data=gsedit.theme_editor.read_theme_file()))
         stack.addWidget(LexerEditorWidget(theme_data=gsedit.theme_editor.read_theme_file(), parent=self.mwindow, brother=self))
         stack.addWidget(LexerThemeBrowser(theme_data=gsedit.theme_editor.read_theme_file(), parent=self.mwindow, brother=self))
-        stack.addWidget(QLabel("Create New Lexer Theme"))
         stack.addWidget(QLabel("TITLE"))
         stack.addWidget(EditorThemeInfoWidget(theme_data=gsedit.theme_editor.read_editor_theme_file()))
         stack.addWidget(EditorEditorWidget(theme_data=gsedit.theme_editor.read_editor_theme_file(), parent=self.mwindow, brother=self))
         stack.addWidget(EditorThemeBrowser(theme_data=gsedit.theme_editor.read_editor_theme_file(), parent=self.mwindow, brother=self))
-        stack.addWidget(QLabel("Create New Editor Theme"))
         
         main_theme_list.currentRowChanged.connect(stack.setCurrentIndex)
         
