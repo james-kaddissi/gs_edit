@@ -6,12 +6,12 @@ QTabWidget {
 
 QTabBar {
     border-bottom: 1px solid black;
-    background-color: #868686;
+    background-color: #0c0f11;
     qproperty-drawBase: false;
 }
 QTabBar::tab {
-    background-color: #868686;
-    color: #000000;
+    background-color: #0c0f11;
+    color: #7a7e82;
     min-width: 10ex;
     min-height: 5ex;
     padding: 10px 25px;
@@ -24,7 +24,7 @@ QTabBar::tab {
 QTabBar::tab::selected {
     color: #279fc4;
     border-style: none;
-    background-color: #FFFFFF;
+    background-color: #101316;
     border-bottom: 1px solid  transparent;
 
     border-top: 1px solid #279fc4;

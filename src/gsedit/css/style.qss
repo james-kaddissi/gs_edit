@@ -19,7 +19,7 @@ QScrollBar:vertical {
     border: none;
     width: 12px;
     margin: 15px 0 15px 0;
-    background-color: #FFFFFF;
+    background-color: #101316;
     border-radius: 0px;
 }
 
@@ -63,7 +63,7 @@ QScrollBar:horizontal {
     border: none;
     height: 12px;
     margin: 0 0 0 0;
-    background-color: #FFFFFF;
+    background-color: #101316;
     border-radius: 0px;
 }
 
@@ -105,7 +105,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 
 QsciScintilla {
     border: none;
-    background-color: #FFFFFF;
+    background-color: #101316;
     color: #d6d6d6;
 }
 
