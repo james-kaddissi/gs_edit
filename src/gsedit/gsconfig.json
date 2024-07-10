@@ -1,5 +1,6 @@
 {
     "debugMode": true,
+    "syncThemes": true,
     "colors": {
         "primary-background": "#101316",
         "primary-text": "#bfc3c4"
