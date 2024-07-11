@@ -100,7 +100,6 @@ class MainWindow(FramelessMainWindow):
 
     def enable_quicktool(self):
         self.quicktool_active = True
-        self.quicktool_sequence = []
         print("2")
 
     def keyPressEvent(self, event):
@@ -121,19 +120,33 @@ class MainWindow(FramelessMainWindow):
         elif key == Qt.Key_B:
             print("B")
         elif key == Qt.Key_C:
-            print("C")
+            self.enable_quickcolor()
         else:
             print('NA')
+
     def disable_quicktool(self):
         self.quicktool_active = False
-        self.quicktool_sequence = []
         print("Disabled")
 
 
-    
-            
+    def enable_quickcolor(self):
+        self.grabMouse()
+        self.setCursor(Qt.CrossCursor)
 
+    def mouseMoveEvent(self, event):
+        screen = QApplication.primaryScreen()
+        color = screen.grabWindow(QApplication.desktop().winId(), event.globalX(), event.globalY(), 1, 1).toImage().pixel(0, 0)
+        color = QColor(color)
 
+    def mousePressEvent(self, event):
+        screen = QApplication.primaryScreen()
+        color = screen.grabWindow(QApplication.desktop().winId(), event.globalX(), event.globalY(), 1, 1).toImage().pixel(0, 0)
+        color = QColor(color)
+        hex_color = color.name()
+        clipboard = QApplication.clipboard()
+        clipboard.setText(hex_color)
+        self.releaseMouse()
+        self.setCursor(Qt.ArrowCursor)
 
 if __name__ == '__main__':
     QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
