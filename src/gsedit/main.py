@@ -33,11 +33,14 @@ class MainWindow(FramelessMainWindow):
         self.version_control = vc.VersionControl()
         self.app_title = "GS-Edit"
         self.app_icon = QIcon("./src/gsedit/images/icon.png")
+        self.quicktool_active = False
         self.setWindowIcon(self.app_icon)
         self.app_version = "0.2.6"
         self.initialize_window()
         self.current_file = None
         self.current_tool = None
+        self.quicktool_shortcut = QShortcut(QKeySequence("Ctrl+`"), self)
+        self.quicktool_shortcut.activated.connect(self.enable_quicktool)
         self.css_editor = CSSEditor(self)
         self.center_window()
 
@@ -94,6 +97,41 @@ class MainWindow(FramelessMainWindow):
 
     def open_css_editor(self):
         self.css_editor.show()
+
+    def enable_quicktool(self):
+        self.quicktool_active = True
+        self.quicktool_sequence = []
+        print("2")
+
+    def keyPressEvent(self, event):
+        if self.quicktool_active:
+            key = event.key()
+            if key in [Qt.Key_A, Qt.Key_B, Qt.Key_C]: 
+                self.perform_quicktool_action(key)
+            else:
+                print('3')
+            event.accept()
+            self.disable_quicktool()
+        else:
+            QMainWindow.keyPressEvent(self, event)
+
+    def perform_quicktool_action(self, key):
+        if key == Qt.Key_A:
+            print("A")
+        elif key == Qt.Key_B:
+            print("B")
+        elif key == Qt.Key_C:
+            print("C")
+        else:
+            print('NA')
+    def disable_quicktool(self):
+        self.quicktool_active = False
+        self.quicktool_sequence = []
+        print("Disabled")
+
+
+    
+            
 
 
 
