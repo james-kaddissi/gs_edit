@@ -58,7 +58,7 @@ class CSSEditor(QMainWindow):
 
     def load_file_list(self):
         base_path = os.path.dirname(__file__) 
-        css_path = os.path.join(base_path, 'css')  
+        css_path = os.path.join(base_path, 'original-css')  
 
         if not os.path.exists(css_path):
             self.statusBar().showMessage('CSS directory not found: {}'.format(css_path))
@@ -74,7 +74,7 @@ class CSSEditor(QMainWindow):
 
         base_path = os.path.dirname(__file__)
         print(base_path)
-        self.current_file = os.path.join(base_path, 'css', current.text())
+        self.current_file = os.path.join(base_path, 'original-css', current.text())
         print(self.current_file)
         self.refresh_css_editor(self.current_file)
 

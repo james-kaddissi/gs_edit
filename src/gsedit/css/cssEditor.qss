@@ -9,7 +9,7 @@ QLabel {
 }
 
 QListWidget::item {
-    background-color: "#323F4B";
+    background-color: #101316;
     color: "#CBD2D9";
     font-family: "Consolas";
 }
