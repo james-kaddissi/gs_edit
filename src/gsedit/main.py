@@ -81,7 +81,6 @@ class MainWindow(FramelessMainWindow):
         self.file_explorer_frame = FileExplorerFrame(self)
         self.sidebar = Sidebar(self)
         self.vc_frame = VersionControlFrame(self)
-        
         self.top_bar = TopBar(self)
         self.top_bar.setStyleSheet(self.top_bar.styleSheet() + "border: none; border-bottom: 1px solid #333641; border-bottom-left-radius: 0; border-bottom-right-radius: 0;")
         self.main_body_frame = MainBodyFrame(self)
@@ -100,7 +99,7 @@ class MainWindow(FramelessMainWindow):
 
     def enable_quicktool(self):
         self.quicktool_active = True
-        print("2")
+        self.bar.set_timed_message("Quicktool listening...", 3000)
 
     def keyPressEvent(self, event):
         if self.quicktool_active:
@@ -108,7 +107,7 @@ class MainWindow(FramelessMainWindow):
             if key in [Qt.Key_A, Qt.Key_B, Qt.Key_C]: 
                 self.perform_quicktool_action(key)
             else:
-                print('3')
+                self.bar.set_timed_message("Quicktool unrecognized.", 3000)
             event.accept()
             self.disable_quicktool()
         else:
@@ -120,6 +119,7 @@ class MainWindow(FramelessMainWindow):
         elif key == Qt.Key_B:
             print("B")
         elif key == Qt.Key_C:
+            self.bar.set_timed_message("Color picker enabled.", 3000)
             self.enable_quickcolor()
         else:
             print('NA')
@@ -147,6 +147,7 @@ class MainWindow(FramelessMainWindow):
         clipboard.setText(hex_color)
         self.releaseMouse()
         self.setCursor(Qt.ArrowCursor)
+        self.bar.set_timed_message(f"Color copied: {hex_color}", 3000)
 
 if __name__ == '__main__':
     QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)

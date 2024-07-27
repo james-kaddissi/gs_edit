@@ -15,7 +15,7 @@ import gsedit.gsconfig
 
 from pathlib import Path
 
-from gsedit.language_lexer import JavaScriptLexer, PythonLexer, CLexer, JSONLexer, RustLexer, CppLexer, HTMLLexer, CSSLexer, CSLexer, JavaLexer, TxtLexer, GoLexer, HaskellLexer, RubyLexer, PHPLexer, KotlinLexer, TypeScriptLexer, JSXLexer, TSXLexer, SwiftLexer
+from gsedit.language_lexer import JavaScriptLexer, RLexer, PythonLexer, CLexer, JSONLexer, RustLexer, CppLexer, HTMLLexer, CSSLexer, CSLexer, JavaLexer, TxtLexer, GoLexer, HaskellLexer, RubyLexer, PHPLexer, KotlinLexer, TypeScriptLexer, JSXLexer, TSXLexer, SwiftLexer
 from gsedit.code_completer import Completer
 
 
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     from gsedit.version_control import VersionControlLayout
 
 class TextEditor(QsciScintilla):
-    def __init__(self, window, parent = None, path = None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None, htmlf=None, cssf=None, csf=None, javaf=None, txtf=None, gof=None, hsf=None, rbf=None, ktf=None, phpf=None, swiftf=None, tsf=None, jsxf=None, tsxf=None, is_historical=False):
+    def __init__(self, window, parent = None, path = None, pyf=None, cf=None, jsonf=None, rustf=None, cppf=None, jsf=None, htmlf=None, cssf=None, csf=None, javaf=None, txtf=None, gof=None, hsf=None, rbf=None, ktf=None, phpf=None, swiftf=None, tsf=None, jsxf=None, tsxf=None, rf=None, is_historical=False):
         super(TextEditor, self).__init__(parent)
         self.window = window
         self.vcl = self.window.vc_frame.vclayout
@@ -62,6 +62,7 @@ class TextEditor(QsciScintilla):
         self.jsxf = jsxf
         self.tsxf = tsxf
         self.tsf = tsf
+        self.rf = rf
         self.setUtf8(True)
 
         self.window_font = QFont("Fire Code")
@@ -215,6 +216,12 @@ class TextEditor(QsciScintilla):
             self.setLexer(self.lexer)
         elif self.tsf:
             self.lexer = TypeScriptLexer(self)
+            self.lexer.setDefaultFont(self.window_font)
+            self.api = QsciAPIs(self.lexer)
+            self.code_completer = Completer(self.abs_path, self.api)
+            self.setLexer(self.lexer)
+        elif self.rf:
+            self.lexer = RLexer(self)
             self.lexer.setDefaultFont(self.window_font)
             self.api = QsciAPIs(self.lexer)
             self.code_completer = Completer(self.abs_path, self.api)
@@ -411,6 +418,12 @@ class TextEditor(QsciScintilla):
                 self.setLexer(self.lexer)
             elif self.tsf:
                 self.lexer = TypeScriptLexer(self)
+                self.lexer.setDefaultFont(self.window_font)
+                self.api = QsciAPIs(self.lexer)
+                self.code_completer = Completer(self.abs_path, self.api)
+                self.setLexer(self.lexer)
+            elif self.rf:
+                self.lexer = RLexer(self)
                 self.lexer.setDefaultFont(self.window_font)
                 self.api = QsciAPIs(self.lexer)
                 self.code_completer = Completer(self.abs_path, self.api)

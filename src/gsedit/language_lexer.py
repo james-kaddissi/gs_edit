@@ -316,7 +316,81 @@ class CppLexer(GSLexer):
                 self.setStyling(token_length, self.FUNCTIONS)
             else:
                 self.setStyling(token_length, self.DEFAULT)
-    
+
+class RLexer(GSLexer):
+    def __init__(self, editor):
+        super(RLexer, self).__init__("R", editor)
+        self.editor = editor
+        self.generateKeywords([
+            "if", "else", "for", "while", "repeat", "break", "next", "return", "function",
+            "in", "is", "library", "require", "source", "try", "catch", "finally", "stop", 
+            "warning", "print", "cat", "paste", "sprintf", "list", "data.frame", "matrix",
+            "c", "seq", "length", "dim", "nrow", "ncol", "str", "summary", "plot", "hist",
+            "mean", "median", "sd", "var", "cor", "lm", "glm", "t.test", "aov", "anova",
+            "rnorm", "runif", "rexp", "rpois"
+        ])
+        self.generateSavedNames([
+            "data", "model", "fit", "result", "plot", "output", "input", "args", "params"
+        ])
+
+    def styleText(self, ipos, epos):
+        self.startStyling(ipos)
+
+        active_text = self.editor.text()[ipos:epos]
+        self.get_token(active_text)
+
+        is_string = False
+        is_comment = False
+        is_multiline_comment = False
+        is_function = False
+
+        while True:
+            active_token = self.get_next_token()
+            if active_token is None:
+                break
+            token, token_length = active_token
+
+            if is_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("\n"):
+                    is_comment = False
+                continue
+
+            if is_multiline_comment:
+                self.setStyling(token_length, self.COMMENTS)
+                if token.startswith("*/"):
+                    is_multiline_comment = False
+                continue
+
+            if is_string:
+                self.setStyling(token_length, self.STRING)
+                if token.endswith('"'):
+                    is_string = False
+                continue
+
+            if token.startswith("#"):
+                self.setStyling(token_length, self.COMMENTS)
+                is_comment = True
+            elif token.startswith("/*"):
+                self.setStyling(token_length, self.COMMENTS)
+                is_multiline_comment = True
+            elif token.endswith("*/"):
+                self.setStyling(token_length, self.COMMENTS)
+                is_multiline_comment = False
+            elif token in ['"', "'"]:
+                self.setStyling(token_length, self.STRING)
+                is_string = True
+            elif token in self.keywords:
+                self.setStyling(token_length, self.KEYWORD)
+            elif token in ["(", ")", "{", "}", "[", "]"]:
+                self.setStyling(token_length, self.BRACKETS)
+            elif token.isdigit() or token.startswith("0x"):
+                self.setStyling(token_length, self.CONSTANTS)
+            elif token in self.saved_names:
+                self.setStyling(token_length, self.FUNCTIONS)
+            else:
+                self.setStyling(token_length, self.DEFAULT)
+
 class PythonLexer(GSLexer):
     def __init__(self, editor):
         super(PythonLexer, self).__init__("Python", editor)

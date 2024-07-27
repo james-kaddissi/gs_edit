@@ -25,7 +25,8 @@
         "php": [".php"],
         "swift": [".swift"],
         "jsx": [".jsx"],
-        "tsx": [".tsx"]
+        "tsx": [".tsx"],
+        "r": [".r"]
     },
     "tools-preferences": {
         "tool-replace": true 
