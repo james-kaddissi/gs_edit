@@ -20,21 +20,23 @@ def replace_qss():
     css_dir = os.path.join(base_path, 'css')
 
     for filename in os.listdir(original_directory):
-        src = os.path.join(original_directory, filename)
-        dest = os.path.join(css_dir, filename)
-        if os.path.isfile(src):
-            with open(src, 'r') as f, open(dest, 'w') as d:
-                d.write(f.read())
+        if filename != 'README.md':
+            src = os.path.join(original_directory, filename)
+            dest = os.path.join(css_dir, filename)
+            if os.path.isfile(src):
+                with open(src, 'r') as f, open(dest, 'w') as d:
+                    d.write(f.read())
 
     for filename in os.listdir(css_dir):
-        src = os.path.join(css_dir, filename)
-        dest = os.path.join(original_directory, filename)
-        if os.path.isfile(src):
-            with open(src, 'r') as f, open(dest, 'w') as d:
-                d.write(f.read())
+        if filename != 'README.md':
+            src = os.path.join(css_dir, filename)
+            dest = os.path.join(original_directory, filename)
+            if os.path.isfile(src):
+                with open(src, 'r') as f, open(dest, 'w') as d:
+                    d.write(f.read())
             
     for filename in os.listdir(css_dir):
-        if filename.endswith('.qss'):
+        if filename.endswith('.qss') and filename != 'README.md':
             filepath = os.path.join(css_dir, filename)
             with open(filepath, 'r') as file:
                 content = file.read()
