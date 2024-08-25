@@ -1,4 +1,4 @@
 QScintilla
 PyQt5
 jedi
-PyQt5-Frameless-Window
+PyQt5-Frameless-Windows

@@ -47,14 +47,14 @@ class CSSEditor(QMainWindow):
 
         self.statusBar()
         self.load_file_list()
-        self.refresh_style()
+        self.refresh_style('cssEditor')
         self.splitter.setSizes([300, 500])
 
-    def refresh_style(self):
+    def refresh_style(self, name):
         base_path = os.path.dirname(__file__)
-        style_sheet_path = os.path.join(base_path, 'css', 'cssEditor.qss')
+        style_sheet_path = os.path.join(base_path, 'css', name+'.qss')
         with open(style_sheet_path, "r") as style_file:
-            self.setStyleSheet(style_file.read())
+            return style_file.read()
 
     def load_file_list(self):
         base_path = os.path.dirname(__file__) 
@@ -159,6 +159,7 @@ class CSSEditor(QMainWindow):
     def apply_styles(self):
         self.save_css() 
         self.restart_program()
+
     def reload_styles(self):
         self.refresh_css_editor(self.current_file)
 
