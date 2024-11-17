@@ -1,48 +1,43 @@
-# gs-edit
+# 📝 GS-Edit
 
-GS Edit is a bare bones open source multi language IDE, with the goal of giving all the design and customization of the editor to the user. The frontend uses Python and Qt, while the backend uses Python and some Rust integration for large tasks.
+GS Edit is an open source multi language IDE, with the goal of giving all the design and customization of the editor to the user.
 
-Files and Languages With Supported Lexers: (*- supports run functionality)
+![Screenshot 2024-11-17 183443](https://github.com/user-attachments/assets/491e0837-ad04-4370-9bda-06de694a6a83)
 
-* .py*- python
-* .c*- c
-* .cpp*- c++
-* .rs*- rust
-* .json - json
-* .js - javascript
-* .html - html
-* .css - css
-* .cs - c#
-* .java - java
-* .txt - plaintext
-  .hs - haskell
-  .go - go
-  .rb - ruby
-  .kt - kotlin
-  .kts - kotlin script
-  .ktm - kotlin module
-  .php - php
-  .swift - swift
-  .ts - typescript
-  .jsx - jsx
-  .tsx - tsx
+![Windows OS Compatible](https://img.shields.io/badge/Windows-0078D6?style=flat&logo=windows&logoColor=white)
+![Mac OS Compatible](https://img.shields.io/badge/macOS-000000?style=flat&logo=apple&logoColor=white)
+![Linux OS Compatible](https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black)
 
-To be addded (in no particular order):
-.scss, .sass - sass
-.less - less
-.xml - xml
-.yaml, .yml - yaml
-.lua - lua
-.perl - perl
-.sh - shell script
-.md - markdown
-.r - r
-.dart - dart
-.groovy - groovy
-.pascal - pascal
-.scala - scala
-.vim - vim script
-.sqp - sql
-.pl - prolog
-.asm - assembly
-.vbs - VBScript
+## 🛠️ Installation
+
+### Method #1 (Manual Installation)
+
+Install the binary from Releases for your OS, and place it in a folder recognized by your PATH or add it's location to your PATH.
+
+### Method #2 (Automatic Installation - Pip - requires Python)
+
+Open a terminal (with Python installed on your machine)
+```
+pip install GS-Edit
+```
+Launch GS-Edit in your terminal:
+```
+gs
+```
+
+### Method #3 (Build from the repo - requires Python)
+
+Open a terminal (with Rust installed on your machine)
+```
+git clone https://github.com/james-kaddissi/gs_edit.git
+cd gs_edit
+pip install -e .
+```
+<br>
+<br>
+
+## 📄 Feautres
+- Supports Python or Rust extensions
+- Custom advanced Version Control and support for native version controls
+- Internal CSS Editor - edit the entire look and feel of the editor from within the editor with a user freindly UI
+- Includes most common and popular features of other major IDEs (Supports most languages, integrated terminal, search and replace, etc.)
