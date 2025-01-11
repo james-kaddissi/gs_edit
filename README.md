@@ -36,7 +36,7 @@ pip install -e .
 <br>
 <br>
 
-## 📄 Feautres
+## 📄 Features
 - Supports Python or Rust extensions
 - Custom advanced Version Control and support for native version controls
 - Internal CSS Editor - edit the entire look and feel of the editor from within the editor with a user freindly UI
